@@ -121,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> savoir ouvrir un terminal</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Les bases">
   <div class="kicker">Le principe</div>
   <h2>Git n'est pas GitHub</h2>
   <div class="grid2">
@@ -146,6 +146,34 @@ td:first-child{font-weight:600}
     <li><b>Sécurité</b> : tu peux tester sans risque, puis revenir à une version qui marchait.</li>
     <li><b>Synchronisation</b> : le même projet sur plusieurs ordinateurs ou entre plusieurs personnes.</li>
   </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Démarrer</div>
+  <h2>Installer et configurer Git</h2>
+  <div class="grid2">
+    <pre><span class="c"># vérifier l'installation</span>
+git --version
+
+<span class="c"># ton identité (apparaît dans chaque commit)</span>
+git config --global user.name <span class="s">"Prénom Nom"</span>
+git config --global user.email <span class="s">"toi@exemple.be"</span>
+
+<span class="c"># nommer la branche principale « main »</span>
+git config --global init.defaultBranch main
+
+<span class="c"># Windows : gérer les fins de ligne</span>
+git config --global core.autocrlf true
+
+<span class="c"># voir toute la configuration</span>
+git config --list</pre>
+    <ul class="clean small">
+      <li>Sous Windows, installe <b>Git for Windows</b> : il fournit aussi <i>Git Bash</i>, un terminal pratique.</li>
+      <li>L'adresse e-mail doit correspondre à celle de ton compte GitHub pour que tes commits soient reliés à ton profil.</li>
+      <li><code>--global</code> s'applique à tous tes projets. Sans lui, le réglage ne vaut que pour le dépôt courant.</li>
+      <li><b>VS Code</b> intègre Git : onglet « Contrôle de code source ». Comprendre les commandes aide à savoir ce que font ses boutons.</li>
+    </ul>
+  </div>
 </section>
 
 <section class="slide">
@@ -167,6 +195,34 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Démarrer</div>
+  <h2>Créer un dépôt et le relier à GitHub</h2>
+  <div class="grid2">
+    <div>
+      <h3>Partir d'un projet existant</h3>
+      <pre style="margin-top:10px"><span class="c"># dans le dossier du projet</span>
+git init
+git add .
+git commit -m <span class="s">"Premier commit"</span>
+
+<span class="c"># dépôt vide créé sur github.com</span>
+git remote add origin https://github.com/moi/projet.git
+git push -u origin main</pre>
+    </div>
+    <div>
+      <h3>Partir d'un dépôt GitHub</h3>
+      <pre style="margin-top:10px">git clone https://github.com/moi/projet.git
+cd projet</pre>
+      <ul class="clean small" style="margin-top:16px">
+        <li><code>origin</code> est le nom habituel du dépôt distant. <code>git remote -v</code> l'affiche.</li>
+        <li><code>-u</code> relie ta branche locale à la branche distante : ensuite, <code>git push</code> et <code>git pull</code> suffisent.</li>
+        <li>Crée le <code>.gitignore</code> <b>avant</b> le premier <code>git add .</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Au quotidien">
   <div class="kicker">Au quotidien</div>
   <h2>Le cycle de base</h2>
   <div class="grid2">
@@ -199,6 +255,56 @@ git log --oneline -10</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Comprendre</div>
+  <h2>Ce qu'est vraiment un commit</h2>
+  <div class="flow">
+    <div class="node"><b>a1b2c3d</b><span>Premier commit</span></div><div class="arr">←</div>
+    <div class="node"><b>e4f5a6b</b><span>Ajoute le formulaire</span></div><div class="arr">←</div>
+    <div class="node hl"><b>c7d8e9f</b><span>Corrige le menu · <code>main</code> · <code>HEAD</code></span></div>
+  </div>
+  <div class="grid2">
+    <ul class="clean small">
+      <li>Un commit est un <b>instantané complet</b> du projet, avec un auteur, une date, un message et un lien vers son <b>parent</b>.</li>
+      <li>Son identifiant (le <b>hash</b>, ex. <code>c7d8e9f…</code>) est calculé à partir de son contenu : modifier un commit change son hash.</li>
+    </ul>
+    <ul class="clean small">
+      <li>Une <b>branche</b> n'est qu'une étiquette qui pointe vers un commit, et avance à chaque nouveau commit.</li>
+      <li><code>HEAD</code> désigne l'endroit où tu te trouves : en général, la branche sur laquelle tu travailles.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Comprendre</div>
+  <h2>Lire l'historique et les différences</h2>
+  <div class="grid2">
+    <pre><span class="c"># historique compact, avec les branches</span>
+git log --oneline --graph --all
+
+<span class="c"># détail d'un commit</span>
+git show c7d8e9f
+
+<span class="c"># ce qui a changé, pas encore ajouté</span>
+git diff
+
+<span class="c"># ce qui est dans l'index (prochain commit)</span>
+git diff --staged
+
+<span class="c"># différences entre deux branches</span>
+git diff main..nouvelle-navbar
+
+<span class="c"># qui a modifié chaque ligne, et quand</span>
+git blame src/page.tsx</pre>
+    <ul class="clean small">
+      <li>Dans <code>git log</code>, appuie sur <kbd>q</kbd> pour sortir, sur <kbd>Espace</kbd> pour descendre.</li>
+      <li><code>git diff --staged</code> avant de commiter montre <b>exactement</b> ce qui va être enregistré.</li>
+      <li>Sur GitHub, l'onglet <i>Commits</i> et le bouton <i>Blame</i> d'un fichier donnent les mêmes informations en visuel.</li>
+      <li>On peut utiliser un hash raccourci (7 caractères) dans toutes les commandes.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Ce qu'on ne versionne pas</div>
   <h2>Le fichier <code>.gitignore</code></h2>
   <div class="grid2">
@@ -225,6 +331,21 @@ Thumbs.db</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Ce qu'on ne versionne pas</div>
+  <h2>Les motifs du <code>.gitignore</code></h2>
+  <table>
+    <tr><th>Motif</th><th>Ignore</th></tr>
+    <tr><td><code>*.log</code></td><td>Tous les fichiers qui finissent par <code>.log</code>, partout</td></tr>
+    <tr><td><code>dist/</code></td><td>Tous les dossiers nommés <code>dist</code></td></tr>
+    <tr><td><code>/build</code></td><td>Seulement le dossier <code>build</code> à la racine</td></tr>
+    <tr><td><code>secrets/**/*.json</code></td><td>Les <code>.json</code> à n'importe quelle profondeur sous <code>secrets/</code></td></tr>
+    <tr><td><code>!garder.log</code></td><td>Exception : ce fichier est suivi malgré <code>*.log</code></td></tr>
+    <tr><td><code># commentaire</code></td><td>Ligne ignorée</td></tr>
+  </table>
+  <div class="callout"><p><code>git check-ignore -v fichier</code> indique quelle ligne du <code>.gitignore</code> ignore un fichier. Les modèles de <b>gitignore.io</b> ou de GitHub donnent une bonne base par langage.</p></div>
+</section>
+
+<section class="slide" data-part="Synchroniser">
   <div class="kicker">Local et distant</div>
   <h2>fetch, pull, push</h2>
   <table>
@@ -235,6 +356,34 @@ Thumbs.db</pre>
     <tr><td><code>git push</code></td><td>Envoie tes commits vers le distant</td><td>Quand tu as fini une étape</td></tr>
   </table>
   <div class="callout"><p><code>origin/main</code> est la <b>dernière version connue</b> de la branche <code>main</code> sur GitHub. Elle ne se met à jour qu'au <code>fetch</code> ou au <code>pull</code> : ce n'est pas du temps réel.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Local et distant</div>
+  <h2>Les branches distantes</h2>
+  <div class="grid2">
+    <pre><span class="c"># publier une nouvelle branche</span>
+git push -u origin nouvelle-navbar
+
+<span class="c"># voir toutes les branches, locales et distantes</span>
+git branch -a
+
+<span class="c"># récupérer une branche créée par quelqu'un d'autre</span>
+git fetch
+git switch sa-branche
+
+<span class="c"># supprimer une branche distante</span>
+git push origin --delete nouvelle-navbar
+
+<span class="c"># nettoyer les branches distantes disparues</span>
+git fetch --prune</pre>
+    <ul class="clean small">
+      <li>Une branche créée en local <b>n'existe pas sur GitHub</b> tant que tu ne l'as pas poussée.</li>
+      <li><code>git switch sa-branche</code> crée automatiquement la branche locale qui suit <code>origin/sa-branche</code>.</li>
+      <li><code>git status</code> indique si tu es « en avance » (commits à pousser) ou « en retard » (commits à récupérer) sur la branche distante.</li>
+      <li>Supprimer une branche après sa fusion garde le dépôt lisible.</li>
+    </ul>
+  </div>
 </section>
 
 <section class="slide">
@@ -261,7 +410,7 @@ Thumbs.db</pre>
   <div class="callout warn"><p><b>« push rejected (non-fast-forward) » :</b> le distant contient des commits que tu n'as pas. Ne force pas : fais <code>git pull</code>, règle les éventuels conflits, puis <code>git push</code>.</p></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Branches et conflits">
   <div class="kicker">Branches</div>
   <h2>Travailler en parallèle sans casser <code>main</code></h2>
   <div class="grid2">
@@ -300,6 +449,29 @@ git branch -d nouvelle-navbar</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Fusionner</div>
+  <h2>Nettoyer ses commits avant de partager</h2>
+  <div class="grid2">
+    <pre><span class="c"># retravailler les 3 derniers commits</span>
+git rebase -i HEAD~3
+
+<span class="c"># l'éditeur s'ouvre :</span>
+pick   a1b2c3d Ajoute le formulaire
+squash e4f5a6b oups, faute de frappe
+reword c7d8e9f Corrige le menu
+
+<span class="c"># modifier seulement le dernier message</span>
+git commit --amend -m <span class="s">"Nouveau message"</span></pre>
+    <ul class="clean small">
+      <li><b>pick</b> : garder le commit ; <b>reword</b> : changer son message ; <b>squash</b> : le fusionner avec le précédent ; <b>drop</b> : le supprimer.</li>
+      <li>Utile pour transformer « wip », « oups », « ça marche ? » en commits propres avant une pull request.</li>
+      <li>Ça <b>réécrit l'historique</b> : uniquement sur des commits qui n'ont pas encore été partagés.</li>
+      <li>En cas de doute : <code>git rebase --abort</code> annule tout.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Conflits</div>
   <h2>Résoudre un conflit sans paniquer</h2>
   <div class="grid2">
@@ -321,6 +493,27 @@ git branch -d nouvelle-navbar</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Conflits</div>
+  <h2>Moins de conflits au quotidien</h2>
+  <div class="grid2">
+    <ul class="clean">
+      <li><b>Pull souvent</b> : plus tu attends, plus les deux versions divergent.</li>
+      <li><b>Des branches courtes</b> : fusionner après quelques jours plutôt que quelques semaines.</li>
+      <li><b>Des commits petits</b> et ciblés.</li>
+      <li><b>Un formateur automatique</b> (Prettier) partagé par tous : il évite les conflits de mise en forme.</li>
+    </ul>
+    <div class="card">
+      <h3>Le cas de <code>package-lock.json</code></h3>
+      <p class="small">Fichier généré, souvent en conflit. Plutôt que de le résoudre à la main :</p>
+      <pre style="margin-top:10px;font-size:14px">git checkout --theirs package-lock.json
+npm install
+git add package-lock.json</pre>
+      <p class="small muted" style="margin-top:10px">On repart de la version qui arrive, puis <code>npm install</code> le régénère proprement avec tes dépendances.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Outils et réparations">
   <div class="kicker">Mettre de côté</div>
   <h2><code>git stash</code> : la poche temporaire</h2>
   <div class="grid2">
@@ -345,6 +538,29 @@ git stash list</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Outils utiles</div>
+  <h2>Récupérer un seul commit : <code>cherry-pick</code></h2>
+  <div class="grid2">
+    <pre><span class="c"># trouver le commit voulu</span>
+git log --oneline autre-branche
+
+<span class="c"># le copier sur la branche courante</span>
+git switch main
+git cherry-pick e4f5a6b
+
+<span class="c"># en cas de conflit : résoudre puis</span>
+git cherry-pick --continue
+<span class="c"># ou abandonner</span>
+git cherry-pick --abort</pre>
+    <ul class="clean small">
+      <li><code>cherry-pick</code> recopie les changements d'un commit précis sur ta branche actuelle, avec un nouveau hash.</li>
+      <li>Cas typique : une correction urgente faite sur une branche de travail, dont tu as besoin tout de suite sur <code>main</code>.</li>
+      <li>À utiliser ponctuellement : pour tout récupérer, une fusion reste plus claire.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Annuler</div>
   <h2>Quelle commande pour revenir en arrière ?</h2>
   <table>
@@ -359,6 +575,29 @@ git stash list</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Annuler</div>
+  <h2>Retrouver un travail « perdu »</h2>
+  <div class="grid2">
+    <pre>$ git reflog
+c7d8e9f HEAD@{0}: reset: moving to origin/main
+9a8b7c6 HEAD@{1}: commit: Ajoute la page contact
+e4f5a6b HEAD@{2}: commit: Ajoute le formulaire
+
+<span class="c"># créer une branche sur le commit perdu</span>
+git branch sauvetage 9a8b7c6
+
+<span class="c"># ou y revenir directement</span>
+git reset --hard 9a8b7c6</pre>
+    <ul class="clean small">
+      <li>Le <b>reflog</b> note chaque déplacement de <code>HEAD</code> pendant environ 90 jours, même après un <code>reset --hard</code> ou un rebase raté.</li>
+      <li>Repère la ligne juste avant l'erreur et récupère son hash.</li>
+      <li>Créer une branche dessus est le plus sûr : tu ne touches à rien d'autre.</li>
+      <li><b>Limite :</b> des modifications jamais commitées ne sont pas dans le reflog. Commite souvent.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="GitHub">
   <div class="kicker">Ce qui est public</div>
   <h2>L'historique n'oublie rien</h2>
   <div class="grid2">
@@ -383,6 +622,32 @@ git stash list</pre>
 
 <section class="slide">
   <div class="kicker">GitHub</div>
+  <h2>Se connecter à GitHub en SSH</h2>
+  <div class="grid2" style="grid-template-columns:1.35fr 1fr">
+    <pre style="font-size:14px"><span class="c"># 1. créer une paire de clés</span>
+ssh-keygen -t ed25519 -C <span class="s">"toi@exemple.be"</span>
+
+<span class="c"># 2. afficher la clé PUBLIQUE à copier</span>
+cat ~/.ssh/id_ed25519.pub
+
+<span class="c"># 3. la coller dans GitHub :</span>
+<span class="c">#    Settings → SSH and GPG keys → New SSH key</span>
+
+<span class="c"># 4. tester</span>
+ssh -T git@github.com
+
+<span class="c"># 5. utiliser l'adresse SSH du dépôt</span>
+git remote set-url origin git@github.com:moi/projet.git</pre>
+    <ul class="clean small">
+      <li>GitHub n'accepte plus le mot de passe du compte dans le terminal : il faut une <b>clé SSH</b>, un <b>jeton</b> ou <b>GitHub CLI</b> (<code>gh auth login</code>).</li>
+      <li>La clé <b>privée</b> (sans <code>.pub</code>) ne quitte jamais ton ordinateur.</li>
+      <li>Une clé par ordinateur : si tu en perds un, tu supprimes seulement sa clé dans GitHub.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">GitHub</div>
   <h2>Ce que GitHub ajoute à Git</h2>
   <div class="grid3">
     <div class="card"><div class="tag">PULL REQUEST</div><h3>Relire avant de fusionner</h3><p>Propose de fusionner une branche, avec la liste des changements, des commentaires et des vérifications automatiques.</p></div>
@@ -393,6 +658,135 @@ git stash list</pre>
     <li>Le <b>README.md</b> est la vitrine du dépôt : à quoi sert le projet, comment l'installer, comment le lancer.</li>
     <li>Pour s'authentifier depuis le terminal : <b>clé SSH</b> ou GitHub CLI (<code>gh auth login</code>), plus de mot de passe.</li>
   </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">GitHub</div>
+  <h2>Le cycle d'une pull request</h2>
+  <ol class="steps">
+    <li><b>Branche</b> : <code>git switch -c ajout-recherche</code>, puis commits.</li>
+    <li><b>Push</b> : <code>git push -u origin ajout-recherche</code>. GitHub propose d'ouvrir une pull request.</li>
+    <li><b>Description</b> : ce qui change, pourquoi, comment tester, captures si c'est visuel.</li>
+    <li><b>Vérifications</b> : tests automatiques, déploiement de prévisualisation, relecture.</li>
+    <li><b>Corrections</b> : de nouveaux commits sur la même branche mettent la PR à jour.</li>
+    <li><b>Fusion</b> sur <code>main</code> (merge, squash ou rebase), puis suppression de la branche.</li>
+  </ol>
+  <div class="callout"><p>Même seul sur un projet, passer par des PR donne un historique clair et une étape de relecture avant la production.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">GitHub</div>
+  <h2>Tags, versions et releases</h2>
+  <div class="grid2">
+    <div>
+      <div style="font:700 44px 'JetBrains Mono',monospace;color:var(--accent)">v2.4.1</div>
+      <table style="margin-top:14px">
+        <tr><td><b>2</b> · majeur</td><td>Changement qui casse la compatibilité</td></tr>
+        <tr><td><b>4</b> · mineur</td><td>Nouvelle fonctionnalité compatible</td></tr>
+        <tr><td><b>1</b> · correctif</td><td>Correction de bug</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:12px">C'est le <b>versionnement sémantique</b> (semver), utilisé par npm et la plupart des projets.</p>
+    </div>
+    <div>
+      <pre><span class="c"># marquer une version</span>
+git tag -a v1.0.0 -m <span class="s">"Première version"</span>
+git push origin v1.0.0
+
+<span class="c"># lister les versions</span>
+git tag</pre>
+      <ul class="clean small" style="margin-top:16px">
+        <li>Un tag est une étiquette <b>fixe</b> sur un commit, contrairement à une branche.</li>
+        <li>Sur GitHub, une <b>release</b> ajoute à un tag des notes de version et des fichiers à télécharger.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">GitHub</div>
+  <h2>Automatiser avec GitHub Actions</h2>
+  <div class="grid2">
+    <pre style="font-size:14.5px"><span class="c"># .github/workflows/verifs.yml</span>
+name: Vérifications
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build</pre>
+    <ul class="clean small">
+      <li>Un <b>workflow</b> est un fichier YAML dans <code>.github/workflows/</code>. Il s'exécute sur les serveurs de GitHub à chaque événement choisi (<code>push</code>, <code>pull_request</code>, horaire…).</li>
+      <li>Ici : à chaque push, GitHub installe les dépendances, vérifie le code et tente un build. Une croix rouge apparaît sur le commit en cas d'échec.</li>
+      <li>Les secrets (clés d'API) se déclarent dans <i>Settings → Secrets and variables</i>, jamais dans le fichier.</li>
+      <li>Gratuit dans une large limite pour les dépôts publics.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">GitHub</div>
+  <h2>Publier un site avec GitHub Pages</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li>Mets des fichiers HTML, CSS et JS dans un dépôt (un <code>index.html</code> à la racine).</li>
+      <li><i>Settings → Pages</i> → <i>Deploy from a branch</i> → <code>main</code> et <code>/ (root)</code>.</li>
+      <li>Une minute plus tard : <code>https://utilisateur.github.io/depot/</code>.</li>
+      <li>Chaque push redéploie automatiquement.</li>
+    </ol>
+    <div class="card">
+      <h3>Bon à savoir</h3>
+      <ul class="clean small">
+        <li>Uniquement des fichiers <b>statiques</b> : pas de serveur, pas de base de données.</li>
+        <li>Gratuit pour les dépôts publics.</li>
+        <li>Un fichier vide <code>.nojekyll</code> désactive le traitement Jekyll et publie les fichiers tels quels.</li>
+        <li>Un nom de domaine personnalisé se configure dans la même page, avec un CNAME dans ta zone DNS.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Synthèse">
+  <div class="kicker">Dépannage</div>
+  <h2>Erreurs fréquentes</h2>
+  <table>
+    <tr><th>Message</th><th>Signification et solution</th></tr>
+    <tr><td><code>fatal: not a git repository</code></td><td>Tu n'es pas dans le dossier du projet (ou il n'a pas de <code>git init</code>)</td></tr>
+    <tr><td><code>Your local changes would be overwritten</code></td><td>Modifications non commitées : commit ou <code>git stash</code>, puis recommence</td></tr>
+    <tr><td><code>Permission denied (publickey)</code></td><td>Clé SSH absente ou non déclarée sur GitHub</td></tr>
+    <tr><td><code>Support for password authentication was removed</code></td><td>Utiliser SSH, un jeton ou <code>gh auth login</code></td></tr>
+    <tr><td><code>refusing to merge unrelated histories</code></td><td>Le dépôt local et le distant ont été créés séparément : <code>git pull --allow-unrelated-histories</code></td></tr>
+    <tr><td><code>You are in 'detached HEAD' state</code></td><td>Tu regardes un ancien commit : <code>git switch main</code> pour revenir, ou <code>git switch -c nom</code> pour garder ce point</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>Dépôt (repo)</td><td>Un projet suivi par Git</td></tr>
+      <tr><td>Commit</td><td>Instantané enregistré du projet</td></tr>
+      <tr><td>Hash</td><td>Identifiant unique d'un commit</td></tr>
+      <tr><td>Index (staging)</td><td>Ce qui ira dans le prochain commit</td></tr>
+      <tr><td>Branche</td><td>Pointeur mobile vers un commit</td></tr>
+      <tr><td>HEAD</td><td>L'endroit où tu te trouves</td></tr>
+    </table>
+    <table>
+      <tr><td>Remote / origin</td><td>Dépôt distant (souvent GitHub)</td></tr>
+      <tr><td>Merge</td><td>Fusion de deux branches</td></tr>
+      <tr><td>Rebase</td><td>Rejouer des commits ailleurs</td></tr>
+      <tr><td>Pull request</td><td>Demande de fusion relue sur GitHub</td></tr>
+      <tr><td>Tag</td><td>Étiquette fixe, souvent une version</td></tr>
+      <tr><td>Reflog</td><td>Journal des déplacements de HEAD</td></tr>
+    </table>
+  </div>
 </section>
 
 <section class="slide">
@@ -421,6 +815,18 @@ git stash list</pre>
     <details><summary>Tu as poussé un commit qui casse le site. Comment l'annuler proprement ?</summary><p><code>git revert &lt;hash&gt;</code> crée un nouveau commit qui annule le précédent, sans réécrire l'historique partagé.</p></details>
     <details><summary>Tu veux jeter tout ton travail local et revenir exactement à la version GitHub.</summary><p><code>git fetch</code> puis <code>git reset --hard origin/main</code>. Attention : tout ce qui n'est pas poussé est perdu (sauf via <code>git reflog</code> pour les commits).</p></details>
     <details><summary>Ton <code>.env</code> apparaît sur GitHub alors qu'il est dans <code>.gitignore</code>. Pourquoi ?</summary><p>Il était déjà suivi avant l'ajout au <code>.gitignore</code>. Fais <code>git rm --cached .env</code>, commite, et régénère les secrets qu'il contenait.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Tu as créé une branche en local, mais tes collègues ne la voient pas sur GitHub. Pourquoi ?</summary><p>Elle n'a pas été poussée : <code>git push -u origin nom-de-la-branche</code>.</p></details>
+    <details><summary>Comment voir exactement ce qui partira dans ton prochain commit ?</summary><p><code>git diff --staged</code>.</p></details>
+    <details><summary>Tu as fait <code>git reset --hard</code> et perdu un commit. Comment le retrouver ?</summary><p><code>git reflog</code> pour trouver son hash, puis <code>git branch sauvetage &lt;hash&gt;</code>.</p></details>
+    <details><summary>Ton prochain changement ajoute une fonctionnalité compatible à la v1.3.2. Nouvelle version ?</summary><p><code>v1.4.0</code> : on incrémente le numéro mineur et on remet le correctif à zéro.</p></details>
+    <details><summary>« Permission denied (publickey) » au moment du push. Que faire ?</summary><p>Créer une clé SSH, ajouter la clé publique dans GitHub, tester avec <code>ssh -T git@github.com</code>, ou utiliser <code>gh auth login</code>.</p></details>
   </div>
 </section>
 

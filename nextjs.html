@@ -121,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant → intermédiaire</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> bases de React et JavaScript</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Les bases">
   <div class="kicker">Le principe</div>
   <h2>Next.js = React + tout ce qui manque autour</h2>
   <p class="lead">React sait afficher des composants. Next.js ajoute ce qu'il faut pour en faire un site complet.</p>
@@ -147,6 +147,35 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Démarrer</div>
+  <h2>Créer et lancer un projet</h2>
+  <div class="grid2">
+    <pre><span class="c"># créer le projet (questions : TypeScript,</span>
+<span class="c"># ESLint, Tailwind, dossier src/…)</span>
+npx create-next-app@latest mon-projet
+cd mon-projet
+
+<span class="c"># développer : http://localhost:3000</span>
+npm run dev
+
+<span class="c"># préparer la version de production</span>
+npm run build
+npm run start</pre>
+    <div>
+      <table>
+        <tr><th>Élément</th><th>Rôle</th></tr>
+        <tr><td><code>app/</code></td><td>Les routes et les pages</td></tr>
+        <tr><td><code>public/</code></td><td>Fichiers servis tels quels (images, favicon)</td></tr>
+        <tr><td><code>next.config.ts</code></td><td>Configuration de Next.js</td></tr>
+        <tr><td><code>package.json</code></td><td>Dépendances et scripts</td></tr>
+        <tr><td><code>.env.local</code></td><td>Variables secrètes locales</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:14px"><code>npm run dev</code> recharge à chaque sauvegarde. <code>npm run build</code> détecte les erreurs de types et de build : lance-le avant chaque déploiement.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Routes et navigation">
   <div class="kicker">Routing</div>
   <h2>Un dossier = un segment d'URL</h2>
   <div class="grid2">
@@ -188,6 +217,36 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Routing</div>
+  <h2>Des layouts imbriqués</h2>
+  <div class="grid2">
+    <pre><span class="c">// app/layout.tsx : le cadre de tout le site</span>
+<span class="k">export default function</span> RootLayout(
+  { children }: { children: React.ReactNode }
+) {
+  <span class="k">return</span> (
+    &lt;html lang=<span class="s">"fr"</span>&gt;
+      &lt;body&gt;&lt;Navbar /&gt;{children}&lt;/body&gt;
+    &lt;/html&gt;
+  );
+}
+
+<span class="c">// app/compte/layout.tsx : seulement sous /compte</span>
+<span class="k">export default function</span> CompteLayout({ children }) {
+  <span class="k">return</span> &lt;div className=<span class="s">"flex"</span>&gt;
+    &lt;MenuCompte /&gt;&lt;main&gt;{children}&lt;/main&gt;
+  &lt;/div&gt;;
+}</pre>
+    <ul class="clean small">
+      <li>Les layouts s'<b>emboîtent</b> : <code>/compte/profil</code> est affiché dans le layout de <code>compte</code>, lui-même dans le layout racine.</li>
+      <li>Un layout <b>ne se recharge pas</b> quand on change de page à l'intérieur : la navbar garde son état, le menu ne clignote pas.</li>
+      <li>Un groupe <code>(nom)</code> permet d'avoir des layouts différents pour des sections du site sans changer les URL.</li>
+      <li>Les métadonnées d'un layout s'appliquent à toutes ses pages, qui peuvent les compléter.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Routes dynamiques</div>
   <h2>Lire les paramètres de l'URL</h2>
   <div class="grid2">
@@ -217,6 +276,47 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Routing</div>
+  <h2>Naviguer et rediriger</h2>
+  <table>
+    <tr><th>Besoin</th><th>Où</th><th>Outil</th></tr>
+    <tr><td>Un lien cliquable</td><td>Partout</td><td><code>&lt;Link href="/blog"&gt;</code> (<code>next/link</code>)</td></tr>
+    <tr><td>Changer de page après un clic ou un événement</td><td>Client Component</td><td><code>const router = useRouter(); router.push("/merci")</code></td></tr>
+    <tr><td>Rediriger avant d'afficher</td><td>Serveur (page, action)</td><td><code>redirect("/connexion")</code> (<code>next/navigation</code>)</td></tr>
+    <tr><td>Afficher la page 404</td><td>Serveur</td><td><code>notFound()</code></td></tr>
+    <tr><td>Savoir sur quelle page on est</td><td>Client Component</td><td><code>usePathname()</code></td></tr>
+    <tr><td>Recharger les données de la page</td><td>Client Component</td><td><code>router.refresh()</code></td></tr>
+  </table>
+  <div class="callout"><p>Dans le dossier App Router, <code>useRouter</code> s'importe de <code>next/navigation</code>, pas de <code>next/router</code> (c'est l'ancien Pages Router).</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Routing</div>
+  <h2>Générer à l'avance les pages dynamiques</h2>
+  <div class="grid2">
+    <pre><span class="c">// app/blog/[slug]/page.tsx</span>
+<span class="k">export async function</span> generateStaticParams() {
+  <span class="k">const</span> articles = <span class="k">await</span> getArticles();
+  <span class="k">return</span> articles.map(a =&gt; ({ slug: a.slug }));
+}
+
+<span class="k">export async function</span> generateMetadata(
+  { params }: Props
+) {
+  <span class="k">const</span> { slug } = <span class="k">await</span> params;
+  <span class="k">const</span> a = <span class="k">await</span> getArticle(slug);
+  <span class="k">return</span> { title: a.titre, description: a.resume };
+}</pre>
+    <ul class="clean small">
+      <li><code>generateStaticParams</code> liste les valeurs possibles de <code>[slug]</code> : Next.js génère ces pages <b>au build</b>, elles s'affichent instantanément.</li>
+      <li>Idéal pour un blog, une documentation, un catalogue qui change peu.</li>
+      <li>Une valeur absente de la liste est générée à la première visite (comportement par défaut).</li>
+      <li><code>generateMetadata</code> donne à chaque page son propre titre et sa description pour le SEO.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Rendu">
   <div class="kicker">Le concept central</div>
   <h2>Server Components vs Client Components</h2>
   <table>
@@ -266,6 +366,77 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Rendu</div>
+  <h2>Statique, dynamique ou en streaming</h2>
+  <table>
+    <tr><th>Mode</th><th>Quand la page est calculée</th><th>Pour</th></tr>
+    <tr><td>Statique</td><td>Une fois, au build (ou à la revalidation)</td><td>Pages qui changent peu : accueil, articles, documentation</td></tr>
+    <tr><td>Dynamique</td><td>À chaque visite</td><td>Contenu propre à l'utilisateur : panier, compte, tableau de bord</td></tr>
+    <tr><td>Streaming</td><td>À chaque visite, envoyé morceau par morceau</td><td>Pages lentes : on affiche le cadre tout de suite, les données arrivent ensuite</td></tr>
+  </table>
+  <ul class="clean small" style="margin-top:20px">
+    <li>Une page devient <b>dynamique</b> dès qu'elle lit les cookies, les en-têtes, <code>searchParams</code>, ou fait un <code>fetch</code> non mis en cache.</li>
+    <li><code>npm run build</code> affiche, pour chaque route, si elle est statique (○) ou dynamique (ƒ).</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Rendu</div>
+  <h2>Le streaming avec <code>Suspense</code></h2>
+  <div class="grid2">
+    <pre><span class="k">import</span> { Suspense } <span class="k">from</span> <span class="s">"react"</span>;
+
+<span class="k">export default function</span> Page() {
+  <span class="k">return</span> (
+    &lt;main&gt;
+      &lt;h1&gt;Tableau de bord&lt;/h1&gt;
+      &lt;Resume /&gt;              <span class="c">{/* rapide */}</span>
+
+      &lt;Suspense fallback={&lt;p&gt;Chargement…&lt;/p&gt;}&gt;
+        &lt;StatistiquesLentes /&gt; <span class="c">{/* lent */}</span>
+      &lt;/Suspense&gt;
+    &lt;/main&gt;
+  );
+}</pre>
+    <ul class="clean small">
+      <li>Sans <code>Suspense</code>, toute la page attend la requête la plus lente.</li>
+      <li>Avec, le reste s'affiche tout de suite et le <code>fallback</code> est remplacé dès que les données arrivent.</li>
+      <li><code>loading.tsx</code> fait la même chose pour une page entière, automatiquement.</li>
+      <li>On peut avoir plusieurs <code>Suspense</code> indépendants sur une même page.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Rendu</div>
+  <h2>Gérer les erreurs proprement</h2>
+  <div class="grid2">
+    <pre><span class="c">// app/blog/error.tsx</span>
+<span class="s">"use client"</span>;
+
+<span class="k">export default function</span> Erreur({ error, reset }: {
+  error: Error; reset: () =&gt; <span class="k">void</span>;
+}) {
+  <span class="k">return</span> (
+    &lt;div&gt;
+      &lt;h2&gt;Impossible de charger le blog&lt;/h2&gt;
+      &lt;button onClick={() =&gt; reset()}&gt;
+        Réessayer
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+    <ul class="clean small">
+      <li><code>error.tsx</code> capture les erreurs de sa route et de ses sous-routes : le reste du site (navbar, layout) reste affiché.</li>
+      <li><code>reset()</code> retente d'afficher la page.</li>
+      <li><code>not-found.tsx</code> personnalise la 404, déclenchée par <code>notFound()</code> ou une URL inconnue.</li>
+      <li><code>global-error.tsx</code> attrape les erreurs du layout racine lui-même.</li>
+      <li>En production, le message détaillé est masqué : regarde les journaux du serveur pour la cause.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Données">
   <div class="kicker">Données</div>
   <h2>Récupérer des données côté serveur</h2>
   <div class="grid2">
@@ -291,6 +462,32 @@ td:first-child{font-weight:600}
       <li>Toujours vérifier <code>res.ok</code> : <code>fetch</code> ne lève pas d'erreur sur un 404 ou un 500.</li>
       <li>Une erreur levée affiche <code>error.tsx</code> ; pendant l'attente, <code>loading.tsx</code>.</li>
       <li>Plusieurs requêtes indépendantes ? Lance-les en parallèle avec <code>Promise.all</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Données</div>
+  <h2>Accéder à une base de données</h2>
+  <div class="grid2" style="grid-template-columns:1.45fr 1fr">
+    <pre style="font-size:14px"><span class="c">// lib/db.ts</span>
+<span class="k">import</span> <span class="s">"server-only"</span>;
+<span class="k">import</span> { PrismaClient } <span class="k">from</span> <span class="s">"@prisma/client"</span>;
+
+<span class="k">const</span> g = globalThis <span class="k">as</span> { prisma?: PrismaClient };
+<span class="k">export const</span> db = g.prisma ?? <span class="k">new</span> PrismaClient();
+<span class="k">if</span> (process.env.NODE_ENV !== <span class="s">"production"</span>) g.prisma = db;
+
+<span class="c">// app/films/page.tsx</span>
+<span class="k">const</span> films = <span class="k">await</span> db.film.findMany({
+  where: { vu: <span class="k">true</span> },
+  orderBy: { date: <span class="s">"desc"</span> },
+});</pre>
+    <ul class="clean small">
+      <li>Un <b>ORM</b> (Prisma, Drizzle) traduit des appels JavaScript typés en requêtes SQL.</li>
+      <li>On interroge la base <b>directement</b> dans un Server Component ou une Server Action : pas besoin de passer par une route API.</li>
+      <li><code>import "server-only"</code> provoque une erreur de build si ce fichier est importé par erreur côté client.</li>
+      <li>Le motif <code>globalThis</code> évite d'ouvrir une nouvelle connexion à chaque rechargement en développement.</li>
     </ul>
   </div>
 </section>
@@ -338,7 +535,7 @@ td:first-child{font-weight:600}
   </div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Back-end">
   <div class="kicker">Back-end intégré</div>
   <h2>Route Handlers : tes propres API</h2>
   <div class="grid2">
@@ -403,6 +600,39 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Mutations</div>
+  <h2>Valider et renvoyer un état</h2>
+  <div class="grid2" style="grid-template-columns:1.4fr 1fr">
+    <pre style="font-size:13.5px"><span class="c">// actions.ts</span>
+<span class="s">"use server"</span>;
+<span class="k">import</span> { z } <span class="k">from</span> <span class="s">"zod"</span>;
+<span class="k">const</span> Schema = z.object({ email: z.string().email() });
+
+<span class="k">export async function</span> inscrire(_prev: any, data: FormData) {
+  <span class="k">const</span> r = Schema.safeParse({ email: data.get(<span class="s">"email"</span>) });
+  <span class="k">if</span> (!r.success) <span class="k">return</span> { erreur: <span class="s">"E-mail invalide"</span> };
+  <span class="k">await</span> db.abonne.create({ data: r.data });
+  <span class="k">return</span> { ok: <span class="k">true</span> };
+}
+
+<span class="c">// Formulaire.tsx</span>
+<span class="s">"use client"</span>;
+<span class="k">const</span> [etat, action, enCours] = useActionState(inscrire, {});
+&lt;form action={action}&gt;
+  &lt;input name=<span class="s">"email"</span> /&gt;
+  &lt;button disabled={enCours}&gt;S'inscrire&lt;/button&gt;
+  {etat.erreur &amp;&amp; &lt;p&gt;{etat.erreur}&lt;/p&gt;}
+&lt;/form&gt;</pre>
+    <ul class="clean small">
+      <li><b>Zod</b> décrit la forme attendue des données et les vérifie côté serveur. Ne fais jamais confiance aux seules vérifications du navigateur.</li>
+      <li><code>useActionState</code> (React 19) donne le dernier résultat de l'action et un booléen « en cours ».</li>
+      <li>L'action renvoie un objet simple : succès, ou message d'erreur à afficher.</li>
+      <li>Après une modification, <code>revalidatePath</code> ou <code>redirect</code> mettent la page à jour.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Configuration et sécurité">
   <div class="kicker">Configuration</div>
   <h2>Variables d'environnement et secrets</h2>
   <div class="grid2">
@@ -423,6 +653,56 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>Authentification : les principes</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Après connexion, l'utilisateur reçoit une <b>session</b>, stockée dans un cookie <code>httpOnly</code> (illisible par le JavaScript de la page).</li>
+        <li>À chaque requête, le serveur lit ce cookie pour savoir <b>qui</b> fait la demande.</li>
+        <li>Ne réinvente pas cette partie : utilise une bibliothèque éprouvée (Auth.js, Better Auth) ou un service (Clerk, Supabase Auth).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Où vérifier les droits</h3>
+      <ol class="steps small">
+        <li>Dans chaque <b>Server Action</b> et <b>Route Handler</b> qui modifie ou lit des données privées.</li>
+        <li>Dans les pages protégées : <code>redirect("/connexion")</code> si pas de session.</li>
+        <li>Optionnellement dans le <b>proxy</b> (voir slide suivante) pour rediriger tôt.</li>
+      </ol>
+      <p class="small muted" style="margin-top:10px">Cacher un bouton n'est pas une protection : la vérification doit toujours se faire côté serveur.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>Le proxy (ex-middleware)</h2>
+  <div class="grid2" style="grid-template-columns:1.35fr 1fr">
+    <pre style="font-size:14px"><span class="c">// proxy.ts (middleware.ts avant Next.js 16)</span>
+<span class="k">import</span> { NextResponse } <span class="k">from</span> <span class="s">"next/server"</span>;
+<span class="k">import type</span> { NextRequest } <span class="k">from</span> <span class="s">"next/server"</span>;
+
+<span class="k">export function</span> proxy(req: NextRequest) {
+  <span class="k">const</span> session = req.cookies.get(<span class="s">"session"</span>);
+  <span class="k">if</span> (!session) {
+    <span class="k">return</span> NextResponse.redirect(
+      <span class="k">new</span> URL(<span class="s">"/connexion"</span>, req.url));
+  }
+  <span class="k">return</span> NextResponse.next();
+}
+
+<span class="k">export const</span> config = { matcher: [<span class="s">"/compte/:path*"</span>] };</pre>
+    <ul class="clean small">
+      <li>Un fichier à la racine qui s'exécute <b>avant</b> chaque requête correspondant au <code>matcher</code>.</li>
+      <li>Usages : redirections, langue, protection rapide de sections entières.</li>
+      <li>Depuis Next.js 16, le fichier s'appelle <code>proxy.ts</code> et la fonction <code>proxy</code>. Les versions précédentes utilisent <code>middleware.ts</code>.</li>
+      <li>Garde-le léger : il s'exécute très souvent. La vraie vérification reste dans les actions et les pages.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Outils et mise en ligne">
   <div class="kicker">Outils intégrés</div>
   <h2>Liens, images et métadonnées</h2>
   <div class="grid3">
@@ -433,6 +713,53 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Outils intégrés</div>
+  <h2>Styles et polices</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <tr><th>Méthode</th><th>Principe</th></tr>
+        <tr><td><code>globals.css</code></td><td>Styles globaux, importés dans le layout racine</td></tr>
+        <tr><td>CSS Modules</td><td><code>Bouton.module.css</code> : classes limitées au composant</td></tr>
+        <tr><td>Tailwind</td><td>Classes utilitaires, proposé à la création du projet</td></tr>
+      </table>
+    </div>
+    <div>
+      <pre><span class="c">// app/layout.tsx</span>
+<span class="k">import</span> { Inter } <span class="k">from</span> <span class="s">"next/font/google"</span>;
+<span class="k">const</span> inter = Inter({ subsets: [<span class="s">"latin"</span>] });
+
+&lt;body className={inter.className}&gt;</pre>
+      <ul class="clean small" style="margin-top:14px">
+        <li><code>next/font</code> télécharge la police au build et l'héberge avec le site : pas de requête vers Google, pas de saut de texte au chargement.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Mise en ligne</div>
+  <h2>Build et déploiement</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><code>npm run build</code> en local : corrige toutes les erreurs avant de pousser.</li>
+      <li>Pousse le code sur GitHub.</li>
+      <li>Relie le dépôt à un hébergeur qui gère Next.js (Vercel, Netlify, un serveur Node, Docker…).</li>
+      <li>Déclare les <b>variables d'environnement</b> chez l'hébergeur.</li>
+      <li>Chaque push sur <code>main</code> déploie la production ; chaque branche peut avoir une prévisualisation.</li>
+      <li>Branche ton nom de domaine (voir le cours DNS).</li>
+    </ol>
+    <div class="card">
+      <h3>Export statique</h3>
+      <p class="small">Un site sans serveur (pas de Server Actions, pas de rendu dynamique) peut être exporté en fichiers HTML :</p>
+      <pre style="margin-top:10px;font-size:14px"><span class="c">// next.config.ts</span>
+<span class="k">export default</span> { output: <span class="s">"export"</span> };</pre>
+      <p class="small muted" style="margin-top:10px">Le dossier <code>out/</code> s'héberge alors n'importe où, même sur GitHub Pages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Synthèse">
   <div class="kicker">Synthèse</div>
   <h2>Où mettre le code ?</h2>
   <table>
@@ -444,6 +771,43 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
     <tr><td>Données qui suivent la frappe en direct</td><td>Client Component + SWR / TanStack Query → ma route API</td></tr>
     <tr><td>Une clé secrète</td><td>Variable sans <code>NEXT_PUBLIC_</code>, utilisée côté serveur uniquement</td></tr>
   </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Dépannage</div>
+  <h2>Erreurs fréquentes</h2>
+  <table>
+    <tr><th>Message</th><th>Cause et solution</th></tr>
+    <tr><td><code>window is not defined</code></td><td>Code navigateur exécuté côté serveur : le mettre dans un Client Component, dans un <code>useEffect</code></td></tr>
+    <tr><td>Hydration failed / mismatch</td><td>Le HTML du serveur diffère du premier rendu client (date, <code>Math.random</code>, extension du navigateur) : rendre la valeur stable ou l'afficher après montage</td></tr>
+    <tr><td><code>useState</code> only works in Client Components</td><td>Ajouter <code>"use client"</code>, ou extraire la partie interactive</td></tr>
+    <tr><td>Variable d'environnement <code>undefined</code></td><td>Lue côté client sans <code>NEXT_PUBLIC_</code>, oubliée chez l'hébergeur, ou serveur pas redémarré</td></tr>
+    <tr><td>Données pas à jour</td><td>Cache : vérifier les options de <code>fetch</code> et revalider après modification</td></tr>
+    <tr><td>Erreur de build mais OK en dev</td><td>Erreurs de types ou d'ESLint : lire la sortie de <code>npm run build</code></td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>App Router</td><td>Le système de routes basé sur <code>app/</code></td></tr>
+      <tr><td>Server Component</td><td>Composant exécuté uniquement sur le serveur</td></tr>
+      <tr><td>Client Component</td><td>Composant interactif, marqué <code>"use client"</code></td></tr>
+      <tr><td>Hydratation</td><td>Le navigateur rend interactif le HTML reçu</td></tr>
+      <tr><td>Layout</td><td>Cadre partagé par plusieurs pages</td></tr>
+      <tr><td>Route Handler</td><td>Point d'API dans <code>route.ts</code></td></tr>
+    </table>
+    <table>
+      <tr><td>Server Action</td><td>Fonction serveur appelée par un formulaire</td></tr>
+      <tr><td>Revalidation</td><td>Rafraîchir des données mises en cache</td></tr>
+      <tr><td>Streaming</td><td>Envoi progressif de la page</td></tr>
+      <tr><td>SSG</td><td>Génération statique au build</td></tr>
+      <tr><td>ORM</td><td>Bibliothèque qui traduit du code en SQL</td></tr>
+      <tr><td>Proxy</td><td>Code exécuté avant chaque requête</td></tr>
+    </table>
+  </div>
 </section>
 
 <section class="slide">
@@ -472,6 +836,18 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
     <details><summary>Pourquoi la clé <code>NEXT_PUBLIC_API_KEY</code> est-elle une mauvaise idée ?</summary><p>Le préfixe <code>NEXT_PUBLIC_</code> l'inclut dans le JavaScript envoyé au navigateur : n'importe qui peut la lire.</p></details>
     <details><summary>Mes données ne se mettent pas à jour après une modification. Pistes ?</summary><p>Vérifier les options de cache du <code>fetch</code> selon ta version, et appeler <code>revalidatePath</code> ou <code>revalidateTag</code> après la modification.</p></details>
     <details><summary>Un formulaire « s'inscrire à la newsletter » : Route Handler ou Server Action ?</summary><p>Server Action : le formulaire est sur ton site et n'a pas besoin d'API publique. Le Route Handler sert si un client externe doit appeler l'URL.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Tu veux un menu latéral sur toutes les pages sous <code>/admin</code>, et seulement là. Où le mettre ?</summary><p>Dans <code>app/admin/layout.tsx</code>, qui entoure toutes les pages de ce dossier.</p></details>
+    <details><summary>Une page affiche un résumé rapide et des statistiques qui mettent 3 secondes. Comment éviter d'attendre ?</summary><p>Mettre les statistiques dans un composant séparé, entouré de <code>&lt;Suspense fallback=…&gt;</code>.</p></details>
+    <details><summary>Où vérifier qu'un utilisateur a le droit de supprimer un article ?</summary><p>Dans la Server Action (ou le Route Handler) qui supprime, côté serveur. Masquer le bouton ne suffit pas.</p></details>
+    <details><summary>Erreur « Hydration failed » sur une page qui affiche l'heure. Pourquoi ?</summary><p>L'heure calculée sur le serveur diffère de celle du navigateur au premier rendu. Afficher l'heure après le montage du composant (dans un <code>useEffect</code>).</p></details>
+    <details><summary>Tu veux pré-générer toutes les pages d'un blog au build. Quelle fonction ?</summary><p><code>generateStaticParams</code>, qui renvoie la liste des <code>slug</code>.</p></details>
   </div>
 </section>
 
