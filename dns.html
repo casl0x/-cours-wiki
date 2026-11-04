@@ -92,6 +92,23 @@ td:first-child{font-weight:600}
 #prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
 #count{font:500 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
 @media (max-width:560px){#bar .opt{display:none}}
+/* sommaire */
+.toc-list{list-style:none;columns:3;column-gap:26px;column-fill:auto;height:478px}
+.toc-list.dense{columns:4;column-gap:20px}
+.toc-list li{break-inside:avoid;margin-bottom:2px}
+.toc-list a,#tocpanel a{display:flex;gap:10px;align-items:baseline;padding:4px 8px;border-radius:7px;color:var(--ink);text-decoration:none;font-size:15px;line-height:1.28}
+.toc-list.dense a{font-size:14px;padding:4px 6px}
+.toc-list a:hover,#tocpanel a:hover,#tocpanel a.cur{background:var(--accent-soft)}
+.toc-list .n,#tocpanel .n{font:600 13px "JetBrains Mono",ui-monospace,monospace;color:var(--accent);min-width:24px;flex:none}
+.toc-list .part,#tocpanel .part{display:block;font:600 11.5px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 8px 3px}
+.toc-list li:first-child .part{padding-top:0}
+#tocpanel{position:fixed;inset:0 0 52px 0;background:var(--bg);overflow-y:auto;padding:28px 16px 40px;display:none;z-index:5}
+#tocpanel.open{display:block}
+#tocpanel .in{max-width:760px;margin:0 auto}
+#tocpanel h2{font-size:30px;margin-bottom:14px}
+#tocpanel ol{list-style:none;columns:2;column-gap:24px}
+#tocpanel li{break-inside:avoid}
+@media (max-width:640px){#tocpanel ol{columns:1}}
 </style>
 </head>
 <body>
@@ -104,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~45 min</span><span><b>Prérequis</b> aucun</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -117,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Les bases">
   <div class="kicker">Le principe</div>
   <h2>Le DNS, c'est l'annuaire d'Internet</h2>
   <p class="lead">Les machines communiquent avec des <b>adresses IP</b> (<code>216.58.213.67</code>). Les humains retiennent des <b>noms</b> (<code>google.be</code>). Le DNS (<i>Domain Name System</i>) traduit l'un en l'autre.</p>
@@ -127,6 +144,29 @@ td:first-child{font-weight:600}
     <div class="card"><div class="tag">NOM</div><h3>Lisible</h3><p class="muted"><code>www.exemple.be</code><br>Ce que l'on tape, ce que l'on retient.</p></div>
   </div>
   <div class="callout"><p><b>Idée clé :</b> configurer un domaine, c'est simplement écrire dans l'annuaire « ce nom → cette adresse ».</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le principe</div>
+  <h2>Les adresses IP en pratique</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <tr><th>Type</th><th>Exemple</th><th>Visible depuis Internet ?</th></tr>
+        <tr><td>IPv4 publique</td><td><code>81.247.12.4</code></td><td>Oui</td></tr>
+        <tr><td>IPv4 privée</td><td><code>192.168.1.20</code></td><td>Non, réseau local seulement</td></tr>
+        <tr><td>IPv6</td><td><code>2a02:a03f::1</code></td><td>Oui, en général</td></tr>
+        <tr><td>Boucle locale</td><td><code>127.0.0.1</code></td><td>Non : « cette machine »</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:14px">Plages privées : <code>10.x.x.x</code>, <code>172.16</code> à <code>172.31.x.x</code>, <code>192.168.x.x</code>.</p>
+    </div>
+    <ul class="clean small">
+      <li>Il n'existe qu'environ 4,3 milliards d'adresses IPv4 : elles sont épuisées. D'où les adresses <b>privées</b> chez toi, partagées derrière l'adresse publique de ta box (le <b>NAT</b>).</li>
+      <li>IPv6 offre un nombre d'adresses pratiquement illimité, et se déploie progressivement.</li>
+      <li>Un site peut avoir une adresse IPv4 (enregistrement A) <b>et</b> IPv6 (AAAA). Les deux doivent mener au même serveur.</li>
+      <li>Un même serveur héberge souvent des milliers de sites : c'est le <b>nom</b> demandé qui lui dit lequel servir.</li>
+    </ul>
+  </div>
 </section>
 
 <section class="slide">
@@ -163,6 +203,53 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Les acteurs</div>
+  <h2>Registres, registrars et extensions</h2>
+  <div class="flow">
+    <div class="node"><b>ICANN</b><span>Coordonne les noms et les extensions au niveau mondial</span></div><div class="arr">→</div>
+    <div class="node"><b>Registre</b><span>Gère une extension : DNS Belgium (.be), EURid (.eu), Verisign (.com)</span></div><div class="arr">→</div>
+    <div class="node hl"><b>Registrar</b><span>Te vend le nom : OVH, Gandi, Cloudflare…</span></div><div class="arr">→</div>
+    <div class="node"><b>Toi</b><span>Le titulaire du nom</span></div>
+  </div>
+  <div class="grid2">
+    <ul class="clean small">
+      <li><b>Extensions nationales</b> (ccTLD) : <code>.be</code>, <code>.fr</code>, <code>.de</code>. Elles inspirent confiance localement.</li>
+      <li><b>Extensions génériques</b> (gTLD) : <code>.com</code>, <code>.org</code>, <code>.dev</code>, <code>.shop</code>…</li>
+    </ul>
+    <ul class="clean small">
+      <li>Le <b>WHOIS / RDAP</b> indique qui gère un nom. Pour les particuliers en Europe, les données personnelles y sont masquées.</li>
+      <li>Certaines extensions imposent HTTPS (<code>.dev</code>, <code>.app</code>) ou des conditions de résidence.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les acteurs</div>
+  <h2>Acheter et gérer un nom de domaine</h2>
+  <div class="grid2">
+    <div>
+      <h3>Au moment de l'achat</h3>
+      <ul class="clean small">
+        <li>Un nom <b>court</b>, facile à épeler au téléphone, sans tiret si possible.</li>
+        <li>Active le <b>renouvellement automatique</b> : un domaine expiré peut être racheté par quelqu'un d'autre.</li>
+        <li>Utilise une adresse e-mail que tu consulteras encore dans 10 ans.</li>
+        <li>Compare le prix de <b>renouvellement</b>, pas seulement celui de la première année.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Changer de registrar (transfert)</h3>
+      <ol class="steps small">
+        <li>Désactive le <b>verrou de transfert</b> chez l'ancien registrar.</li>
+        <li>Récupère le <b>code d'autorisation</b> (AuthCode / EPP).</li>
+        <li>Lance le transfert chez le nouveau, avec ce code.</li>
+        <li>Vérifie que les serveurs DNS et la zone sont toujours corrects.</li>
+      </ol>
+      <p class="small muted" style="margin-top:10px">Pour les <code>.com</code>, un transfert est souvent bloqué pendant 60 jours après un achat.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="La zone DNS">
   <div class="kicker">Anatomie d'un nom</div>
   <h2>Racine, sous-domaines et zone</h2>
   <div style="font:700 54px 'Space Grotesk',Inter,system-ui,sans-serif;letter-spacing:-.01em;margin:6px 0 26px">
@@ -178,6 +265,27 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Anatomie d'un nom</div>
+  <h2>Les sous-domaines en pratique</h2>
+  <div class="grid2">
+    <div>
+      <p>Un sous-domaine ne coûte rien : il suffit d'ajouter un enregistrement dans ta zone. Chacun peut pointer vers un service différent.</p>
+      <pre style="margin-top:18px">@      A      76.76.21.21       <span class="c">; site principal</span>
+www    CNAME  cname.hebergeur.com.
+blog   CNAME  monblog.plateforme.com.
+app    CNAME  mon-app.autrehebergeur.app.
+shop   CNAME  shops.boutique.com.</pre>
+    </div>
+    <ul class="clean small">
+      <li>Usages courants : <code>blog.</code>, <code>app.</code>, <code>shop.</code>, <code>status.</code>, <code>mail.</code>.</li>
+      <li>Un <b>joker</b> (<code>*</code>) répond pour tous les sous-domaines non définis. Pratique, mais à utiliser avec prudence.</li>
+      <li>Les sous-domaines techniques commencent souvent par un tiret bas : <code>_dmarc</code>, <code>_vercel</code>, <code>selecteur._domainkey</code>. Ils servent aux vérifications, pas aux visiteurs.</li>
+      <li>Chaque sous-domaine utilisé en HTTPS a besoin d'un certificat : l'hébergeur s'en charge s'il est bien déclaré chez lui.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Enregistrements</div>
   <h2>Les types d'enregistrement essentiels</h2>
   <table>
@@ -190,6 +298,27 @@ td:first-child{font-weight:600}
     <tr><td>NS</td><td>Quels serveurs font autorité</td><td><code>@  NS  ns1.fournisseur.com.</code></td></tr>
   </table>
   <p class="small muted" style="margin-top:16px">Le point final dans <code>cname.hebergeur.com.</code> signifie « nom complet ». Sans lui, certains fournisseurs ajoutent ton domaine à la fin.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Enregistrements</div>
+  <h2>À quoi ressemble une zone complète</h2>
+  <pre style="font-size:15px">$ORIGIN exemple.be.
+$TTL 3600
+@     IN  SOA   ns1.fournisseur.com. admin.exemple.be. ( 2026110401 7200 3600 1209600 300 )
+@     IN  NS    ns1.fournisseur.com.
+@     IN  NS    ns2.fournisseur.com.
+@     IN  A     76.76.21.21
+www   IN  CNAME cname.hebergeur.com.
+@     IN  MX    10 mx1.mail.fournisseur.net.
+@     IN  MX    20 mx2.mail.fournisseur.net.
+@     IN  TXT   <span class="s">"v=spf1 include:mail.fournisseur.net ~all"</span>
+_dmarc IN TXT   <span class="s">"v=DMARC1; p=none; rua=mailto:dmarc@exemple.be"</span></pre>
+  <ul class="clean small" style="margin-top:16px">
+    <li>Le <b>SOA</b> (Start of Authority) décrit la zone : serveur principal, contact, numéro de version et délais. L'interface de ton fournisseur le gère pour toi.</li>
+    <li>Chaque ligne : <b>nom</b>, (TTL), <b>classe</b> (<code>IN</code>), <b>type</b>, <b>valeur</b>. Les interfaces web présentent exactement ces colonnes.</li>
+    <li>Le nombre devant un MX est une <b>priorité</b> : le plus petit est essayé en premier.</li>
+  </ul>
 </section>
 
 <section class="slide">
@@ -213,6 +342,28 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Enregistrements</div>
+  <h2>Les e-mails : MX, SPF, DKIM, DMARC</h2>
+  <table>
+    <tr><th>Enregistrement</th><th>Rôle</th><th>Forme</th></tr>
+    <tr><td>MX</td><td>Où <b>livrer</b> le courrier destiné au domaine</td><td><code>@ MX 10 mx1.fournisseur.net.</code></td></tr>
+    <tr><td>SPF (TXT)</td><td>Quels serveurs ont le droit d'<b>envoyer</b> au nom du domaine</td><td><code>"v=spf1 include:… ~all"</code></td></tr>
+    <tr><td>DKIM (TXT)</td><td>Clé publique pour vérifier la <b>signature</b> des messages</td><td><code>selecteur._domainkey</code></td></tr>
+    <tr><td>DMARC (TXT)</td><td>Que faire si SPF ou DKIM échoue, et où envoyer les rapports</td><td><code>_dmarc "v=DMARC1; p=none; …"</code></td></tr>
+  </table>
+  <div class="grid2" style="margin-top:22px">
+    <ul class="clean small">
+      <li><b>Un seul</b> enregistrement SPF par domaine : s'il faut plusieurs services, on les combine dans le même avec plusieurs <code>include:</code>.</li>
+      <li>Les valeurs exactes viennent de ton fournisseur d'e-mail : copie-les sans les modifier.</li>
+    </ul>
+    <ul class="clean small">
+      <li>Sans SPF, DKIM et DMARC, tes e-mails ont de grandes chances d'arriver en <b>spam</b>, voire d'être refusés par les grands fournisseurs.</li>
+      <li>Commence DMARC en <code>p=none</code> (observation), puis durcis en <code>quarantine</code> ou <code>reject</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Qui fait autorité ?</div>
   <h2>Changer les serveurs DNS (NS)</h2>
   <p class="lead">Chez le registrar, tu choisis <b>quels serveurs NS</b> tiennent ta zone. C'est l'interrupteur principal.</p>
@@ -223,7 +374,7 @@ td:first-child{font-weight:600}
   <div class="callout warn"><p><b>Attention aux e-mails :</b> en changeant de NS, recrée tes enregistrements <b>MX</b>, SPF et DKIM chez le nouveau fournisseur, sinon le courrier s'arrête. Et si le domaine est en « parking », les NS de parking ignorent tes modifications.</p></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Délais, preuves et sécurité">
   <div class="kicker">Temps d'attente</div>
   <h2>TTL et « propagation »</h2>
   <div class="grid2">
@@ -245,6 +396,31 @@ td:first-child{font-weight:600}
     </div>
   </div>
   <div class="callout"><p>La « propagation » n'est pas une diffusion : ce sont des caches qui expirent un par un. Teste avec plusieurs résolveurs avant de conclure.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Temps d'attente</div>
+  <h2>Les caches, couche par couche</h2>
+  <div class="flow">
+    <div class="node"><b>Navigateur</b><span>Garde ses propres réponses quelques minutes</span></div><div class="arr">→</div>
+    <div class="node"><b>Système</b><span>Windows, macOS et Linux ont un cache DNS</span></div><div class="arr">→</div>
+    <div class="node"><b>Box</b><span>Souvent un petit résolveur intégré</span></div><div class="arr">→</div>
+    <div class="node hl"><b>Résolveur</b><span>FAI, 1.1.1.1, 8.8.8.8 : respecte le TTL</span></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <h3>Vider ce qui peut l'être</h3>
+      <pre style="margin-top:10px"><span class="c"># Windows</span>
+ipconfig /flushdns
+<span class="c"># macOS</span>
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder</pre>
+    </div>
+    <ul class="clean small">
+      <li>Le cache du résolveur de ton FAI ne se vide pas à la main : il faut attendre le TTL, ou tester avec un autre résolveur.</li>
+      <li><b>Cache négatif</b> : si tu as visité un nom <b>avant</b> de le créer, la réponse « n'existe pas » est elle aussi mise en cache.</li>
+      <li>Une fenêtre de navigation privée ou un autre appareil (en 4G) donne un avis neuf.</li>
+    </ul>
+  </div>
 </section>
 
 <section class="slide">
@@ -290,6 +466,38 @@ _vercel  TXT  <span class="s">"vc-domain-verify=…"</span></pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>Ce que contient un certificat</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li><b>Les noms couverts</b> : <code>exemple.be</code>, <code>www.exemple.be</code>, ou <code>*.exemple.be</code> pour tous les sous-domaines.</li>
+        <li><b>L'émetteur</b> : l'autorité de certification (Let's Encrypt, Sectigo…).</li>
+        <li><b>Les dates de validité</b> : un certificat expiré déclenche une alerte rouge dans le navigateur.</li>
+        <li><b>Une clé publique</b> : elle permet de chiffrer la connexion.</li>
+      </ul>
+      <p class="small muted" style="margin-top:14px">Pour le voir : clique sur l'icône à gauche de l'adresse, puis « La connexion est sécurisée » → « Certificat ».</p>
+    </div>
+    <div class="card">
+      <h3>Aller plus loin : HSTS</h3>
+      <p class="small">L'en-tête <code>Strict-Transport-Security</code> dit au navigateur de toujours utiliser HTTPS pour ce domaine, même si on tape <code>http://</code>.</p>
+      <pre style="margin-top:12px;font-size:14px">Strict-Transport-Security:
+  max-age=31536000; includeSubDomains</pre>
+      <p class="small muted" style="margin-top:12px">À activer seulement quand tout le site, sous-domaines compris, fonctionne en HTTPS : c'est difficile à annuler.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>CAA et DNSSEC</h2>
+  <div class="grid2">
+    <div class="card"><div class="tag">CAA</div><h3>Qui peut émettre un certificat</h3><p class="small">Un enregistrement CAA liste les autorités autorisées à créer un certificat pour ton domaine. Les autres doivent refuser.</p><pre style="margin-top:12px;font-size:14px">@  CAA  0 issue "letsencrypt.org"</pre><p class="small muted" style="margin-top:10px">Si tu en ajoutes un, vérifie qu'il inclut l'autorité utilisée par ton hébergeur, sinon le certificat ne se renouvelle plus.</p></div>
+    <div class="card"><div class="tag">DNSSEC</div><h3>Des réponses signées</h3><p class="small">DNSSEC signe la zone pour qu'un résolveur détecte une réponse falsifiée. Il s'active chez le fournisseur DNS, puis chez le registrar.</p><p class="small muted" style="margin-top:10px"><b>Piège :</b> avant de changer de serveurs DNS, désactive DNSSEC (ou transfère-le proprement). Sinon les résolveurs rejettent les nouvelles réponses et le domaine devient injoignable.</p></div>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Avec ou sans www</div>
   <h2>Choisir une adresse principale</h2>
   <p class="lead">Les deux noms doivent fonctionner, mais un seul doit être l'adresse « officielle ». L'autre redirige vers elle.</p>
@@ -306,6 +514,23 @@ _vercel  TXT  <span class="s">"vc-domain-verify=…"</span></pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Avec ou sans www</div>
+  <h2>Les codes de redirection HTTP</h2>
+  <table>
+    <tr><th>Code</th><th>Signification</th><th>Usage</th></tr>
+    <tr><td><code>301</code></td><td>Déplacé définitivement</td><td>Ancienne adresse → nouvelle, changement de domaine</td></tr>
+    <tr><td><code>308</code></td><td>Définitif, en gardant la méthode (POST reste POST)</td><td>Redirection permanente d'une API ou d'un formulaire</td></tr>
+    <tr><td><code>302</code></td><td>Temporaire</td><td>Page en maintenance, test</td></tr>
+    <tr><td><code>307</code></td><td>Temporaire, en gardant la méthode</td><td>Équivalent strict du 302</td></tr>
+  </table>
+  <ul class="clean small" style="margin-top:20px">
+    <li>Les navigateurs <b>mémorisent</b> les redirections permanentes : en cas d'erreur, teste en navigation privée.</li>
+    <li>Les moteurs de recherche transfèrent la « valeur » d'une page vers sa nouvelle adresse avec un 301 ou un 308.</li>
+    <li>Évite les <b>chaînes</b> (A → B → C) et les <b>boucles</b> (A → B → A) : le navigateur finit par abandonner.</li>
+  </ul>
+</section>
+
+<section class="slide" data-part="Diagnostiquer et pratiquer">
   <div class="kicker">Diagnostic</div>
   <h2>Interroger le DNS toi-même</h2>
   <div class="grid2">
@@ -330,6 +555,28 @@ nslookup exemple.be 8.8.8.8</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Diagnostic</div>
+  <h2>Lire une réponse de <code>dig</code></h2>
+  <pre style="font-size:15px">$ dig www.exemple.be
+
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span class="k">NOERROR</span>, id: 4242
+
+;; ANSWER SECTION:
+www.exemple.be.      <span class="k">300</span>   IN   <span class="k">CNAME</span>  cname.hebergeur.com.
+cname.hebergeur.com. 60    IN   A      76.76.21.21</pre>
+  <div class="grid2" style="margin-top:18px">
+    <ul class="clean small">
+      <li><b>status</b> : <code>NOERROR</code> = réponse trouvée ; <code>NXDOMAIN</code> = le nom n'existe pas ; <code>SERVFAIL</code> = le serveur n'a pas pu répondre (souvent DNSSEC ou NS cassés).</li>
+      <li><b>ANSWER SECTION</b> : la réponse, ligne par ligne.</li>
+    </ul>
+    <ul class="clean small">
+      <li>Le nombre après le nom est le <b>TTL restant</b> dans le cache du résolveur : il diminue à chaque nouvelle demande.</li>
+      <li>Un CNAME est suivi : on voit l'alias, puis l'adresse finale.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Méthode</div>
   <h2>Checklist quand « le domaine ne marche pas »</h2>
   <ol class="steps">
@@ -340,6 +587,82 @@ nslookup exemple.be 8.8.8.8</pre>
     <li><b>As-tu attendu le TTL ?</b> Teste via 1.1.1.1 et 8.8.8.8.</li>
     <li><b>Le certificat est-il émis ?</b> Il suit automatiquement une fois le DNS correct.</li>
   </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Cas pratique</div>
+  <h2>Brancher un domaine sur un hébergeur</h2>
+  <p class="small muted" style="margin-bottom:16px">Situation : domaine acheté chez un registrar, site déployé chez un hébergeur moderne. On garde le DNS chez le registrar.</p>
+  <ol class="steps small">
+    <li>Chez l'hébergeur, <b>ajoute le domaine</b> au projet (avec et sans <code>www</code>) et note les valeurs demandées.</li>
+    <li>Chez le registrar, vérifie que les <b>NS</b> sont bien ceux du registrar (pas de parking).</li>
+    <li>Dans la zone, sur <code>@</code> : remplace l'ancien <b>A</b> par l'IP de l'hébergeur, supprime les <b>AAAA</b> inutiles.</li>
+    <li>Sur <code>www</code> : supprime tout ce qui existe, puis crée le <b>CNAME</b> indiqué.</li>
+    <li>Ajoute le <b>TXT</b> de vérification si l'hébergeur en demande un.</li>
+    <li>Attends, vérifie avec <code>dig</code> ou <code>nslookup</code>, puis attends l'émission du certificat.</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Cas pratique</div>
+  <h2>Déléguer le DNS à un autre fournisseur</h2>
+  <div class="grid2">
+    <div>
+      <p class="small muted" style="margin-bottom:12px">Situation : tu veux que l'hébergeur (ou Cloudflare) gère toute la zone.</p>
+      <ol class="steps small">
+        <li><b>Inventorie</b> la zone actuelle : copie tous les enregistrements, surtout MX, SPF, DKIM, DMARC.</li>
+        <li>Recrée-les chez le <b>nouveau fournisseur</b> avant tout changement.</li>
+        <li>Désactive <b>DNSSEC</b> chez le registrar s'il est actif.</li>
+        <li>Remplace les <b>NS</b> chez le registrar par ceux du nouveau fournisseur.</li>
+        <li>Vérifie avec <code>dig NS</code> au fil des heures, puis teste site <b>et</b> e-mails.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Avantages et inconvénients</h3>
+      <ul class="clean small">
+        <li><b>+</b> Configuration automatique par l'hébergeur, outils plus modernes.</li>
+        <li><b>−</b> La zone du registrar ne sert plus : toute modification se fait désormais chez le nouveau fournisseur.</li>
+        <li><b>−</b> Un oubli dans l'inventaire coupe un service, souvent les e-mails.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Diagnostic</div>
+  <h2>Erreurs fréquentes et leur cause</h2>
+  <table>
+    <tr><th>Message ou symptôme</th><th>Cause probable</th></tr>
+    <tr><td>« Invalid configuration » chez l'hébergeur</td><td>A ou CNAME manquant, mauvaise valeur, ou modifications faites dans une zone qui ne fait pas autorité</td></tr>
+    <tr><td>« CNAME and other data »</td><td>Un autre enregistrement existe déjà sur ce nom</td></tr>
+    <tr><td><code>DNS_PROBE_FINISHED_NXDOMAIN</code></td><td>Le nom n'existe pas (encore) dans la zone, ou cache négatif</td></tr>
+    <tr><td>Site qui s'affiche une fois sur deux</td><td>Deux A (ou un ancien AAAA) vers des serveurs différents</td></tr>
+    <tr><td>« Votre connexion n'est pas privée »</td><td>Certificat pas encore émis, expiré ou ne couvrant pas ce nom</td></tr>
+    <tr><td>« Trop de redirections »</td><td>Boucle de redirection (souvent HTTP ↔ HTTPS ou avec / sans www)</td></tr>
+  </table>
+</section>
+
+<section class="slide" data-part="Synthèse">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>Apex / racine</td><td>Le domaine sans préfixe (<code>@</code>)</td></tr>
+      <tr><td>Autoritaire</td><td>Serveur qui détient la vraie zone</td></tr>
+      <tr><td>Registrar</td><td>Revendeur de noms de domaine</td></tr>
+      <tr><td>Registre</td><td>Gestionnaire d'une extension</td></tr>
+      <tr><td>Résolveur</td><td>Serveur qui cherche les réponses pour toi</td></tr>
+      <tr><td>TTL</td><td>Durée de mise en cache, en secondes</td></tr>
+    </table>
+    <table>
+      <tr><td>Zone</td><td>Ensemble des enregistrements d'un domaine</td></tr>
+      <tr><td>NS</td><td>Serveurs qui font autorité</td></tr>
+      <tr><td>CNAME</td><td>Alias vers un autre nom</td></tr>
+      <tr><td>SPF / DKIM / DMARC</td><td>Authentification des e-mails</td></tr>
+      <tr><td>Certificat TLS</td><td>Preuve d'identité qui permet HTTPS</td></tr>
+      <tr><td>Parking</td><td>Page par défaut d'un domaine non configuré</td></tr>
+    </table>
+  </div>
 </section>
 
 <section class="slide">
@@ -371,8 +694,22 @@ nslookup exemple.be 8.8.8.8</pre>
   </div>
 </section>
 
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Tu veux un blog sur <code>blog.exemple.be</code> hébergé par une plateforme. Que crées-tu dans la zone ?</summary><p>Un CNAME <code>blog</code> vers le nom fourni par la plateforme, puis tu déclares <code>blog.exemple.be</code> chez elle pour obtenir le certificat.</p></details>
+    <details><summary>Tes e-mails arrivent en spam depuis que tu utilises un nouvel outil d'envoi. Que vérifier ?</summary><p>Que l'outil est inclus dans ton SPF (un seul enregistrement SPF), que sa clé DKIM est publiée, et qu'un DMARC existe.</p></details>
+    <details><summary><code>dig</code> répond <code>SERVFAIL</code> juste après un changement de NS. Piste principale ?</summary><p>DNSSEC encore actif chez le registrar alors que la nouvelle zone n'est pas signée avec les mêmes clés : le désactiver ou le reconfigurer.</p></details>
+    <details><summary>Quelle différence entre une redirection 301 et 302 ?</summary><p>301 est permanente (les navigateurs et les moteurs la retiennent), 302 est temporaire.</p></details>
+    <details><summary>Tu as visité <code>shop.exemple.be</code> avant de le créer. Pourquoi il reste « introuvable » ?</summary><p>Le cache négatif : la réponse « n'existe pas » a été mise en cache. Vider le cache local, tester avec un autre résolveur, ou attendre.</p></details>
+  </div>
+</section>
+
 </div></div>
+<div id="tocpanel" role="dialog" aria-label="Sommaire"><div class="in"><h2>Sommaire</h2><ol></ol></div></div>
 <nav id="bar" aria-label="Navigation des slides">
+  <button id="tocbtn" aria-label="Ouvrir le sommaire" title="Sommaire (touche S)">☰ Sommaire</button>
   <button id="prev" aria-label="Slide précédente">←</button>
   <button id="next" aria-label="Slide suivante">→</button>
   <span id="count">1 / 1</span>
@@ -382,10 +719,29 @@ nslookup exemple.be 8.8.8.8</pre>
 </nav>
 <script>
 (function(){
-  var slides=[].slice.call(document.querySelectorAll('.slide'));
   var stage=document.getElementById('stage'), vp=document.getElementById('viewport');
+  var first=stage.querySelector('.slide');
+  /* slide Sommaire générée après le titre */
+  var toc=document.createElement('section');
+  toc.className='slide toc-slide';
+  toc.innerHTML='<div class="kicker">Sommaire</div><h2>Au programme</h2><ol class="toc-list"></ol>';
+  first.parentNode.insertBefore(toc,first.nextSibling);
+  var slides=[].slice.call(stage.querySelectorAll('.slide'));
   var i=0, n=slides.length;
   slides.forEach(function(s,k){s.setAttribute('data-n',(k+1)+' / '+n)});
+  function label(s){var h=s.querySelector('h2,h1');return h?h.textContent.replace(/\s+/g,' ').trim():''}
+  function item(k,withPart){
+    var s=slides[k],p=s.getAttribute('data-part');
+    return '<li>'+(p&&withPart?'<span class="part">'+p+'</span>':'')+'<a href="#'+(k+1)+'" data-go="'+k+'"><span class="n">'+(k+1)+'</span><span>'+label(s)+'</span></a></li>';
+  }
+  var tocHtml='',panelHtml='';
+  for(var k=2;k<n;k++){tocHtml+=item(k,true)}
+  for(var k2=0;k2<n;k2++){panelHtml+=item(k2,true)}
+  var tl=toc.querySelector('.toc-list');tl.innerHTML=tocHtml;if(n>40)tl.classList.add('dense');
+  var panel=document.getElementById('tocpanel');panel.querySelector('ol').innerHTML=panelHtml;
+  function openToc(o){panel.classList.toggle('open',o);if(o){[].forEach.call(panel.querySelectorAll('a'),function(a){a.classList.toggle('cur',+a.getAttribute('data-go')===i)});var c=panel.querySelector('a.cur');if(c)c.scrollIntoView({block:'center'})}}
+  document.addEventListener('click',function(e){var a=e.target.closest('[data-go]');if(!a)return;e.preventDefault();e.stopPropagation();openToc(false);go(+a.getAttribute('data-go'))},true);
+  document.getElementById('tocbtn').onclick=function(){openToc(!panel.classList.contains('open'))};
   function fit(){var w=vp.clientWidth-24,h=vp.clientHeight-24;var sc=Math.min(w/1280,h/720);stage.style.transform='scale('+sc+')'}
   function go(k){
     i=Math.max(0,Math.min(n-1,k));
@@ -402,6 +758,8 @@ nslookup exemple.be 8.8.8.8</pre>
     if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
     if(e.key==='Home')go(0); if(e.key==='End')go(n-1);
+    if(e.key==='s'||e.key==='S'){openToc(!panel.classList.contains('open'))}
+    if(e.key==='Escape'){openToc(false)}
   });
   var sx=null;
   document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});

@@ -92,6 +92,23 @@ td:first-child{font-weight:600}
 #prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
 #count{font:500 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
 @media (max-width:560px){#bar .opt{display:none}}
+/* sommaire */
+.toc-list{list-style:none;columns:3;column-gap:26px;column-fill:auto;height:478px}
+.toc-list.dense{columns:4;column-gap:20px}
+.toc-list li{break-inside:avoid;margin-bottom:2px}
+.toc-list a,#tocpanel a{display:flex;gap:10px;align-items:baseline;padding:4px 8px;border-radius:7px;color:var(--ink);text-decoration:none;font-size:15px;line-height:1.28}
+.toc-list.dense a{font-size:14px;padding:4px 6px}
+.toc-list a:hover,#tocpanel a:hover,#tocpanel a.cur{background:var(--accent-soft)}
+.toc-list .n,#tocpanel .n{font:600 13px "JetBrains Mono",ui-monospace,monospace;color:var(--accent);min-width:24px;flex:none}
+.toc-list .part,#tocpanel .part{display:block;font:600 11.5px Inter,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 8px 3px}
+.toc-list li:first-child .part{padding-top:0}
+#tocpanel{position:fixed;inset:0 0 52px 0;background:var(--bg);overflow-y:auto;padding:28px 16px 40px;display:none;z-index:5}
+#tocpanel.open{display:block}
+#tocpanel .in{max-width:760px;margin:0 auto}
+#tocpanel h2{font-size:30px;margin-bottom:14px}
+#tocpanel ol{list-style:none;columns:2;column-gap:24px}
+#tocpanel li{break-inside:avoid}
+@media (max-width:640px){#tocpanel ol{columns:1}}
 </style>
 </head>
 <body>
@@ -459,7 +476,9 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
 </section>
 
 </div></div>
+<div id="tocpanel" role="dialog" aria-label="Sommaire"><div class="in"><h2>Sommaire</h2><ol></ol></div></div>
 <nav id="bar" aria-label="Navigation des slides">
+  <button id="tocbtn" aria-label="Ouvrir le sommaire" title="Sommaire (touche S)">☰ Sommaire</button>
   <button id="prev" aria-label="Slide précédente">←</button>
   <button id="next" aria-label="Slide suivante">→</button>
   <span id="count">1 / 1</span>
@@ -469,10 +488,29 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
 </nav>
 <script>
 (function(){
-  var slides=[].slice.call(document.querySelectorAll('.slide'));
   var stage=document.getElementById('stage'), vp=document.getElementById('viewport');
+  var first=stage.querySelector('.slide');
+  /* slide Sommaire générée après le titre */
+  var toc=document.createElement('section');
+  toc.className='slide toc-slide';
+  toc.innerHTML='<div class="kicker">Sommaire</div><h2>Au programme</h2><ol class="toc-list"></ol>';
+  first.parentNode.insertBefore(toc,first.nextSibling);
+  var slides=[].slice.call(stage.querySelectorAll('.slide'));
   var i=0, n=slides.length;
   slides.forEach(function(s,k){s.setAttribute('data-n',(k+1)+' / '+n)});
+  function label(s){var h=s.querySelector('h2,h1');return h?h.textContent.replace(/\s+/g,' ').trim():''}
+  function item(k,withPart){
+    var s=slides[k],p=s.getAttribute('data-part');
+    return '<li>'+(p&&withPart?'<span class="part">'+p+'</span>':'')+'<a href="#'+(k+1)+'" data-go="'+k+'"><span class="n">'+(k+1)+'</span><span>'+label(s)+'</span></a></li>';
+  }
+  var tocHtml='',panelHtml='';
+  for(var k=2;k<n;k++){tocHtml+=item(k,true)}
+  for(var k2=0;k2<n;k2++){panelHtml+=item(k2,true)}
+  var tl=toc.querySelector('.toc-list');tl.innerHTML=tocHtml;if(n>40)tl.classList.add('dense');
+  var panel=document.getElementById('tocpanel');panel.querySelector('ol').innerHTML=panelHtml;
+  function openToc(o){panel.classList.toggle('open',o);if(o){[].forEach.call(panel.querySelectorAll('a'),function(a){a.classList.toggle('cur',+a.getAttribute('data-go')===i)});var c=panel.querySelector('a.cur');if(c)c.scrollIntoView({block:'center'})}}
+  document.addEventListener('click',function(e){var a=e.target.closest('[data-go]');if(!a)return;e.preventDefault();e.stopPropagation();openToc(false);go(+a.getAttribute('data-go'))},true);
+  document.getElementById('tocbtn').onclick=function(){openToc(!panel.classList.contains('open'))};
   function fit(){var w=vp.clientWidth-24,h=vp.clientHeight-24;var sc=Math.min(w/1280,h/720);stage.style.transform='scale('+sc+')'}
   function go(k){
     i=Math.max(0,Math.min(n-1,k));
@@ -489,6 +527,8 @@ NEXT_PUBLIC_SITE_URL=<span class="s">https://exemple.be</span></pre>
     if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
     if(e.key==='Home')go(0); if(e.key==='End')go(n-1);
+    if(e.key==='s'||e.key==='S'){openToc(!panel.classList.contains('open'))}
+    if(e.key==='Escape'){openToc(false)}
   });
   var sx=null;
   document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
