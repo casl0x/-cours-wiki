@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arduino, ESP32 et Raspberry Pi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEBE2; --paper:#FBF9F4; --ink:#1B1A17; --muted:#5E5A52; --faint:#8C877C;
+  --line:#DDD7CA; --soft:#F1EDE4; --code-bg:#1E1D1A; --code-ink:#ECE8DE; --code-com:#9A958A;
+  --accent:#0369A1; --accent-soft:#E2F0F9; --warn:#B45309; --warn-soft:#FDF1E1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+    --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+    --accent:#5BB8EE; --accent-soft:#172A36; --warn:#F2A65A; --warn-soft:#2E2417;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+  --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+  --accent:#5BB8EE; --accent-soft:#172A36; --warn:#F2A65A; --warn-soft:#2E2417;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+#viewport{position:fixed;inset:0 0 52px 0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:18px;box-shadow:0 1px 0 var(--line),0 20px 50px -30px rgba(0,0,0,.35);
+  padding:64px 80px 56px;display:none;flex-direction:column;overflow:hidden}
+.slide.active{display:flex;animation:in .28s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slide::after{content:attr(data-n);position:absolute;right:36px;bottom:26px;font:500 13px "JetBrains Mono",monospace;color:var(--faint)}
+.slide::before{content:"Cours 7 · Électronique";position:absolute;left:80px;bottom:26px;font:500 13px Inter,system-ui,sans-serif;color:var(--faint);letter-spacing:.02em}
+.kicker{font:600 14px Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font:700 76px/1.02 "Space Grotesk",sans-serif;letter-spacing:-.02em}
+h2{font:700 44px/1.1 "Space Grotesk",sans-serif;letter-spacing:-.015em;margin-bottom:26px}
+h3{font:700 22px/1.25 "Space Grotesk",sans-serif;margin-bottom:8px}
+p,li{font-size:21px;line-height:1.5;color:var(--ink)}
+.lead{font-size:25px;line-height:1.45;color:var(--muted);max-width:980px}
+.muted{color:var(--muted)}
+.small,.small li,.small p{font-size:17px}
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:12px}
+ul.clean li{padding-left:28px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:2px;background:var(--accent)}
+ol.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:14px}
+ol.steps li{counter-increment:s;padding-left:52px;position:relative}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 17px "Space Grotesk",Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+code{font-family:"JetBrains Mono",monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:20px 24px;font:400 15.5px/1.55 "JetBrains Mono",monospace;overflow:hidden;white-space:pre}
+pre code{background:none;border:0;padding:0;font-size:inherit;color:inherit}
+pre .c{color:var(--code-com)} pre .k{color:#F5B971} pre .s{color:#9FD8A8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-bottom:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.card p,.card li{font-size:18px}
+.card .tag{display:inline-block;font:600 12px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:5px;margin-bottom:10px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:16px 22px;border-radius:0 12px 12px 0;margin-top:auto}
+.callout p{font-size:19px}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout b{color:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:18px}
+th{text-align:left;font:600 13px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 14px 10px;border-bottom:2px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+td:first-child{font-weight:600}
+.flow{display:flex;align-items:stretch;gap:0;margin:8px 0 24px}
+.flow .node{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 14px;text-align:center}
+.flow .node b{display:block;font:700 18px "Space Grotesk",Inter,system-ui,sans-serif;margin-bottom:4px}
+.flow .node span{font-size:15px;color:var(--muted);line-height:1.35;display:block}
+.flow .node.hl{border-color:var(--accent);background:var(--accent-soft)}
+.flow .arr{width:34px;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:22px;flex:none}
+.title-slide{justify-content:center;background:var(--paper)}
+.title-slide .bar{width:72px;height:6px;background:var(--accent);border-radius:3px;margin-bottom:34px}
+.title-slide .meta{margin-top:34px;display:flex;gap:28px;font-size:17px;color:var(--muted)}
+.title-slide .meta span b{color:var(--ink);font-weight:600}
+.big-num{font:700 64px "Space Grotesk",Inter,system-ui,sans-serif;color:var(--accent);line-height:1}
+.qa{display:flex;flex-direction:column;gap:14px}
+.qa details{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 20px}
+.qa summary{cursor:pointer;font-size:19px;font-weight:500;list-style:none}
+.qa summary::before{content:"＋ ";color:var(--accent);font-weight:700}
+.qa details[open] summary::before{content:"－ "}
+.qa details p{font-size:17px;color:var(--muted);margin-top:8px}
+/* barre de contrôle */
+#bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--bg)}
+#bar button,#bar a{font:500 14px Inter,system-ui,sans-serif;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;height:34px;min-width:34px;padding:0 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+#bar button:hover,#bar a:hover{border-color:var(--accent)}
+#bar button:disabled{opacity:.4;cursor:default}
+#prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+#prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+#count{font:500 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
+@media (max-width:560px){#bar .opt{display:none}}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+<section class="slide title-slide">
+  <div class="bar"></div>
+  <div class="kicker">Cours 7 · Électronique</div>
+  <h1>Arduino, ESP32<br>et Raspberry Pi</h1>
+  <p class="lead" style="margin-top:24px">Choisir la bonne carte, comprendre les bases électriques, brancher capteurs et écrans sans rien griller, et écrire ses premiers programmes.</p>
+  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> aucun (un peu de programmation aide)</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Objectifs</div>
+  <h2>À la fin de ce cours, tu sauras…</h2>
+  <ol class="steps">
+    <li>Distinguer un <b>microcontrôleur</b> d'un <b>ordinateur monocarte</b>, et choisir le bon pour un projet.</li>
+    <li>Utiliser la loi d'Ohm pour calculer une résistance.</li>
+    <li>Reconnaître les types de broches : numérique, analogique, PWM, I2C, SPI, UART.</li>
+    <li>Câbler proprement sur breadboard, puis passer à la soudure.</li>
+    <li>Écrire un programme qui lit un capteur et affiche un résultat.</li>
+    <li>Alimenter un montage correctement et dépanner les problèmes courants.</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Deux familles</div>
+  <h2>Microcontrôleur ou ordinateur monocarte ?</h2>
+  <table>
+    <tr><th></th><th>Microcontrôleur <span style="text-transform:none">(Arduino, ESP32, Pico)</span></th><th>Ordinateur monocarte <span style="text-transform:none">(Raspberry Pi)</span></th></tr>
+    <tr><td>Ce que c'est</td><td>Une puce qui exécute <b>un seul programme</b>, en boucle</td><td>Un vrai petit <b>ordinateur</b> sous Linux</td></tr>
+    <tr><td>Démarrage</td><td>Instantané</td><td>20 à 40 secondes</td></tr>
+    <tr><td>Consommation</td><td>Très faible : peut tenir des mois sur pile</td><td>Plusieurs watts, toujours sur secteur</td></tr>
+    <tr><td>Langages</td><td>C/C++ (Arduino), MicroPython</td><td>Python, Node.js, tout ce qui tourne sous Linux</td></tr>
+    <tr><td>Points forts</td><td>Capteurs, précision du timing, coupure de courant sans risque</td><td>Écran HDMI, serveur web, base de données, plusieurs services</td></tr>
+    <tr><td>Prix indicatif</td><td>4 à 30 €</td><td>50 à 120 € (plus carte SD et alimentation)</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Choisir</div>
+  <h2>Quelle carte pour quel projet ?</h2>
+  <div class="grid2" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="tag">ARDUINO UNO</div><h3>Apprendre</h3><p class="small">5 V, très robuste, des milliers de tutoriels. Pas de Wi-Fi sur le modèle de base.</p></div>
+    <div class="card"><div class="tag">ESP32</div><h3>Objets connectés</h3><p class="small">Wi-Fi et Bluetooth intégrés, puissant, quelques euros. Programmable comme un Arduino.</p></div>
+    <div class="card"><div class="tag">PI PICO</div><h3>Petit et pas cher</h3><p class="small">Microcontrôleur de Raspberry Pi, idéal en MicroPython. Version W avec Wi-Fi.</p></div>
+    <div class="card"><div class="tag">RASPBERRY PI</div><h3>Serveur, écran</h3><p class="small">Linux complet : domotique, serveur, media center, interface graphique.</p></div>
+  </div>
+  <div class="callout"><p><b>Question à se poser :</b> le projet doit-il seulement <b>lire et réagir</b> (microcontrôleur) ou aussi <b>héberger, stocker, afficher beaucoup</b> (Raspberry Pi) ? Souvent, les deux travaillent ensemble : des ESP32 mesurent, un Pi centralise.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les bases électriques</div>
+  <h2>Tension, courant, résistance</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <tr><th>Grandeur</th><th>Unité</th><th>Image</th></tr>
+        <tr><td>Tension <i>U</i></td><td>volt (V)</td><td>La pression de l'eau</td></tr>
+        <tr><td>Courant <i>I</i></td><td>ampère (A)</td><td>Le débit</td></tr>
+        <tr><td>Résistance <i>R</i></td><td>ohm (Ω)</td><td>L'étroitesse du tuyau</td></tr>
+      </table>
+      <div style="font:700 40px 'Space Grotesk',Inter,sans-serif;margin-top:26px;color:var(--accent)">U = R × I</div>
+      <p class="small muted">La loi d'Ohm. Et la puissance : P = U × I, en watts.</p>
+    </div>
+    <div class="card">
+      <h3>Exemple : la résistance d'une LED</h3>
+      <p class="small">Alimentation 5 V, LED rouge qui consomme environ 2 V et 20 mA.</p>
+      <pre style="margin-top:12px">R = (5 V − 2 V) / 0,020 A
+R = 150 Ω  →  on prend 220 Ω</pre>
+      <p class="small muted" style="margin-top:12px">On arrondit toujours vers la valeur standard <b>supérieure</b> : la LED éclaire un peu moins, mais ne grille pas. Sans résistance, elle meurt (et peut abîmer la broche).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le piège n°1</div>
+  <h2>3,3 V ou 5 V : vérifie toujours</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean">
+        <li><b>Arduino Uno</b> : logique en <b>5 V</b>.</li>
+        <li><b>ESP32, Raspberry Pi, Pi Pico</b> : logique en <b>3,3 V</b>, et leurs broches ne supportent pas 5 V.</li>
+        <li>Envoyer 5 V sur une broche 3,3 V peut <b>détruire la carte</b> définitivement.</li>
+      </ul>
+      <div class="callout warn" style="margin-top:24px"><p>Pour relier un module 5 V à une carte 3,3 V : un <b>convertisseur de niveau</b> (level shifter) ou un pont diviseur de tension.</p></div>
+    </div>
+    <div class="card">
+      <h3>Les broches ne sont pas des prises</h3>
+      <ul class="clean small">
+        <li>Une broche fournit seulement <b>quelques dizaines de milliampères</b> au maximum.</li>
+        <li>Suffisant pour une LED ou un signal, <b>jamais</b> pour un moteur, une pompe ou un ruban LED.</li>
+        <li>Pour ça : un transistor, un module driver ou un relais, avec sa propre alimentation.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les broches</div>
+  <h2>Ce que savent faire les broches</h2>
+  <table>
+    <tr><th>Type</th><th>Rôle</th><th>Exemples</th></tr>
+    <tr><td>Numérique (GPIO)</td><td>Allumé / éteint, en entrée ou en sortie</td><td>LED, bouton, relais</td></tr>
+    <tr><td>Analogique (ADC)</td><td>Lit une tension variable et la convertit en nombre</td><td>Potentiomètre, capteur de lumière</td></tr>
+    <tr><td>PWM</td><td>Simule une tension variable en clignotant très vite</td><td>Variation de LED, servomoteur</td></tr>
+    <tr><td>I2C</td><td>Bus à 2 fils (SDA, SCL), plusieurs modules à la suite</td><td>Écran OLED, capteur BME280</td></tr>
+    <tr><td>SPI</td><td>Bus rapide à 4 fils</td><td>Écran TFT couleur, carte SD</td></tr>
+    <tr><td>UART (série)</td><td>Liaison texte entre deux appareils (TX, RX)</td><td>GPS, communication avec un PC</td></tr>
+  </table>
+  <div class="callout"><p>Garde toujours le <b>schéma des broches</b> (« pinout ») de ta carte sous les yeux : les numéros imprimés sur la carte ne correspondent pas toujours aux numéros du code.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Câbler</div>
+  <h2>Breadboard, puis soudure</h2>
+  <div class="grid2">
+    <div>
+      <h3>La breadboard (plaque d'essai)</h3>
+      <ul class="clean small">
+        <li>Chaque <b>rangée courte</b> de 5 trous est reliée à l'intérieur.</li>
+        <li>Les longues lignes sur les côtés (+ et −) sont les <b>rails d'alimentation</b>.</li>
+        <li>La rainure centrale sépare les deux moitiés : on y place les puces à cheval.</li>
+        <li>Code couleur conseillé : <b>rouge</b> pour le +, <b>noir</b> pour la masse (GND).</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Passer au définitif</h3>
+      <ul class="clean small">
+        <li><b>Perfboard</b> : trous isolés, tu relies tout avec du fil.</li>
+        <li><b>Stripboard</b> : trous déjà reliés en bandes de cuivre, plus rapide.</li>
+        <li><b>PCB sur mesure</b> : conçu avec KiCad, fabriqué en ligne pour quelques euros.</li>
+        <li>Soudure : panne propre et étamée, on chauffe la pastille <b>et</b> la patte, puis on apporte l'étain. Une bonne soudure est brillante et en forme de petit cône.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p><b>Ordre de travail :</b> tester sur breadboard → reproduire sur plaque à souder → mettre en boîtier.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Programmer</div>
+  <h2>Le premier programme Arduino</h2>
+  <div class="grid2">
+    <pre><span class="k">const int</span> LED = 13;
+
+<span class="c">// exécuté une fois, au démarrage</span>
+<span class="k">void</span> setup() {
+  pinMode(LED, OUTPUT);
+  Serial.begin(115200);
+  Serial.println(<span class="s">"Démarré !"</span>);
+}
+
+<span class="c">// exécuté en boucle, pour toujours</span>
+<span class="k">void</span> loop() {
+  digitalWrite(LED, HIGH);
+  delay(500);
+  digitalWrite(LED, LOW);
+  delay(500);
+}</pre>
+    <ul class="clean small">
+      <li>Tout programme Arduino a deux fonctions : <code>setup()</code> une fois, <code>loop()</code> à l'infini.</li>
+      <li>On écrit dans l'<b>Arduino IDE</b>, on choisit la carte et le port, puis on téléverse.</li>
+      <li>L'ESP32 et le Pico se programment aussi dans l'Arduino IDE, après ajout de leur paquet dans le <b>gestionnaire de cartes</b>.</li>
+      <li><code>Serial.println</code> envoie du texte au PC : ouvre le <b>moniteur série</b> à la même vitesse (115200) pour le lire. C'est ton meilleur outil de débogage.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Entrées</div>
+  <h2>Lire un bouton et un capteur</h2>
+  <div class="grid2">
+    <pre><span class="k">const int</span> BOUTON = 2;
+<span class="k">const int</span> POTAR  = A0;
+
+<span class="k">void</span> setup() {
+  pinMode(BOUTON, INPUT_PULLUP);
+  Serial.begin(115200);
+}
+
+<span class="k">void</span> loop() {
+  <span class="c">// avec INPUT_PULLUP : appuyé = LOW</span>
+  <span class="k">if</span> (digitalRead(BOUTON) == LOW) {
+    Serial.println(<span class="s">"Appui"</span>);
+  }
+  <span class="k">int</span> valeur = analogRead(POTAR);
+  Serial.println(valeur);
+  delay(200);
+}</pre>
+    <ul class="clean small">
+      <li>Une entrée non reliée « flotte » et lit des valeurs au hasard. <code>INPUT_PULLUP</code> active une résistance interne qui la maintient à HIGH.</li>
+      <li>Le bouton se branche donc entre la broche et la <b>masse</b> : appuyé, il tire à LOW.</li>
+      <li><code>analogRead</code> donne de 0 à 1023 sur Arduino Uno, de 0 à 4095 sur ESP32.</li>
+      <li>Évite les longs <code>delay()</code> dans un vrai projet : utilise <code>millis()</code> pour faire plusieurs choses à la fois.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Modules</div>
+  <h2>Capteurs, écrans et le bus I2C</h2>
+  <div class="grid2">
+    <table>
+      <tr><th>Module</th><th>Mesure ou rôle</th><th>Liaison</th></tr>
+      <tr><td>BME280</td><td>Température, humidité, pression</td><td>I2C</td></tr>
+      <tr><td>DHT22</td><td>Température, humidité</td><td>1 fil</td></tr>
+      <tr><td>OLED SSD1306</td><td>Petit écran monochrome</td><td>I2C</td></tr>
+      <tr><td>TFT ST7789 / ILI9341</td><td>Écran couleur</td><td>SPI</td></tr>
+      <tr><td>HC-SR04</td><td>Distance par ultrasons</td><td>Numérique</td></tr>
+      <tr><td>PIR</td><td>Détection de mouvement</td><td>Numérique</td></tr>
+    </table>
+    <ul class="clean small">
+      <li>En I2C, chaque module a une <b>adresse</b> (souvent <code>0x3C</code> pour un écran OLED, <code>0x76</code> pour un BME280).</li>
+      <li>Quatre fils suffisent : alimentation, masse, SDA, SCL. Plusieurs modules partagent les mêmes fils.</li>
+      <li>Rien ne s'affiche ? Lance un <b>scanner I2C</b> (exemple fourni avec la bibliothèque Wire) pour voir les adresses détectées.</li>
+      <li>Chaque module a sa <b>bibliothèque</b> à installer depuis le gestionnaire de bibliothèques.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Énergie</div>
+  <h2>Alimenter un montage</h2>
+  <div class="grid2">
+    <ul class="clean small">
+      <li><b>USB</b> (5 V) : parfait pour développer et pour les petits montages.</li>
+      <li><b>Piles et batteries</b> : passent par un régulateur. Les batteries lithium (LiPo, 18650) demandent un module de charge avec protection.</li>
+      <li>Les moteurs, rubans LED et servos ont leur <b>propre alimentation</b>, dimensionnée pour eux.</li>
+    </ul>
+    <div class="card">
+      <h3>Trois règles</h3>
+      <ol class="steps small">
+        <li><b>Masse commune</b> : quand deux alimentations coexistent, relie leurs GND entre elles, sinon les signaux n'ont pas de référence.</li>
+        <li>Moteur ou relais commandé par transistor : ajoute une <b>diode de roue libre</b> pour absorber le pic de tension.</li>
+        <li>Raspberry Pi : une alimentation officielle ou équivalente. Une alimentation faible provoque des plantages aléatoires.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Objets connectés</div>
+  <h2>ESP32 : se connecter au Wi-Fi</h2>
+  <div class="grid2">
+    <pre><span class="k">#include</span> &lt;WiFi.h&gt;
+
+<span class="k">void</span> setup() {
+  Serial.begin(115200);
+  WiFi.begin(<span class="s">"MonWiFi"</span>, <span class="s">"motdepasse"</span>);
+  <span class="k">while</span> (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(<span class="s">"."</span>);
+  }
+  Serial.println(WiFi.localIP());
+}
+
+<span class="k">void</span> loop() {
+  <span class="c">// mesurer, puis envoyer en HTTP ou MQTT</span>
+}</pre>
+    <ul class="clean small">
+      <li>Une fois connecté, l'ESP32 peut <b>envoyer</b> ses mesures (requête HTTP, protocole MQTT) ou <b>servir</b> une petite page web.</li>
+      <li><b>MQTT</b> est le standard de la domotique : les capteurs publient, un serveur (souvent sur un Raspberry Pi) centralise.</li>
+      <li>Sur batterie, le <b>deep sleep</b> éteint presque tout entre deux mesures : de quelques jours à plusieurs mois d'autonomie.</li>
+      <li>Ne mets pas ton mot de passe Wi-Fi dans un dépôt public : garde-le dans un fichier séparé, ignoré par Git.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Raspberry Pi</div>
+  <h2>Un ordinateur avec des broches</h2>
+  <div class="grid2">
+    <pre><span class="c"># clignoter une LED en Python</span>
+<span class="k">from</span> gpiozero <span class="k">import</span> LED, Button
+<span class="k">from</span> signal <span class="k">import</span> pause
+
+led = LED(17)          <span class="c"># numéro GPIO, pas la broche</span>
+bouton = Button(2)
+
+bouton.when_pressed = led.toggle
+pause()</pre>
+    <ul class="clean small">
+      <li>On installe <b>Raspberry Pi OS</b> sur une carte microSD avec <b>Raspberry Pi Imager</b> (Wi-Fi et SSH se règlent dès cette étape).</li>
+      <li>On s'y connecte à distance en <b>SSH</b> : pas besoin d'écran ni de clavier.</li>
+      <li>Les GPIO se pilotent en Python avec <b>gpiozero</b>.</li>
+      <li>Plusieurs services sur un même Pi ? <b>Docker</b> isole chacun dans son conteneur.</li>
+      <li>Pour un usage 24 h/24, un <b>SSD</b> est bien plus fiable qu'une carte SD.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Méthode</div>
+  <h2>Mener un projet sans s'y perdre</h2>
+  <ol class="steps">
+    <li><b>Décrire</b> le projet en une phrase : « afficher la température de la pièce sur un petit écran ».</li>
+    <li><b>Lister</b> les composants, et vérifier pour chacun sa tension (3,3 V ou 5 V) et sa liaison.</li>
+    <li><b>Un composant à la fois</b> : faire marcher l'écran seul, puis le capteur seul, puis les assembler.</li>
+    <li><b>Dessiner le schéma</b> (même à la main, ou avec Fritzing ou KiCad) avant de souder.</li>
+    <li><b>Souder</b> seulement quand tout fonctionne sur breadboard.</li>
+    <li><b>Documenter</b> : photo du câblage, schéma et code dans un dépôt Git.</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Dépannage</div>
+  <h2>« Ça ne marche pas » : dans cet ordre</h2>
+  <table>
+    <tr><th>Symptôme</th><th>À vérifier</th></tr>
+    <tr><td>La carte n'apparaît pas sur le PC</td><td>Câble USB de <b>données</b> (pas seulement de charge), pilote USB (CH340, CP210x), autre port</td></tr>
+    <tr><td>Le téléversement échoue</td><td>Bonne carte et bon port dans l'IDE. Sur certains ESP32, maintenir <b>BOOT</b> pendant l'envoi</td></tr>
+    <tr><td>Rien ne se passe</td><td>Masse (GND) commune, LED dans le bon sens (patte longue au +), bon numéro de broche</td></tr>
+    <tr><td>Valeurs folles en entrée</td><td>Entrée qui flotte : <code>INPUT_PULLUP</code> ou résistance de tirage</td></tr>
+    <tr><td>Écran I2C noir</td><td>SDA et SCL inversés, mauvaise adresse : lancer le scanner I2C</td></tr>
+    <tr><td>Redémarrages aléatoires</td><td>Alimentation trop faible, surtout avec Wi-Fi, moteurs ou Raspberry Pi</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>Ce qu'on ne fait pas</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">SECTEUR</div><h3>Pas de 230 V</h3><p>Ne touche jamais au courant du secteur. Pour commander un appareil, utilise une prise connectée du commerce, déjà certifiée.</p></div>
+    <div class="card"><div class="tag">BATTERIES</div><h3>Lithium avec soin</h3><p>Pas de court-circuit, pas de batterie gonflée ou abîmée, toujours un module de charge avec protection.</p></div>
+    <div class="card"><div class="tag">SOUDURE</div><h3>Fer à 350 °C</h3><p>Support de fer, pièce aérée (les fumées irritent), lunettes pour couper les pattes, mains lavées après.</p></div>
+  </div>
+  <div class="callout"><p>Débranche toujours l'alimentation avant de modifier un câblage.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">À retenir</div>
+  <h2>L'essentiel en 6 phrases</h2>
+  <div class="grid2">
+    <ul class="clean">
+      <li>Microcontrôleur pour <b>mesurer et réagir</b>, Raspberry Pi pour <b>héberger et afficher</b>.</li>
+      <li>U = R × I : toujours une résistance avec une LED.</li>
+      <li>ESP32, Pi et Pico sont en <b>3,3 V</b> : jamais de 5 V sur leurs broches.</li>
+    </ul>
+    <ul class="clean">
+      <li>Une broche commande, elle n'alimente pas un moteur.</li>
+      <li><b>Masse commune</b> entre toutes les alimentations.</li>
+      <li>Un composant à la fois, sur breadboard, avant de souder.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi</h2>
+  <div class="qa">
+    <details><summary>Station météo sur batterie dans le jardin, qui envoie ses mesures toutes les 10 minutes. Quelle carte ?</summary><p>Un ESP32 : Wi-Fi intégré et deep sleep entre les mesures pour une longue autonomie. Un Raspberry Pi consommerait beaucoup trop.</p></details>
+    <details><summary>Quelle résistance pour une LED (2 V, 20 mA) alimentée en 3,3 V ?</summary><p>R = (3,3 − 2) / 0,02 = 65 Ω. On prend la valeur standard supérieure, par exemple 68 ou 100 Ω.</p></details>
+    <details><summary>Un capteur de distance sort un signal 5 V. Tu peux le brancher directement sur un ESP32 ?</summary><p>Non : les broches de l'ESP32 sont en 3,3 V. Il faut un convertisseur de niveau ou un pont diviseur de tension.</p></details>
+    <details><summary>Un bouton en <code>INPUT_PULLUP</code> lit LOW. Qu'est-ce que ça veut dire ?</summary><p>Qu'il est appuyé : il relie la broche à la masse. Relâché, la résistance interne la maintient à HIGH.</p></details>
+    <details><summary>Ton écran OLED reste noir. Les deux premières choses à vérifier ?</summary><p>Le câblage (alimentation, masse, SDA et SCL non inversés) et l'adresse I2C, avec un scanner I2C.</p></details>
+  </div>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="Navigation des slides">
+  <button id="prev" aria-label="Slide précédente">←</button>
+  <button id="next" aria-label="Slide suivante">→</button>
+  <span id="count">1 / 1</span>
+  <div id="prog"><i></i></div>
+  <button id="theme" class="opt" aria-label="Changer de thème">Clair / sombre</button>
+  <a id="full" class="opt" href="#" target="_blank" rel="noopener" title="Ouvrir dans un nouvel onglet">⤢ Plein écran</a>
+</nav>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), vp=document.getElementById('viewport');
+  var i=0, n=slides.length;
+  slides.forEach(function(s,k){s.setAttribute('data-n',(k+1)+' / '+n)});
+  function fit(){var w=vp.clientWidth-24,h=vp.clientHeight-24;var sc=Math.min(w/1280,h/720);stage.style.transform='scale('+sc+')'}
+  function go(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,j){s.classList.toggle('active',j===i)});
+    document.getElementById('count').textContent=(i+1)+' / '+n;
+    document.querySelector('#prog i').style.width=((i+1)/n*100)+'%';
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===n-1;
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home')go(0); if(e.key==='End')go(n-1);
+  });
+  var sx=null;
+  document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){if(sx===null)return;var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)go(i+(d<0?1:-1));sx=null});
+  stage.addEventListener('click',function(e){if(e.target.closest('details,a,button,summary'))return;var r=stage.getBoundingClientRect();go(i+(e.clientX>r.left+r.width/2?1:-1))});
+  document.getElementById('theme').onclick=function(){
+    var r=document.documentElement,cur=r.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark');
+    try{localStorage.setItem('cours-theme',r.getAttribute('data-theme'))}catch(e){}
+  };
+  try{var t=localStorage.getItem('cours-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+  var full=document.getElementById('full'); full.href=location.href.split('#')[0];
+  if(window.top===window.self) full.style.display='none';
+  window.addEventListener('resize',fit); fit();
+  var h=parseInt((location.hash||'').slice(1),10); go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
