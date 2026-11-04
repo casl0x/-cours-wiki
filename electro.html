@@ -118,10 +118,10 @@ td:first-child{font-weight:600}
   <div class="kicker">Cours 7 · Électronique</div>
   <h1>Arduino, ESP32<br>et Raspberry Pi</h1>
   <p class="lead" style="margin-top:24px">Choisir la bonne carte, comprendre les bases électriques, brancher capteurs et écrans sans rien griller, et écrire ses premiers programmes.</p>
-  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> aucun (un peu de programmation aide)</span></div>
+  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h 30 à 2 h</span><span><b>Prérequis</b> aucun (un peu de programmation aide)</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Choisir sa carte">
   <div class="kicker">Deux familles</div>
   <h2>Microcontrôleur ou ordinateur monocarte ?</h2>
   <table>
@@ -160,7 +160,7 @@ td:first-child{font-weight:600}
   <div class="callout"><p><b>Question à se poser :</b> le projet doit-il seulement <b>lire et réagir</b> (microcontrôleur) ou aussi <b>héberger, stocker, afficher beaucoup</b> (Raspberry Pi) ? Souvent, les deux travaillent ensemble : des ESP32 mesurent, un Pi centralise.</p></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Électricité et composants">
   <div class="kicker">Les bases électriques</div>
   <h2>Tension, courant, résistance</h2>
   <div class="grid2">
@@ -208,6 +208,102 @@ R = 150 Ω  →  on prend 220 Ω</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Composants</div>
+  <h2>Les composants de base</h2>
+  <table>
+    <tr><th>Composant</th><th>Rôle</th><th>À savoir</th></tr>
+    <tr><td>Résistance</td><td>Limite le courant</td><td>Pas de sens. Valeur lue avec des anneaux de couleur ou un multimètre</td></tr>
+    <tr><td>LED</td><td>Lumière</td><td><b>Polarisée</b> : patte longue au +, côté plat au −. Toujours avec une résistance</td></tr>
+    <tr><td>Bouton poussoir</td><td>Contact momentané</td><td>Les 4 pattes sont reliées deux à deux : place-le à cheval sur la rainure</td></tr>
+    <tr><td>Potentiomètre</td><td>Résistance réglable</td><td>Broche du milieu vers une entrée analogique</td></tr>
+    <tr><td>Condensateur</td><td>Réserve d'énergie, filtre</td><td>Les chimiques sont <b>polarisés</b> (bande = −). 100 nF près des puces pour stabiliser</td></tr>
+    <tr><td>Diode</td><td>Laisse passer dans un seul sens</td><td>Bande = cathode. Protège des inversions et des pics de tension</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Composants</div>
+  <h2>Lire une résistance</h2>
+  <div class="grid2">
+    <div>
+      <div style="display:flex;align-items:center;gap:0;margin:4px 0 22px">
+        <div style="width:60px;height:4px;background:var(--muted)"></div>
+        <div style="display:flex;gap:14px;align-items:center;background:#E8D5B0;border-radius:18px;padding:0 26px;height:46px">
+          <span style="width:10px;height:46px;background:#C0392B"></span>
+          <span style="width:10px;height:46px;background:#C0392B"></span>
+          <span style="width:10px;height:46px;background:#7B4A21"></span>
+          <span style="width:18px"></span>
+          <span style="width:10px;height:46px;background:#C9A227"></span>
+        </div>
+        <div style="width:60px;height:4px;background:var(--muted)"></div>
+      </div>
+      <p class="small"><b>Rouge (2) · Rouge (2) · Marron (× 10) · Or (± 5 %)</b> = 22 × 10 = <b>220 Ω</b></p>
+      <table style="margin-top:14px">
+        <tr><td>Noir 0</td><td>Marron 1</td><td>Rouge 2</td><td>Orange 3</td><td>Jaune 4</td></tr>
+        <tr><td>Vert 5</td><td>Bleu 6</td><td>Violet 7</td><td>Gris 8</td><td>Blanc 9</td></tr>
+      </table>
+    </div>
+    <ul class="clean small">
+      <li>Lis à partir du côté opposé à l'anneau or ou argent (la tolérance).</li>
+      <li>Deux premiers anneaux : les chiffres. Troisième : le <b>nombre de zéros</b> à ajouter.</li>
+      <li>Exemples courants : 220 Ω (rouge rouge marron), 1 kΩ (marron noir rouge), 10 kΩ (marron noir orange).</li>
+      <li>Les résistances à 5 anneaux ont trois chiffres avant le multiplicateur.</li>
+      <li>En cas de doute, le <b>multimètre</b> tranche en deux secondes.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Composants</div>
+  <h2>Le transistor comme interrupteur</h2>
+  <div class="grid2">
+    <div>
+      <div class="flow" style="flex-direction:column;gap:10px;margin:0">
+        <div class="node"><b>Broche du microcontrôleur</b><span>Petit signal (3,3 ou 5 V, quelques mA)</span></div>
+        <div class="arr" style="width:auto;height:18px">↓</div>
+        <div class="node hl"><b>Transistor ou MOSFET</b><span>Ouvre ou ferme le circuit de puissance</span></div>
+        <div class="arr" style="width:auto;height:18px">↓</div>
+        <div class="node"><b>Moteur, ruban LED, pompe</b><span>Alimenté par sa propre source, masse commune</span></div>
+      </div>
+    </div>
+    <ul class="clean small">
+      <li>Le transistor laisse un <b>petit courant</b> (venant de la broche) commander un <b>gros courant</b>.</li>
+      <li>Transistor <b>NPN</b> (ex. 2N2222) : une résistance d'environ 1 kΩ entre la broche et la base.</li>
+      <li><b>MOSFET</b> : idéal pour les fortes charges. Avec une carte 3,3 V, choisis un modèle « logic level » qui s'ouvre complètement à 3,3 V.</li>
+      <li>Charge inductive (moteur, relais, électrovanne) : une <b>diode de roue libre</b> en parallèle, bande vers le +.</li>
+      <li>Pour débuter : les <b>modules</b> tout prêts (driver de moteur, relais, MOSFET sur carte) intègrent déjà ces protections.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Outils</div>
+  <h2>Lire une datasheet et utiliser un multimètre</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>La datasheet : ce qu'on y cherche</h3>
+      <ul class="clean small">
+        <li><b>Tension d'alimentation</b> (min, typique, max).</li>
+        <li><b>Niveau logique</b> des signaux : 3,3 V ou 5 V.</li>
+        <li><b>Courant</b> consommé, et maximal par broche.</li>
+        <li><b>Brochage</b> (pinout) et schéma d'exemple.</li>
+        <li>Adresse I2C ou protocole utilisé.</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Les tableaux « Absolute Maximum Ratings » sont des limites à ne jamais atteindre, pas des valeurs de fonctionnement.</p>
+    </div>
+    <div class="card">
+      <h3>Le multimètre</h3>
+      <ul class="clean small">
+        <li><b>V⎓</b> (tension continue) : pointes en parallèle sur le circuit alimenté.</li>
+        <li><b>Continuité</b> (bip) : vérifier une soudure ou un fil, circuit <b>éteint</b>.</li>
+        <li><b>Ω</b> : mesurer une résistance hors circuit.</li>
+        <li><b>A</b> : en <b>série</b>, avec la pointe rouge dans la borne A ou mA. Erreur classique : mesurer une tension en position A, ce qui grille le fusible.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Broches et câblage">
   <div class="kicker">Les broches</div>
   <h2>Ce que savent faire les broches</h2>
   <table>
@@ -249,6 +345,30 @@ R = 150 Ω  →  on prend 220 Ω</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Câbler</div>
+  <h2>Souder pas à pas</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li>Fer chauffé autour de <b>330 à 370 °C</b>, panne nettoyée (éponge humide ou laine de laiton), puis <b>étamée</b> (une goutte d'étain).</li>
+      <li>Pose la panne contre la pastille <b>et</b> la patte en même temps, 1 à 2 secondes.</li>
+      <li>Apporte le fil d'étain sur la jonction (pas sur la panne) : il doit couler et entourer la patte.</li>
+      <li>Retire l'étain, puis le fer. Ne bouge rien pendant 2 secondes.</li>
+      <li>Coupe la patte qui dépasse, juste au-dessus de la soudure.</li>
+    </ol>
+    <div class="card">
+      <h3>Matériel de départ</h3>
+      <ul class="clean small">
+        <li>Fer à souder <b>réglable</b> en température.</li>
+        <li>Étain avec flux, de 0,6 à 0,8 mm.</li>
+        <li>Pince coupante, troisième main ou support.</li>
+        <li>Pompe ou tresse à dessouder pour corriger.</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Une soudure ratée est terne et en boule ; une bonne est brillante, en petit cône. Entraîne-toi sur un kit de soudure à quelques euros.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Programmer">
   <div class="kicker">Programmer</div>
   <h2>Le premier programme Arduino</h2>
   <div class="grid2">
@@ -308,6 +428,65 @@ R = 150 Ω  →  on prend 220 Ω</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Programmer</div>
+  <h2>Faire plusieurs choses à la fois</h2>
+  <div class="grid2">
+    <pre><span class="k">unsigned long</span> dernierClignotement = 0;
+<span class="k">unsigned long</span> derniereMesure = 0;
+<span class="k">bool</span> etatLed = <span class="k">false</span>;
+
+<span class="k">void</span> loop() {
+  <span class="k">unsigned long</span> maintenant = millis();
+
+  <span class="k">if</span> (maintenant - dernierClignotement &gt;= 500) {
+    dernierClignotement = maintenant;
+    etatLed = !etatLed;
+    digitalWrite(LED, etatLed);
+  }
+
+  <span class="k">if</span> (maintenant - derniereMesure &gt;= 2000) {
+    derniereMesure = maintenant;
+    Serial.println(analogRead(A0));
+  }
+}</pre>
+    <ul class="clean small">
+      <li><code>delay()</code> <b>bloque</b> tout : pendant 500 ms, impossible de lire un bouton.</li>
+      <li><code>millis()</code> donne le temps écoulé depuis le démarrage. On compare avec le dernier passage pour savoir s'il est temps d'agir.</li>
+      <li>Chaque tâche a son propre compteur : elles s'exécutent à leur rythme, sans se gêner.</li>
+      <li>Écrit sous cette forme (soustraction), le calcul reste juste même quand <code>millis()</code> repart à zéro au bout d'environ 49 jours.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Programmer</div>
+  <h2>La PWM en pratique : LED et servomoteur</h2>
+  <div class="grid2">
+    <pre><span class="c">// variation de luminosité (broches ~)</span>
+<span class="k">for</span> (<span class="k">int</span> v = 0; v &lt;= 255; v++) {
+  analogWrite(9, v);
+  delay(5);
+}
+
+<span class="c">// servomoteur</span>
+<span class="k">#include</span> &lt;Servo.h&gt;   <span class="c">// ESP32Servo sur ESP32</span>
+Servo bras;
+
+<span class="k">void</span> setup() { bras.attach(10); }
+<span class="k">void</span> loop() {
+  bras.write(0);   delay(1000);
+  bras.write(90);  delay(1000);
+}</pre>
+    <ul class="clean small">
+      <li><code>analogWrite(broche, 0 à 255)</code> règle la part du temps où la broche est allumée : 128 ≈ la moitié.</li>
+      <li>Sur Arduino Uno, seules les broches marquées <b>~</b> (3, 5, 6, 9, 10, 11) font de la PWM.</li>
+      <li>Un <b>servomoteur</b> se place à un angle de 0 à 180° selon le signal reçu.</li>
+      <li>Un servo consomme beaucoup quand il bouge : alimente-le séparément si tu en as plusieurs, masse commune avec la carte.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Modules et énergie">
   <div class="kicker">Modules</div>
   <h2>Capteurs, écrans et le bus I2C</h2>
   <div class="grid2">
@@ -325,6 +504,40 @@ R = 150 Ω  →  on prend 220 Ω</pre>
       <li>Quatre fils suffisent : alimentation, masse, SDA, SCL. Plusieurs modules partagent les mêmes fils.</li>
       <li>Rien ne s'affiche ? Lance un <b>scanner I2C</b> (exemple fourni avec la bibliothèque Wire) pour voir les adresses détectées.</li>
       <li>Chaque module a sa <b>bibliothèque</b> à installer depuis le gestionnaire de bibliothèques.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Modules</div>
+  <h2>Afficher sur un écran OLED</h2>
+  <div class="grid2" style="grid-template-columns:1.3fr 1fr">
+    <pre style="font-size:14px"><span class="k">#include</span> &lt;Wire.h&gt;
+<span class="k">#include</span> &lt;Adafruit_SSD1306.h&gt;
+
+Adafruit_SSD1306 ecran(128, 64, &amp;Wire, -1);
+
+<span class="k">void</span> setup() {
+  ecran.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  ecran.clearDisplay();
+  ecran.setTextColor(SSD1306_WHITE);
+}
+
+<span class="k">void</span> loop() {
+  ecran.clearDisplay();
+  ecran.setTextSize(2);
+  ecran.setCursor(0, 0);
+  ecran.println(<span class="s">"21.4 C"</span>);
+  ecran.setTextSize(1);
+  ecran.println(<span class="s">"Humidite : 48 %"</span>);
+  ecran.display();   <span class="c">// envoie l'image</span>
+  delay(2000);
+}</pre>
+    <ul class="clean small">
+      <li>Installe les bibliothèques <b>Adafruit SSD1306</b> et <b>Adafruit GFX</b> depuis le gestionnaire.</li>
+      <li>On dessine dans une mémoire, puis <code>display()</code> envoie tout d'un coup à l'écran.</li>
+      <li><code>0x3C</code> : l'adresse I2C la plus courante pour ces écrans.</li>
+      <li>Les exemples fournis avec chaque bibliothèque (<i>Fichier → Exemples</i>) sont le meilleur point de départ.</li>
     </ul>
   </div>
 </section>
@@ -349,7 +562,7 @@ R = 150 Ω  →  on prend 220 Ω</pre>
   </div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Réseau et Raspberry Pi">
   <div class="kicker">Objets connectés</div>
   <h2>ESP32 : se connecter au Wi-Fi</h2>
   <div class="grid2">
@@ -378,6 +591,30 @@ R = 150 Ω  →  on prend 220 Ω</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Autre langage</div>
+  <h2>MicroPython sur Pico et ESP32</h2>
+  <div class="grid2">
+    <pre><span class="k">from</span> machine <span class="k">import</span> Pin, ADC
+<span class="k">import</span> time
+
+led = Pin(<span class="s">"LED"</span>, Pin.OUT)   <span class="c"># LED intégrée du Pico</span>
+potar = ADC(26)               <span class="c"># entrée analogique</span>
+
+<span class="k">while True</span>:
+    led.toggle()
+    print(potar.read_u16())   <span class="c"># 0 à 65535</span>
+    time.sleep(0.5)</pre>
+    <ul class="clean small">
+      <li><b>MicroPython</b> : du Python qui tourne directement sur le microcontrôleur. Plus simple à apprendre que le C++.</li>
+      <li>Installation sur Pico : maintenir <b>BOOTSEL</b> en branchant, puis copier le fichier <code>.uf2</code> de MicroPython sur le « disque » qui apparaît.</li>
+      <li>Éditeur conseillé : <b>Thonny</b>, qui envoie le code et affiche les résultats.</li>
+      <li>Un fichier <code>main.py</code> sur la carte s'exécute à chaque démarrage.</li>
+      <li>Un peu plus lent que le C++, mais largement suffisant pour la plupart des projets.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Raspberry Pi</div>
   <h2>Un ordinateur avec des broches</h2>
   <div class="grid2">
@@ -401,6 +638,39 @@ pause()</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Raspberry Pi</div>
+  <h2>Lancer un programme au démarrage</h2>
+  <div class="grid2">
+    <pre style="font-size:14.5px"><span class="c"># /etc/systemd/system/meteo.service</span>
+[Unit]
+Description=Station météo
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/meteo/main.py
+WorkingDirectory=/home/pi/meteo
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target</pre>
+    <div>
+      <pre><span class="c"># activer et démarrer</span>
+sudo systemctl enable --now meteo
+
+<span class="c"># état et journaux en direct</span>
+systemctl status meteo
+journalctl -u meteo -f</pre>
+      <ul class="clean small" style="margin-top:16px">
+        <li><b>systemd</b> lance le programme au démarrage et le <b>redémarre</b> s'il plante.</li>
+        <li>Les <code>print()</code> du programme apparaissent dans <code>journalctl</code>.</li>
+        <li>Remplace <code>pi</code> par ton nom d'utilisateur.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Projets et dépannage">
   <div class="kicker">Méthode</div>
   <h2>Mener un projet sans s'y perdre</h2>
   <ol class="steps">
@@ -411,6 +681,50 @@ pause()</pre>
     <li><b>Souder</b> seulement quand tout fonctionne sur breadboard.</li>
     <li><b>Documenter</b> : photo du câblage, schéma et code dans un dépôt Git.</li>
   </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Projet guidé</div>
+  <h2>Une station météo, du début à la fin</h2>
+  <div class="flow">
+    <div class="node"><b>BME280</b><span>Température, humidité, pression (I2C)</span></div><div class="arr">→</div>
+    <div class="node hl"><b>ESP32</b><span>Lit toutes les 10 min, puis deep sleep</span></div><div class="arr">→</div>
+    <div class="node"><b>OLED</b><span>Affichage local (I2C, mêmes fils)</span></div><div class="arr">→</div>
+    <div class="node"><b>Wi-Fi + MQTT</b><span>Vers un Raspberry Pi qui stocke et affiche des courbes</span></div>
+  </div>
+  <div class="grid2">
+    <ol class="steps small">
+      <li>ESP32 seul : faire clignoter une LED et afficher dans le moniteur série.</li>
+      <li>Ajouter le BME280, afficher les mesures dans le moniteur.</li>
+      <li>Ajouter l'écran sur le même bus I2C.</li>
+    </ol>
+    <ol class="steps small" style="counter-reset:s 3">
+      <li>Envoyer les mesures en Wi-Fi.</li>
+      <li>Ajouter le deep sleep et mesurer l'autonomie.</li>
+      <li>Souder, mettre en boîtier, installer à l'ombre.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Finitions</div>
+  <h2>Boîtiers et installation</h2>
+  <div class="grid2">
+    <ul class="clean small">
+      <li><b>Boîtier</b> : boîte de dérivation électrique, boîtier plastique du commerce, ou impression 3D (des milliers de modèles gratuits en ligne).</li>
+      <li><b>Fixations</b> : entretoises et vis plutôt que colle chaude, pour pouvoir démonter.</li>
+      <li><b>Câbles</b> : connecteurs (JST, Dupont, borniers) plutôt que des fils soudés partout, pour remplacer un module facilement.</li>
+      <li>Étiquette chaque fil ou connecteur : dans six mois, tu ne te souviendras plus.</li>
+    </ul>
+    <div class="card">
+      <h3>Pour un capteur</h3>
+      <ul class="clean small">
+        <li>Un capteur de température <b>enfermé</b> avec la carte mesure la chaleur de la carte : sépare-les, ou aère le boîtier.</li>
+        <li>À l'extérieur : à l'ombre, à l'abri de la pluie mais ventilé (abri à persiennes).</li>
+        <li>Les passages de câbles par le bas (avec un presse-étoupe) évitent les infiltrations.</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
@@ -436,6 +750,29 @@ pause()</pre>
     <div class="card"><div class="tag">SOUDURE</div><h3>Fer à 350 °C</h3><p>Support de fer, pièce aérée (les fumées irritent), lunettes pour couper les pattes, mains lavées après.</p></div>
   </div>
   <div class="callout"><p>Débranche toujours l'alimentation avant de modifier un câblage.</p></div>
+</section>
+
+<section class="slide" data-part="Synthèse">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>Microcontrôleur</td><td>Puce qui exécute un seul programme</td></tr>
+      <tr><td>GPIO</td><td>Broche d'entrée/sortie programmable</td></tr>
+      <tr><td>GND</td><td>La masse, référence 0 V</td></tr>
+      <tr><td>ADC</td><td>Conversion d'une tension en nombre</td></tr>
+      <tr><td>PWM</td><td>Signal haché pour simuler une tension</td></tr>
+      <tr><td>Pull-up</td><td>Résistance qui maintient une entrée à HIGH</td></tr>
+    </table>
+    <table>
+      <tr><td>I2C / SPI / UART</td><td>Façons de dialoguer avec des modules</td></tr>
+      <tr><td>Datasheet</td><td>Fiche technique d'un composant</td></tr>
+      <tr><td>Firmware</td><td>Programme envoyé sur la carte</td></tr>
+      <tr><td>Deep sleep</td><td>Veille profonde pour économiser l'énergie</td></tr>
+      <tr><td>MQTT</td><td>Protocole léger pour objets connectés</td></tr>
+      <tr><td>Level shifter</td><td>Convertisseur 3,3 V ↔ 5 V</td></tr>
+    </table>
+  </div>
 </section>
 
 <section class="slide">
@@ -464,6 +801,18 @@ pause()</pre>
     <details><summary>Un capteur de distance sort un signal 5 V. Tu peux le brancher directement sur un ESP32 ?</summary><p>Non : les broches de l'ESP32 sont en 3,3 V. Il faut un convertisseur de niveau ou un pont diviseur de tension.</p></details>
     <details><summary>Un bouton en <code>INPUT_PULLUP</code> lit LOW. Qu'est-ce que ça veut dire ?</summary><p>Qu'il est appuyé : il relie la broche à la masse. Relâché, la résistance interne la maintient à HIGH.</p></details>
     <details><summary>Ton écran OLED reste noir. Les deux premières choses à vérifier ?</summary><p>Le câblage (alimentation, masse, SDA et SCL non inversés) et l'adresse I2C, avec un scanner I2C.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Une résistance a les anneaux marron, noir, orange, or. Quelle valeur ?</summary><p>1, 0, puis 3 zéros : 10 000 Ω, soit 10 kΩ, à ± 5 %.</p></details>
+    <details><summary>Ton programme doit faire clignoter une LED et réagir à un bouton en même temps. Pourquoi éviter <code>delay()</code> ?</summary><p>Parce qu'il bloque tout le programme pendant l'attente : le bouton n'est pas lu. Utiliser <code>millis()</code> pour chaque tâche.</p></details>
+    <details><summary>Comment piloter un ruban LED 12 V depuis un ESP32 ?</summary><p>Avec un MOSFET « logic level » (ou un module), le ruban alimenté par sa propre source 12 V, et les masses reliées.</p></details>
+    <details><summary>Ton programme Python sur Raspberry Pi doit démarrer tout seul et redémarrer s'il plante.</summary><p>Créer un service systemd avec <code>Restart=always</code>, puis <code>sudo systemctl enable --now nom</code>.</p></details>
+    <details><summary>Tu mesures une tension et le multimètre affiche 0, puis plus rien en position ampères. Que s'est-il passé ?</summary><p>Mesurer une tension avec les pointes dans la borne A crée un court-circuit : le fusible interne du multimètre a probablement sauté.</p></details>
   </div>
 </section>
 

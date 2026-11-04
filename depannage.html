@@ -118,10 +118,10 @@ td:first-child{font-weight:600}
   <div class="kicker">Cours 8 · Matériel et système</div>
   <h1>Dépanner un PC<br>sous Windows</h1>
   <p class="lead" style="margin-top:24px">Une méthode pour trouver la cause d'un problème au lieu de tout essayer au hasard, et les outils pour le faire.</p>
-  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~45 min</span><span><b>Prérequis</b> aucun</span></div>
+  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h 30</span><span><b>Prérequis</b> aucun</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Méthode et outils">
   <div class="kicker">La méthode</div>
   <h2>Dépanner, c'est éliminer des hypothèses</h2>
   <ol class="steps">
@@ -159,6 +159,21 @@ td:first-child{font-weight:600}
     <tr><td>Alimentation</td><td>Fournit le courant à tout</td><td>Extinctions brutales en charge</td></tr>
     <tr><td>Carte mère</td><td>Relie tout, porte le BIOS</td><td>Ports USB ou son défaillants, pas de démarrage</td></tr>
   </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les composants</div>
+  <h2>Décoder une configuration</h2>
+  <table>
+    <tr><th>Exemple</th><th>Ce que ça veut dire</th></tr>
+    <tr><td>AMD Ryzen <b>5 5</b>500</td><td>Gamme 5 (milieu), génération 5000. Suffixes : <b>X</b> plus rapide, <b>X3D</b> grand cache (excellent en jeu), <b>G</b> avec graphique intégré</td></tr>
+    <tr><td>Intel Core i5-13400<b>F</b></td><td>Gamme i5, 13<sup>e</sup> génération. <b>K</b> = débloqué, <b>F</b> = sans graphique intégré</td></tr>
+    <tr><td>RTX 4060 <b>8 Go</b></td><td>Carte graphique ; les Go sont la <b>VRAM</b>, sa mémoire dédiée (textures)</td></tr>
+    <tr><td>16 Go <b>DDR4-3200</b></td><td>Quantité de RAM, type (DDR4 ou DDR5, non interchangeables) et vitesse en MT/s</td></tr>
+    <tr><td>SSD <b>NVMe</b> 1 To</td><td>SSD au format barrette, bien plus rapide qu'un SSD <b>SATA</b> ou un disque dur</td></tr>
+    <tr><td>Alimentation 650 W <b>80+ Gold</b></td><td>Puissance maximale et rendement</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:14px">Le chiffre de gamme ne suffit pas : un i5 récent dépasse souvent un i7 ancien. Compare les générations.</p>
 </section>
 
 <section class="slide">
@@ -188,6 +203,31 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Les outils</div>
+  <h2>Ce que Windows a enregistré</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Moniteur de fiabilité</h3>
+      <p class="small"><kbd>Win+R</kbd> → <code>perfmon /rel</code></p>
+      <ul class="clean small" style="margin-top:10px">
+        <li>Un graphique jour par jour : plantages d'applications, erreurs Windows, mises à jour, installations.</li>
+        <li>Idéal pour répondre à « depuis quand ? » et « qu'est-ce qui a changé ce jour-là ? ».</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Observateur d'événements</h3>
+      <p class="small"><kbd>Win+R</kbd> → <code>eventvwr.msc</code></p>
+      <ul class="clean small" style="margin-top:10px">
+        <li><i>Journaux Windows → Système</i>, filtre sur « Critique » et « Erreur ».</li>
+        <li><b>Kernel-Power 41</b> : le PC s'est éteint sans arrêt propre (coupure, plantage matériel, alimentation).</li>
+        <li>Copie la source et le numéro d'événement pour chercher en ligne.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>Beaucoup d'erreurs y apparaissent en permanence sans conséquence. Ce qui compte : celles qui coïncident avec le moment du problème.</p></div>
+</section>
+
+<section class="slide" data-part="Performances en jeu">
   <div class="kicker">En jeu</div>
   <h2>FPS bas ou saccades : ce n'est pas pareil</h2>
   <div class="grid2">
@@ -195,6 +235,21 @@ td:first-child{font-weight:600}
     <div class="card"><div class="tag">MICRO-SACCADES</div><h3>Des à-coups ponctuels</h3><ul class="clean small"><li><b>Compilation des shaders</b> : fréquente les premières minutes, s'améliore ensuite.</li><li><b>VRAM pleine</b> : baisse d'abord la qualité des textures.</li><li><b>RAM</b> trop lente ou en un seul canal.</li><li>Programmes en arrière-plan, overlays.</li></ul></div>
   </div>
   <div class="callout"><p>La moyenne de FPS ne dit pas tout : ce sont les <b>chutes ponctuelles</b> (le « 1 % low ») qui donnent l'impression que ça saccade.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">En jeu</div>
+  <h2>Les réglages graphiques qui comptent</h2>
+  <table>
+    <tr><th>Réglage</th><th>Sollicite surtout</th><th>Conseil</th></tr>
+    <tr><td>Qualité des textures</td><td>La VRAM</td><td>Le plus haut que ta VRAM permet, sans la dépasser</td></tr>
+    <tr><td>Ombres, éclairage, reflets</td><td>Le GPU</td><td>Les premiers à baisser : gros gain, faible perte visuelle</td></tr>
+    <tr><td>Distance de vue, foule, physique</td><td>Le CPU</td><td>À baisser si le processeur limite</td></tr>
+    <tr><td>Résolution</td><td>Le GPU</td><td>Garde celle de l'écran et utilise plutôt l'upscaling</td></tr>
+    <tr><td>DLSS / FSR / XeSS</td><td>Allège le GPU</td><td>Mode « Qualité » : quasi invisible, nettement plus de FPS</td></tr>
+    <tr><td>Limiteur de FPS</td><td>Stabilise tout</td><td>Un peu sous ton maximum habituel : moins de saccades</td></tr>
+    <tr><td>V-Sync / G-Sync / FreeSync</td><td>—</td><td>Supprime le « déchirement » de l'image ; la synchro adaptative est préférable</td></tr>
+  </table>
 </section>
 
 <section class="slide">
@@ -221,7 +276,7 @@ td:first-child{font-weight:600}
   <div class="callout warn"><p>Si le PC devient instable après l'activation du XMP, reviens au réglage par défaut et mets à jour le BIOS avant de réessayer.</p></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Matériel">
   <div class="kicker">Chaleur</div>
   <h2>Températures et throttling</h2>
   <div class="grid2">
@@ -246,6 +301,29 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Matériel</div>
+  <h2>Le PC ne démarre pas</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Rien ne s'allume</b> : prise, interrupteur à l'arrière de l'alimentation, câble, multiprise.</li>
+      <li><b>Les ventilateurs tournent mais pas d'image</b> : l'écran est-il branché sur la <b>carte graphique</b> (et non sur la carte mère) ? Bonne entrée sélectionnée sur l'écran ?</li>
+      <li><b>Bips ou LED de diagnostic</b> sur la carte mère (CPU, DRAM, VGA, BOOT) : la LED allumée indique le composant en cause. Le manuel donne la signification.</li>
+      <li><b>DRAM</b> : retire et remets les barrettes, ou teste avec une seule.</li>
+      <li><b>Après un changement</b> : remets l'ancienne pièce ou les réglages d'usine du BIOS (« Clear CMOS »).</li>
+    </ol>
+    <div class="card">
+      <h3>Démarre, puis plante</h3>
+      <ul class="clean small">
+        <li>Au démarrage de Windows : essaie le <b>mode sans échec</b>, puis la réparation automatique.</li>
+        <li>Après quelques minutes de jeu : températures, alimentation, profil XMP instable.</li>
+        <li>Test de la RAM : <kbd>Win+R</kbd> → <code>mdsched</code> (outil de diagnostic mémoire de Windows).</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Toujours PC débranché avant d'ouvrir, et touche une partie métallique du boîtier pour décharger l'électricité statique.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Logiciel et disques">
   <div class="kicker">Logiciel</div>
   <h2>Pilotes et mises à jour</h2>
   <div class="grid2">
@@ -264,6 +342,32 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Logiciel</div>
+  <h2>Les écrans bleus</h2>
+  <div class="grid2">
+    <div>
+      <p class="small">Note le <b>code d'arrêt</b> affiché (ou retrouve-le dans le moniteur de fiabilité) : c'est le meilleur indice.</p>
+      <table style="margin-top:12px">
+        <tr><th>Code</th><th>Piste fréquente</th></tr>
+        <tr><td><code>MEMORY_MANAGEMENT</code></td><td>RAM ou profil XMP</td></tr>
+        <tr><td><code>IRQL_NOT_LESS_OR_EQUAL</code></td><td>Pilote défectueux</td></tr>
+        <tr><td><code>WHEA_UNCORRECTABLE_ERROR</code></td><td>Matériel : surcadençage, tension, chaleur</td></tr>
+        <tr><td><code>VIDEO_TDR_FAILURE</code></td><td>Pilote ou carte graphique</td></tr>
+        <tr><td><code>CRITICAL_PROCESS_DIED</code></td><td>Fichiers système, disque</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Aller plus loin</h3>
+      <ul class="clean small">
+        <li>Windows écrit un rapport dans <code>C:\Windows\Minidump</code>.</li>
+        <li><b>WhoCrashed</b> ou <b>BlueScreenView</b> le lisent et indiquent souvent le pilote fautif (un nom en <code>.sys</code>).</li>
+        <li>Écrans bleus répétés avec des codes <b>différents</b> : pense au matériel (RAM, alimentation, températures) plutôt qu'à un logiciel.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Stockage</div>
   <h2>Disques : SSD, place libre et santé</h2>
   <table>
@@ -277,6 +381,24 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Logiciel</div>
+  <h2>Un démarrage trop lent</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Programmes au démarrage</b> : Gestionnaire des tâches → <i>Applications de démarrage</i>. Regarde la colonne « Impact » et désactive les inutiles (launchers de jeux, utilitaires de fabricant…).</li>
+      <li><b>Disque</b> : Windows sur un SSD ? Assez de place libre ?</li>
+      <li><b>Mises à jour en attente</b> : une mise à jour bloquée ralentit chaque démarrage. Termine-la.</li>
+      <li><b>Redémarrer plutôt qu'arrêter</b> : avec le démarrage rapide, « Arrêter » ne vide pas tout. « Redémarrer » repart vraiment de zéro.</li>
+    </ol>
+    <div class="card">
+      <h3>Le démarrage rapide</h3>
+      <p class="small">Panneau de configuration → Options d'alimentation → <i>Choisir l'action des boutons</i> → « Activer le démarrage rapide ».</p>
+      <p class="small" style="margin-top:10px">Il accélère l'allumage, mais peut garder un pilote dans un mauvais état. Si un problème disparaît après un <b>redémarrage</b> mais pas après un arrêt, désactive-le.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Périphériques">
   <div class="kicker">Périphériques</div>
   <h2>« Mon appareil USB n'est pas détecté »</h2>
   <div class="grid2">
@@ -299,6 +421,50 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Périphériques</div>
+  <h2>Écran et affichage</h2>
+  <div class="grid2">
+    <ul class="clean small">
+      <li><b>Écran branché sur la carte graphique</b>, pas sur la sortie de la carte mère : sinon tu joues sur la puce graphique intégrée (ou pas d'image du tout).</li>
+      <li><b>Fréquence d'actualisation</b> : un écran 144 Hz est souvent réglé à 60 Hz par défaut. Paramètres → Affichage → Affichage avancé.</li>
+      <li><b>Câble</b> : DisplayPort ou HDMI 2.0/2.1 pour les hautes fréquences. Un vieux câble HDMI peut limiter à 60 Hz.</li>
+      <li><b>Échelle</b> (125 %, 150 %) : agrandit textes et icônes sans changer la résolution.</li>
+    </ul>
+    <div class="card">
+      <h3>Image floue, noire ou qui clignote</h3>
+      <ul class="clean small">
+        <li>Résolution différente de la résolution native de l'écran.</li>
+        <li>Câble mal enfoncé ou abîmé : en tester un autre.</li>
+        <li>Pilote graphique : réinstaller proprement.</li>
+        <li>Raccourci <kbd>Win+Ctrl+Maj+B</kbd> : redémarre le pilote graphique sans fermer tes applications.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Périphériques</div>
+  <h2>Son et micro</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li>Clique sur l'icône du son : le bon <b>périphérique de sortie</b> est-il choisi (casque, haut-parleurs, écran HDMI) ?</li>
+      <li>Paramètres → Système → Son → <i>Mélangeur de volume</i> : une application est peut-être coupée à part.</li>
+      <li>Micro : Paramètres → Confidentialité et sécurité → <b>Microphone</b> : accès autorisé pour l'application ?</li>
+      <li>Dans l'application (Discord, jeu), vérifie le périphérique choisi : elle ne suit pas toujours celui de Windows.</li>
+    </ol>
+    <div class="card">
+      <h3>Encore rien ?</h3>
+      <ul class="clean small">
+        <li>Prise jack en façade : essaie celle de l'arrière.</li>
+        <li>Casque USB ou Bluetooth : le débrancher et le rebrancher, ou l'oublier puis le réappairer.</li>
+        <li>Gestionnaire de périphériques → <i>Entrées et sorties audio</i> : désinstaller le périphérique puis redémarrer réinstalle son pilote.</li>
+        <li>L'utilitaire de résolution des problèmes audio de Windows règle souvent les cas simples.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Windows">
   <div class="kicker">Windows</div>
   <h2>Désinstaller et désactiver proprement</h2>
   <div class="grid2">
@@ -346,6 +512,29 @@ chkdsk C: /f</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Réparer</div>
+  <h2>Réinstaller Windows proprement</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Sauvegarde</b> tes fichiers (et note tes logiciels, clés et mots de passe).</li>
+      <li>Sur un autre PC si besoin, télécharge l'<b>outil de création de support</b> sur le site de Microsoft.</li>
+      <li>Crée une <b>clé USB d'installation</b> (8 Go minimum, elle sera effacée).</li>
+      <li>Démarre sur la clé (touche de menu de démarrage : souvent <kbd>F8</kbd>, <kbd>F11</kbd> ou <kbd>F12</kbd>).</li>
+      <li>Supprime les partitions du disque Windows, installe sur l'espace libre.</li>
+      <li>Après l'installation : Windows Update, puis pilotes graphiques et de chipset.</li>
+    </ol>
+    <div class="card">
+      <h3>Bon à savoir</h3>
+      <ul class="clean small">
+        <li>La <b>licence</b> est en général liée à la carte mère ou au compte Microsoft : Windows se réactive seul après réinstallation sur le même PC.</li>
+        <li><i>Réinitialiser ce PC</i> (dans Paramètres) est plus simple et suffit dans la plupart des cas.</li>
+        <li>Débranche les autres disques pendant l'installation pour ne pas te tromper de disque.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Réseau et prévention">
   <div class="kicker">Réseau et téléphone</div>
   <h2>Les réflexes de base</h2>
   <div class="grid2">
@@ -370,6 +559,34 @@ ipconfig /flushdns</pre>
         <li>Mettre à jour l'appli et le système.</li>
         <li>Vérifier les autorisations et l'appli par défaut.</li>
       </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Réseau</div>
+  <h2>Wi-Fi lent ou instable</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <tr><th>Bande</th><th>Portée</th><th>Débit</th></tr>
+        <tr><td>2,4 GHz</td><td>Grande, traverse les murs</td><td>Plus faible, souvent encombrée</td></tr>
+        <tr><td>5 GHz</td><td>Moyenne</td><td>Élevé</td></tr>
+        <tr><td>6 GHz (Wi-Fi 6E/7)</td><td>Courte</td><td>Très élevé</td></tr>
+      </table>
+      <ul class="clean small" style="margin-top:16px">
+        <li>Mesure le débit près de la box, puis là où tu travailles : tu sauras si le problème vient de la distance.</li>
+        <li>Pour jouer ou en visio, un <b>câble Ethernet</b> reste imbattable en stabilité.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Améliorer la couverture</h3>
+      <ul class="clean small">
+        <li>Box en hauteur, au centre, loin des murs épais et des appareils métalliques.</li>
+        <li>Redémarrer la box de temps en temps.</li>
+        <li>Grand logement : un système <b>mesh</b> (plusieurs bornes) ou du <b>CPL</b> plutôt qu'un simple répéteur.</li>
+        <li>Mettre à jour le pilote Wi-Fi du PC (site du fabricant du PC ou de la carte).</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -400,6 +617,75 @@ ipconfig /flushdns</pre>
 </section>
 
 <section class="slide">
+  <div class="kicker">Prévenir</div>
+  <h2>Arnaques et faux support technique</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean">
+        <li>Une page qui affiche « <b>Votre PC est infecté, appelez ce numéro</b> », avec alarme et plein écran, est <b>toujours</b> une arnaque.</li>
+        <li>Microsoft, ta banque ou ton opérateur <b>n'appellent pas</b> pour signaler un virus.</li>
+        <li>Ne donne jamais l'accès à distance (AnyDesk, TeamViewer…) à quelqu'un qui t'a contacté le premier.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Si ça t'arrive</h3>
+      <ol class="steps small">
+        <li>Ferme le navigateur (<kbd>Alt+F4</kbd>, ou le Gestionnaire des tâches si la page bloque).</li>
+        <li>N'appelle pas le numéro, ne paie rien.</li>
+        <li>Si tu as donné un accès : déconnecte Internet, désinstalle le logiciel d'accès, change tes mots de passe depuis un autre appareil, préviens ta banque.</li>
+        <li>Lance une analyse complète avec Microsoft Defender.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Évoluer</div>
+  <h2>Améliorer son PC : par quoi commencer</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>SSD</b> à la place d'un disque dur : le plus gros gain ressenti, pour un petit budget.</li>
+      <li><b>RAM</b> : passer à 16 ou 32 Go, en deux barrettes identiques.</li>
+      <li><b>Carte graphique</b> : le gain principal en jeu, si le processeur suit.</li>
+      <li><b>Processeur</b> : souvent possible sur la même carte mère, après une mise à jour du BIOS.</li>
+    </ol>
+    <div class="card">
+      <h3>Vérifier la compatibilité</h3>
+      <ul class="clean small">
+        <li><b>Socket</b> et <b>chipset</b> de la carte mère pour un processeur (liste de compatibilité sur le site du fabricant).</li>
+        <li><b>Type de RAM</b> : DDR4 ou DDR5 selon la carte mère.</li>
+        <li><b>Alimentation</b> : puissance et connecteurs suffisants pour la carte graphique.</li>
+        <li><b>Taille</b> : longueur de la carte graphique et hauteur du ventirad dans le boîtier.</li>
+        <li>Emplacements M.2 libres pour un SSD NVMe.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Synthèse">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>CPU / GPU</td><td>Processeur / carte graphique</td></tr>
+      <tr><td>VRAM</td><td>Mémoire de la carte graphique</td></tr>
+      <tr><td>XMP / EXPO</td><td>Profil de vitesse de la RAM</td></tr>
+      <tr><td>Throttling</td><td>Baisse de vitesse due à la chaleur</td></tr>
+      <tr><td>BIOS / UEFI</td><td>Logiciel de la carte mère, avant Windows</td></tr>
+      <tr><td>POST</td><td>Vérification du matériel au démarrage</td></tr>
+    </table>
+    <table>
+      <tr><td>Pilote</td><td>Logiciel qui fait parler Windows au matériel</td></tr>
+      <tr><td>BSOD</td><td>Écran bleu, arrêt brutal de Windows</td></tr>
+      <tr><td>SFC / DISM</td><td>Outils de réparation de Windows</td></tr>
+      <tr><td>NVMe / SATA</td><td>Types de connexion des SSD</td></tr>
+      <tr><td>Socket</td><td>Emplacement du processeur</td></tr>
+      <tr><td>1 % low</td><td>FPS dans les pires moments</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">À retenir</div>
   <h2>L'essentiel en 6 phrases</h2>
   <div class="grid2">
@@ -425,6 +711,18 @@ ipconfig /flushdns</pre>
     <details><summary>Un appareil USB-C ne s'allume pas et rien n'apparaît dans le Gestionnaire de périphériques. Première vérification ?</summary><p>Le câble : beaucoup de câbles USB-C ne transmettent que la charge. Tester avec le câble d'origine, sur un port arrière.</p></details>
     <details><summary><code>ping 1.1.1.1</code> marche mais <code>ping google.be</code> échoue. Quel est le problème ?</summary><p>La résolution DNS. Essayer <code>ipconfig /flushdns</code>, redémarrer la box, ou changer de serveur DNS.</p></details>
     <details><summary>Dans quel ordre lancer les commandes de réparation de Windows ?</summary><p>D'abord <code>DISM /Online /Cleanup-Image /RestoreHealth</code>, puis <code>sfc /scannow</code>, puis redémarrer.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Nouveau PC, les ventilateurs tournent mais l'écran reste noir. Première vérification ?</summary><p>Que l'écran est branché sur la carte graphique (et non la carte mère), avec la bonne entrée sélectionnée sur l'écran.</p></details>
+    <details><summary>Ton écran 144 Hz semble moins fluide que prévu. Où regarder ?</summary><p>Paramètres → Affichage → Affichage avancé : la fréquence est peut-être restée à 60 Hz. Vérifier aussi le câble.</p></details>
+    <details><summary>Écrans bleus fréquents avec des codes différents depuis l'activation du XMP. Piste ?</summary><p>Un profil XMP instable : revenir aux réglages par défaut, mettre à jour le BIOS, puis tester la RAM.</p></details>
+    <details><summary>Une page affiche « Virus détecté, appelez le support Microsoft ». Que faire ?</summary><p>Fermer le navigateur sans appeler : c'est une arnaque. Ne jamais donner d'accès à distance.</p></details>
+    <details><summary>Ton PC a un disque dur et 8 Go de RAM. Quelle amélioration en premier ?</summary><p>Un SSD pour Windows et les programmes : c'est le gain le plus visible au quotidien.</p></details>
   </div>
 </section>
 
