@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lancer une activité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEBE2; --paper:#FBF9F4; --ink:#1B1A17; --muted:#5E5A52; --faint:#8C877C;
+  --line:#DDD7CA; --soft:#F1EDE4; --code-bg:#1E1D1A; --code-ink:#ECE8DE; --code-com:#9A958A;
+  --accent:#6D28D9; --accent-soft:#EEE8FB; --warn:#B45309; --warn-soft:#FDF1E1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+    --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+    --accent:#B79CF7; --accent-soft:#261E3A; --warn:#F2A65A; --warn-soft:#2E2417;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+  --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+  --accent:#B79CF7; --accent-soft:#261E3A; --warn:#F2A65A; --warn-soft:#2E2417;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+#viewport{position:fixed;inset:0 0 52px 0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:18px;box-shadow:0 1px 0 var(--line),0 20px 50px -30px rgba(0,0,0,.35);
+  padding:64px 80px 56px;display:none;flex-direction:column;overflow:hidden}
+.slide.active{display:flex;animation:in .28s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slide::after{content:attr(data-n);position:absolute;right:36px;bottom:26px;font:500 13px "JetBrains Mono",monospace;color:var(--faint)}
+.slide::before{content:"Cours 9 · Lancer une activité";position:absolute;left:80px;bottom:26px;font:500 13px Inter,system-ui,sans-serif;color:var(--faint);letter-spacing:.02em}
+.kicker{font:600 14px Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font:700 76px/1.02 "Space Grotesk",sans-serif;letter-spacing:-.02em}
+h2{font:700 44px/1.1 "Space Grotesk",sans-serif;letter-spacing:-.015em;margin-bottom:26px}
+h3{font:700 22px/1.25 "Space Grotesk",sans-serif;margin-bottom:8px}
+p,li{font-size:21px;line-height:1.5;color:var(--ink)}
+.lead{font-size:25px;line-height:1.45;color:var(--muted);max-width:980px}
+.muted{color:var(--muted)}
+.small,.small li,.small p{font-size:17px}
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:12px}
+ul.clean li{padding-left:28px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:2px;background:var(--accent)}
+ol.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:14px}
+ol.steps li{counter-increment:s;padding-left:52px;position:relative}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 17px "Space Grotesk",Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+code{font-family:"JetBrains Mono",monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:20px 24px;font:400 15.5px/1.55 "JetBrains Mono",monospace;overflow:hidden;white-space:pre}
+pre code{background:none;border:0;padding:0;font-size:inherit;color:inherit}
+pre .c{color:var(--code-com)} pre .k{color:#F5B971} pre .s{color:#9FD8A8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-bottom:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.card p,.card li{font-size:18px}
+.card .tag{display:inline-block;font:600 12px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:5px;margin-bottom:10px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:16px 22px;border-radius:0 12px 12px 0;margin-top:auto}
+.callout p{font-size:19px}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout b{color:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:18px}
+th{text-align:left;font:600 13px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 14px 10px;border-bottom:2px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+td:first-child{font-weight:600}
+.flow{display:flex;align-items:stretch;gap:0;margin:8px 0 24px}
+.flow .node{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 14px;text-align:center}
+.flow .node b{display:block;font:700 18px "Space Grotesk",Inter,system-ui,sans-serif;margin-bottom:4px}
+.flow .node span{font-size:15px;color:var(--muted);line-height:1.35;display:block}
+.flow .node.hl{border-color:var(--accent);background:var(--accent-soft)}
+.flow .arr{width:34px;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:22px;flex:none}
+.title-slide{justify-content:center;background:var(--paper)}
+.title-slide .bar{width:72px;height:6px;background:var(--accent);border-radius:3px;margin-bottom:34px}
+.title-slide .meta{margin-top:34px;display:flex;gap:28px;font-size:17px;color:var(--muted)}
+.title-slide .meta span b{color:var(--ink);font-weight:600}
+.big-num{font:700 64px "Space Grotesk",Inter,system-ui,sans-serif;color:var(--accent);line-height:1}
+.qa{display:flex;flex-direction:column;gap:14px}
+.qa details{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 20px}
+.qa summary{cursor:pointer;font-size:19px;font-weight:500;list-style:none}
+.qa summary::before{content:"＋ ";color:var(--accent);font-weight:700}
+.qa details[open] summary::before{content:"－ "}
+.qa details p{font-size:17px;color:var(--muted);margin-top:8px}
+/* barre de contrôle */
+#bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--bg)}
+#bar button,#bar a{font:500 14px Inter,system-ui,sans-serif;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;height:34px;min-width:34px;padding:0 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+#bar button:hover,#bar a:hover{border-color:var(--accent)}
+#bar button:disabled{opacity:.4;cursor:default}
+#prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+#prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+#count{font:500 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
+@media (max-width:560px){#bar .opt{display:none}}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+<section class="slide title-slide">
+  <div class="bar"></div>
+  <div class="kicker">Cours 9 · Entreprendre</div>
+  <h1>Lancer une activité<br>et la faire connaître</h1>
+  <p class="lead" style="margin-top:24px">Vérifier qu'une idée répond à un vrai besoin, construire une offre claire, puis communiquer avec des supports simples et efficaces.</p>
+  <div class="meta"><span><b>Niveau</b> débutant</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> aucun</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Objectifs</div>
+  <h2>À la fin de ce cours, tu sauras…</h2>
+  <ol class="steps">
+    <li>Formuler et <b>tester</b> les hypothèses derrière une idée d'activité.</li>
+    <li>Écrire un questionnaire d'étude de marché qui donne des réponses utiles.</li>
+    <li>Résumer ton offre en une phrase et fixer un prix.</li>
+    <li>Connaître les grandes étapes pour te lancer comme indépendant en Belgique.</li>
+    <li>Réaliser des supports qui convertissent : vidéo, carte de visite, QR code.</li>
+    <li>Écrire des messages courts et clairs, et mesurer ce qui marche.</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Avant tout</div>
+  <h2>Une idée, c'est une série d'hypothèses</h2>
+  <div class="grid2">
+    <div>
+      <p>« Je vais proposer des cours de cuisine à domicile » cache en réalité plusieurs paris :</p>
+      <ul class="clean small" style="margin-top:18px">
+        <li><b>Le problème existe</b> : ces personnes veulent vraiment mieux cuisiner.</li>
+        <li><b>Il est important</b> pour elles, assez pour agir.</li>
+        <li><b>Elles paieraient</b>, et combien.</li>
+        <li><b>Tu peux les atteindre</b> : tu sais où elles sont.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Le principe</h3>
+      <p class="small">Vérifie ces hypothèses <b>le moins cher possible</b> avant d'investir du temps et de l'argent : discussions, questionnaire, page de présentation, première offre test.</p>
+      <p class="small muted" style="margin-top:12px">Le but n'est pas d'avoir raison, mais de savoir le plus tôt possible si tu as tort.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">La cible</div>
+  <h2>Pour qui, exactement ?</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">QUI</div><h3>Le profil</h3><p>Âge, métier, taille de structure, niveau à l'aise avec le numérique.</p></div>
+    <div class="card"><div class="tag">PROBLÈME</div><h3>Ce qui le bloque</h3><p>Avec ses mots à lui : « je n'ai pas le temps », « je ne sais pas par où commencer ».</p></div>
+    <div class="card"><div class="tag">OÙ</div><h3>Où le trouver</h3><p>Groupes locaux, associations, salons, bouche-à-oreille, un réseau social précis.</p></div>
+  </div>
+  <div class="callout"><p>« Tout le monde » n'est pas une cible. Commencer par <b>un</b> groupe précis rend les messages plus forts et les retours plus clairs. On peut élargir ensuite.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Étude de marché</div>
+  <h2>Construire un questionnaire</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Profil</b> : 2 ou 3 questions pour savoir qui répond.</li>
+      <li><b>Situation actuelle</b> : comment la personne fait aujourd'hui, ce qui lui pose problème.</li>
+      <li><b>Besoins</b> : ce qui l'aiderait, par ordre d'importance.</li>
+      <li><b>Budget et format</b> : fourchettes de prix, à distance ou en personne.</li>
+      <li><b>Ouverture</b> : une question libre et, en option, un e-mail pour être recontacté.</li>
+    </ol>
+    <div class="card">
+      <h3>Les règles</h3>
+      <ul class="clean small">
+        <li><b>2 à 5 minutes</b> maximum : 10 à 15 questions.</li>
+        <li>Surtout des questions <b>fermées</b> (faciles à analyser), et une ou deux <b>ouvertes</b> pour les mots exacts.</li>
+        <li>Une seule idée par question.</li>
+        <li>Anonyme par défaut. Si tu demandes un e-mail, dis à quoi il servira et laisse-le facultatif (RGPD).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Étude de marché</div>
+  <h2>Bonnes et mauvaises questions</h2>
+  <table>
+    <tr><th>À éviter</th><th>Pourquoi</th><th>Mieux</th></tr>
+    <tr><td>« Seriez-vous intéressé par de super cours de cuisine ? »</td><td>Orientée : tout le monde dit oui</td><td>« Combien de fois avez-vous cuisiné un vrai repas la semaine dernière ? »</td></tr>
+    <tr><td>« Utiliseriez-vous ce service ? »</td><td>Hypothétique : les gens sont optimistes</td><td>« Avez-vous déjà payé pour ce type d'aide ? Combien ? »</td></tr>
+    <tr><td>« Manquez-vous de temps et d'idées pour cuisiner ? »</td><td>Deux questions en une</td><td>Deux questions séparées</td></tr>
+    <tr><td>« Combien paieriez-vous ? »</td><td>Réponse libre difficile à exploiter</td><td>Fourchettes : moins de 50 €, 50 à 150 €, plus de 150 €</td></tr>
+  </table>
+  <div class="callout"><p>Le passé et les faits (« la dernière fois… ») sont plus fiables que les intentions (« est-ce que vous feriez… »).</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Étude de marché</div>
+  <h2>Diffuser, puis analyser</h2>
+  <div class="grid2">
+    <div>
+      <h3>Diffuser</h3>
+      <ul class="clean small">
+        <li>Là où se trouve ta cible : groupes Facebook locaux, associations, commerçants, entourage.</li>
+        <li>Un message <b>honnête</b> : « je réfléchis à lancer… et j'ai besoin de votre avis » touche plus qu'une publicité.</li>
+        <li>Dis combien de temps ça prend, et remercie.</li>
+        <li>Une relance quelques jours plus tard, pas plus.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Analyser</h3>
+      <ul class="clean small">
+        <li>Compte les réponses par profil : les besoins diffèrent souvent selon les groupes.</li>
+        <li>Repère les <b>problèmes qui reviennent</b> et le budget réaliste.</li>
+        <li>Relève les <b>mots exacts</b> des réponses libres : ce sont tes futurs messages.</li>
+        <li>Conclus par une <b>décision</b> : je lance, j'ajuste l'offre, ou je laisse tomber.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><p>Trente réponses de ton entourage ne valent pas trente réponses de ta vraie cible. Note d'où viennent les réponses.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">L'offre</div>
+  <h2>Ton activité en une phrase</h2>
+  <div style="background:var(--accent-soft);border-radius:14px;padding:26px 30px;margin-bottom:26px">
+    <p style="font:600 26px/1.4 'Space Grotesk',Inter,sans-serif">J'aide <span style="color:var(--accent)">[qui]</span> à <span style="color:var(--accent)">[résultat]</span> grâce à <span style="color:var(--accent)">[comment]</span>, sans <span style="color:var(--accent)">[ce qu'ils redoutent]</span>.</p>
+    <p class="small muted" style="margin-top:10px">Ex. : J'aide les jeunes actifs à cuisiner des repas sains en 20 minutes grâce à des cours à domicile, sans matériel compliqué.</p>
+  </div>
+  <div class="grid2">
+    <ul class="clean small">
+      <li>Parle du <b>résultat</b> pour le client, pas de la technique.</li>
+      <li>Peu de services, bien décrits, valent mieux qu'une longue liste.</li>
+    </ul>
+    <ul class="clean small">
+      <li>Regroupe-les en 2 ou 3 <b>formules</b> lisibles (petite, moyenne, complète).</li>
+      <li>Teste la phrase à voix haute : un inconnu doit comprendre en 10 secondes.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le prix</div>
+  <h2>Fixer un tarif sans se brader</h2>
+  <div class="grid2">
+    <div>
+      <ol class="steps small">
+        <li><b>Tes coûts</b> : matériel, logiciels, déplacements, assurances, cotisations sociales, impôts.</li>
+        <li><b>Ton temps réel</b> : la prospection, l'administratif et les échanges comptent aussi, pas seulement la production.</li>
+        <li><b>Le marché</b> : ce que pratiquent les autres, et ce que tes répondants ont dit pouvoir payer.</li>
+        <li><b>La valeur</b> : ce que le résultat rapporte ou fait gagner au client.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Forfait ou taux horaire ?</h3>
+      <ul class="clean small">
+        <li><b>Forfait</b> : le client connaît le prix à l'avance. Idéal pour une prestation bien délimitée ou un atelier. Définis précisément ce qui est inclus.</li>
+        <li><b>Horaire</b> : pour les petites tâches et la maintenance.</li>
+        <li>Un devis écrit, même court, évite la plupart des malentendus.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Démarches · Belgique</div>
+  <h2>Les grandes étapes pour se lancer</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li>Choisir le statut : indépendant <b>à titre principal</b> ou <b>complémentaire</b> (à côté d'un emploi ou d'études), en personne physique ou en société.</li>
+      <li>Ouvrir un <b>compte bancaire professionnel</b>.</li>
+      <li>S'inscrire à la <b>BCE</b> via un <b>guichet d'entreprise</b> agréé, qui vérifie aussi les éventuelles conditions d'accès à la profession.</li>
+      <li>Activer le <b>numéro de TVA</b> (ou demander le régime de franchise pour les petits chiffres d'affaires).</li>
+      <li>S'affilier à une <b>caisse d'assurances sociales</b> avant de commencer.</li>
+    </ol>
+    <div class="card">
+      <h3>Bon à savoir</h3>
+      <ul class="clean small">
+        <li>Les montants des cotisations et les seuils changent régulièrement : vérifie-les auprès de ta caisse ou du guichet.</li>
+        <li>Un <b>comptable</b> n'est pas obligatoire pour une petite activité, mais fait souvent gagner plus qu'il ne coûte.</li>
+        <li>Garde toutes tes factures et dépenses dès le premier jour.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:14px">Ce cours donne une vue d'ensemble, pas un conseil juridique ou fiscal.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Image</div>
+  <h2>Une identité visuelle simple et cohérente</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">LOGO</div><h3>Lisible en petit</h3><p>Il doit rester reconnaissable sur une carte de visite et en icône de profil. Une version claire et une version foncée.</p></div>
+    <div class="card"><div class="tag">COULEURS</div><h3>2 ou 3, pas plus</h3><p>Une couleur principale, une d'accent, des neutres. Toujours les mêmes codes hexadécimaux, partout.</p></div>
+    <div class="card"><div class="tag">TYPO</div><h3>1 ou 2 polices</h3><p>Une pour les titres, une pour le texte. Lisibles avant d'être originales.</p></div>
+  </div>
+  <div class="callout"><p>La <b>cohérence</b> compte plus que l'originalité : les mêmes couleurs, le même ton et le même logo sur le site, les réseaux, la vidéo et les cartes rendent une petite activité professionnelle.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vidéo</div>
+  <h2>Une vidéo promotionnelle qui convertit</h2>
+  <div class="flow">
+    <div class="node hl"><b>Accroche</b><span>3 premières secondes : le problème ou une image forte</span></div><div class="arr">→</div>
+    <div class="node"><b>Solution</b><span>Ce que tu proposes, montré en action</span></div><div class="arr">→</div>
+    <div class="node"><b>Preuve</b><span>Résultat, avis, avant / après</span></div><div class="arr">→</div>
+    <div class="node hl"><b>Appel à l'action</b><span>Une seule action + adresse + logo</span></div>
+  </div>
+  <div class="grid2">
+    <ul class="clean small">
+      <li>La fin tient en 5 à 8 secondes : <b>le bénéfice</b>, <b>une action</b> (« Essayez gratuitement », « Prenez rendez-vous ») et <b>l'adresse</b>.</li>
+      <li>Un seul appel à l'action : en proposer trois, c'est n'en faire suivre aucun.</li>
+    </ul>
+    <ul class="clean small">
+      <li><b>Sous-titres</b> obligatoires : la plupart des vidéos sur les réseaux sont regardées sans le son.</li>
+      <li>Format <b>vertical 9:16</b> pour Reels, TikTok et Shorts ; 16:9 pour un site ou YouTube.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Print</div>
+  <h2>Cartes de visite et QR codes</h2>
+  <div class="grid2">
+    <div>
+      <h3>La carte</h3>
+      <ul class="clean small">
+        <li>Format européen : <b>85 × 55 mm</b>.</li>
+        <li>L'essentiel : nom, activité en quelques mots, téléphone, e-mail ou site.</li>
+        <li>Fichier en <b>PDF pour impression</b>, en <b>300 DPI</b>, avec <b>fonds perdus</b> (souvent 3 mm) si l'imprimeur le demande.</li>
+        <li>Garde le texte important à au moins 3 mm du bord.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Le QR code</h3>
+      <ul class="clean small">
+        <li><b>Statique</b> : gratuit, pointe vers une adresse fixe. <b>Dynamique</b> : modifiable et mesurable, souvent payant.</li>
+        <li>Au moins <b>2 × 2 cm</b>, sombre sur fond clair, une marge blanche autour, jamais sur une photo chargée.</li>
+        <li>Une phrase qui dit pourquoi scanner : « Mes tarifs », « Retrouvez-moi sur Facebook ».</li>
+        <li><b>Teste-le</b> avec plusieurs téléphones avant d'imprimer.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Écrire</div>
+  <h2>Des messages courts que tout le monde comprend</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li><b>Commence par ce qui change pour le lecteur</b>, pas par ce que tu as fait.</li>
+        <li>Une idée par puce, en commençant par un mot-clé en gras.</li>
+        <li>Remplace le jargon (« migration vers un module de réservation ») par le résultat (« réservez en ligne en deux clics »).</li>
+        <li>Adapte la longueur au support : notification, publication, e-mail.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Exemple d'annonce de nouveauté</h3>
+      <p class="small"><b>Du nouveau à l'atelier</b></p>
+      <ul class="clean small" style="margin-top:8px">
+        <li><b>Réservation en ligne</b> : choisissez votre créneau, 24 h/24.</li>
+        <li><b>Paiement sur place</b> : rien à régler à l'avance.</li>
+        <li><b>Ouvert le samedi</b> : de 9 h à 13 h.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>Relis-toi en te demandant : « Une personne qui n'a jamais utilisé mon service comprend-elle chaque phrase ? »</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Réseaux et mesure</div>
+  <h2>Publier moins, mais mieux</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Choisis <b>1 ou 2 plateformes</b> où se trouve ta cible, plutôt que d'être partout à moitié.</li>
+        <li><b>Régularité</b> plutôt que volume : une publication utile par semaine bat dix publications puis le silence.</li>
+        <li>Alterne : conseils utiles, coulisses, réalisations, témoignages réels.</li>
+        <li>Réponds aux commentaires et messages : c'est là que naissent les clients.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Trois chiffres à suivre</h3>
+      <ul class="clean small">
+        <li><b>Visites</b> du site ou de la page.</li>
+        <li><b>Demandes</b> de contact ou de devis.</li>
+        <li><b>Taux de transformation</b> : demandes ÷ visites.</li>
+      </ul>
+      <p class="small muted" style="margin-top:12px">Les « j'aime » font plaisir, mais ce sont les demandes qui font vivre une activité.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">À retenir</div>
+  <h2>L'essentiel en 6 phrases</h2>
+  <div class="grid2">
+    <ul class="clean">
+      <li>Une idée est un ensemble d'hypothèses à vérifier, vite et pas cher.</li>
+      <li>Des questions sur les <b>faits passés</b>, pas sur des intentions.</li>
+      <li>Ton offre en une phrase : qui, quel résultat, comment.</li>
+    </ul>
+    <ul class="clean">
+      <li>Un prix qui couvre <b>tout</b> ton temps et tes coûts.</li>
+      <li>Une identité cohérente et <b>un seul</b> appel à l'action.</li>
+      <li>On mesure les demandes, pas les « j'aime ».</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi</h2>
+  <div class="qa">
+    <details><summary>Que vaut la question « Seriez-vous prêt à payer pour ce service ? »</summary><p>Peu : elle est hypothétique et les gens répondent par politesse. Mieux : « Avez-vous déjà payé pour ce type d'aide ? Combien ? »</p></details>
+    <details><summary>Ta vidéo finit par le site, le téléphone, Instagram, Facebook et une promo. Qu'est-ce qui ne va pas ?</summary><p>Trop d'appels à l'action. Garde un bénéfice, une seule action, l'adresse et le logo.</p></details>
+    <details><summary>Ton QR code fait 1,5 cm et est posé sur une photo de paysage. Risques ?</summary><p>Trop petit et pas assez contrasté : il peut ne pas être lu. Au moins 2 × 2 cm, sombre sur fond clair, avec une marge blanche.</p></details>
+    <details><summary>Réécris « Nous avons migré notre système de réservation vers une nouvelle plateforme » pour un client.</summary><p>Par exemple : « Vous pouvez maintenant réserver en ligne, 24 h/24, en deux clics. »</p></details>
+    <details><summary>200 visites et 4 demandes de devis ce mois-ci. Quel taux de transformation ?</summary><p>4 ÷ 200 = 2 %.</p></details>
+  </div>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="Navigation des slides">
+  <button id="prev" aria-label="Slide précédente">←</button>
+  <button id="next" aria-label="Slide suivante">→</button>
+  <span id="count">1 / 1</span>
+  <div id="prog"><i></i></div>
+  <button id="theme" class="opt" aria-label="Changer de thème">Clair / sombre</button>
+  <a id="full" class="opt" href="#" target="_blank" rel="noopener" title="Ouvrir dans un nouvel onglet">⤢ Plein écran</a>
+</nav>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), vp=document.getElementById('viewport');
+  var i=0, n=slides.length;
+  slides.forEach(function(s,k){s.setAttribute('data-n',(k+1)+' / '+n)});
+  function fit(){var w=vp.clientWidth-24,h=vp.clientHeight-24;var sc=Math.min(w/1280,h/720);stage.style.transform='scale('+sc+')'}
+  function go(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,j){s.classList.toggle('active',j===i)});
+    document.getElementById('count').textContent=(i+1)+' / '+n;
+    document.querySelector('#prog i').style.width=((i+1)/n*100)+'%';
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===n-1;
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home')go(0); if(e.key==='End')go(n-1);
+  });
+  var sx=null;
+  document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){if(sx===null)return;var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)go(i+(d<0?1:-1));sx=null});
+  stage.addEventListener('click',function(e){if(e.target.closest('details,a,button,summary'))return;var r=stage.getBoundingClientRect();go(i+(e.clientX>r.left+r.width/2?1:-1))});
+  document.getElementById('theme').onclick=function(){
+    var r=document.documentElement,cur=r.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark');
+    try{localStorage.setItem('cours-theme',r.getAttribute('data-theme'))}catch(e){}
+  };
+  try{var t=localStorage.getItem('cours-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+  var full=document.getElementById('full'); full.href=location.href.split('#')[0];
+  if(window.top===window.self) full.style.display='none';
+  window.addEventListener('resize',fit); fit();
+  var h=parseInt((location.hash||'').slice(1),10); go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
