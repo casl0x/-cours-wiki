@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odoo Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEBE2; --paper:#FBF9F4; --ink:#1B1A17; --muted:#5E5A52; --faint:#8C877C;
+  --line:#DDD7CA; --soft:#F1EDE4; --code-bg:#1E1D1A; --code-ink:#ECE8DE; --code-com:#9A958A;
+  --accent:#714B67; --accent-soft:#F2EAF0; --warn:#B45309; --warn-soft:#FDF1E1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+    --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+    --accent:#D3A9C9; --accent-soft:#2E2230; --warn:#F2A65A; --warn-soft:#2E2417;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121210; --paper:#1B1A17; --ink:#EEEAE1; --muted:#B0AA9E; --faint:#7F7A70;
+  --line:#33312C; --soft:#24231F; --code-bg:#0E0E0C; --code-ink:#ECE8DE; --code-com:#8A857A;
+  --accent:#D3A9C9; --accent-soft:#2E2230; --warn:#F2A65A; --warn-soft:#2E2417;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+#viewport{position:fixed;inset:0 0 52px 0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--paper);border-radius:18px;box-shadow:0 1px 0 var(--line),0 20px 50px -30px rgba(0,0,0,.35);
+  padding:64px 80px 56px;display:none;flex-direction:column;overflow:hidden}
+.slide.active{display:flex;animation:in .28s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slide::after{content:attr(data-n);position:absolute;right:36px;bottom:26px;font:500 13px "JetBrains Mono",monospace;color:var(--faint)}
+.slide::before{content:"Cours 5 · Odoo Website";position:absolute;left:80px;bottom:26px;font:500 13px Inter,system-ui,sans-serif;color:var(--faint);letter-spacing:.02em}
+.kicker{font:600 14px Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font:700 76px/1.02 "Space Grotesk",sans-serif;letter-spacing:-.02em}
+h2{font:700 44px/1.1 "Space Grotesk",sans-serif;letter-spacing:-.015em;margin-bottom:26px}
+h3{font:700 22px/1.25 "Space Grotesk",sans-serif;margin-bottom:8px}
+p,li{font-size:21px;line-height:1.5;color:var(--ink)}
+.lead{font-size:25px;line-height:1.45;color:var(--muted);max-width:980px}
+.muted{color:var(--muted)}
+.small,.small li,.small p{font-size:17px}
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:12px}
+ul.clean li{padding-left:28px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:2px;background:var(--accent)}
+ol.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:14px}
+ol.steps li{counter-increment:s;padding-left:52px;position:relative}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 17px "Space Grotesk",Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+code{font-family:"JetBrains Mono",monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:20px 24px;font:400 15.5px/1.55 "JetBrains Mono",monospace;overflow:hidden;white-space:pre}
+pre code{background:none;border:0;padding:0;font-size:inherit;color:inherit}
+pre .c{color:var(--code-com)} pre .k{color:#F5B971} pre .s{color:#9FD8A8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-bottom:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.card p,.card li{font-size:18px}
+.card .tag{display:inline-block;font:600 12px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:5px;margin-bottom:10px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:16px 22px;border-radius:0 12px 12px 0;margin-top:auto}
+.callout p{font-size:19px}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout b{color:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:18px}
+th{text-align:left;font:600 13px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 14px 10px;border-bottom:2px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+td:first-child{font-weight:600}
+.flow{display:flex;align-items:stretch;gap:0;margin:8px 0 24px}
+.flow .node{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 14px;text-align:center}
+.flow .node b{display:block;font:700 18px "Space Grotesk",Inter,system-ui,sans-serif;margin-bottom:4px}
+.flow .node span{font-size:15px;color:var(--muted);line-height:1.35;display:block}
+.flow .node.hl{border-color:var(--accent);background:var(--accent-soft)}
+.flow .arr{width:34px;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:22px;flex:none}
+.title-slide{justify-content:center;background:var(--paper)}
+.title-slide .bar{width:72px;height:6px;background:var(--accent);border-radius:3px;margin-bottom:34px}
+.title-slide .meta{margin-top:34px;display:flex;gap:28px;font-size:17px;color:var(--muted)}
+.title-slide .meta span b{color:var(--ink);font-weight:600}
+.big-num{font:700 64px "Space Grotesk",Inter,system-ui,sans-serif;color:var(--accent);line-height:1}
+.qa{display:flex;flex-direction:column;gap:14px}
+.qa details{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 20px}
+.qa summary{cursor:pointer;font-size:19px;font-weight:500;list-style:none}
+.qa summary::before{content:"＋ ";color:var(--accent);font-weight:700}
+.qa details[open] summary::before{content:"－ "}
+.qa details p{font-size:17px;color:var(--muted);margin-top:8px}
+/* barre de contrôle */
+#bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--bg)}
+#bar button,#bar a{font:500 14px Inter,system-ui,sans-serif;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;height:34px;min-width:34px;padding:0 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+#bar button:hover,#bar a:hover{border-color:var(--accent)}
+#bar button:disabled{opacity:.4;cursor:default}
+#prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+#prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+#count{font:500 13px "JetBrains Mono",ui-monospace,monospace;color:var(--muted);min-width:56px;text-align:center}
+@media (max-width:560px){#bar .opt{display:none}}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+<section class="slide title-slide">
+  <div class="bar"></div>
+  <div class="kicker">Cours 5 · ERP et site web</div>
+  <h1>Odoo Website :<br>vues, QWeb et propriétés</h1>
+  <p class="lead" style="margin-top:24px">Comprendre comment Odoo construit ses pages, où se trouve vraiment le code, et comment le modifier sans tout casser.</p>
+  <div class="meta"><span><b>Niveau</b> débutant → intermédiaire</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> bases de HTML</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Objectifs</div>
+  <h2>À la fin de ce cours, tu sauras…</h2>
+  <ol class="steps">
+    <li>Expliquer le trio d'Odoo : <b>modèles</b>, <b>enregistrements</b> et <b>vues</b>.</li>
+    <li>Utiliser le mode développeur pour trouver les noms techniques et les vues.</li>
+    <li>Modifier une vue proprement grâce à l'<b>héritage</b> et aux XPath.</li>
+    <li>Comprendre les vues <b>propres au site web</b> et pourquoi une modification « n'apparaît pas ».</li>
+    <li>Écrire du <b>QWeb</b> : boucles, conditions, affichage de champs.</li>
+    <li>Expliquer le fonctionnement du champ <b>Properties</b>.</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le principe</div>
+  <h2>Modèles, enregistrements, vues</h2>
+  <div class="flow">
+    <div class="node"><b>Modèle</b><span>La structure : une « table » avec ses champs. Ex. <code>res.partner</code></span></div><div class="arr">→</div>
+    <div class="node"><b>Enregistrements</b><span>Les lignes : chaque contact, produit, bien…</span></div><div class="arr">→</div>
+    <div class="node hl"><b>Vues</b><span>Comment on les affiche : formulaire, liste, kanban, page web</span></div>
+  </div>
+  <ul class="clean">
+    <li>Tout vient de <b>modules</b> (Ventes, Site web, CRM…). Un module ajoute des modèles, des vues et des données.</li>
+    <li>Une vue ne contient <b>pas les données</b> : elle décrit seulement comment les présenter. Deux vues peuvent afficher le même champ.</li>
+    <li>Les pages du site web sont des vues de type <b>QWeb</b> : du HTML enrichi d'instructions <code>t-…</code>.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Champs</div>
+  <h2>Les types de champs à connaître</h2>
+  <table>
+    <tr><th>Type</th><th>Contient</th><th>Exemple</th></tr>
+    <tr><td><code>Char</code> / <code>Text</code> / <code>Html</code></td><td>Du texte, court ou long</td><td>Nom, description</td></tr>
+    <tr><td><code>Integer</code> / <code>Float</code> / <code>Monetary</code></td><td>Des nombres</td><td>Surface, prix</td></tr>
+    <tr><td><code>Boolean</code> / <code>Date</code> / <code>Selection</code></td><td>Oui/non, date, choix dans une liste</td><td>Disponible, date d'entrée, statut</td></tr>
+    <tr><td><code>Many2one</code></td><td>Un lien vers <b>un</b> enregistrement</td><td>Le client d'une commande</td></tr>
+    <tr><td><code>One2many</code> / <code>Many2many</code></td><td>Des liens vers <b>plusieurs</b> enregistrements</td><td>Les lignes d'une commande, des étiquettes</td></tr>
+  </table>
+  <div class="callout"><p>Chaque champ a un <b>libellé</b> (« Surface ») et un <b>nom technique</b> (<code>x_surface</code>). Le code utilise toujours le nom technique. Les champs créés à la main commencent par <code>x_</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">L'outil indispensable</div>
+  <h2>Le mode développeur</h2>
+  <div class="grid2">
+    <div>
+      <h3>L'activer</h3>
+      <ul class="clean small">
+        <li><b>Paramètres</b> → tout en bas → <b>Activer le mode développeur</b>.</li>
+        <li>Ou ajouter <code>?debug=1</code> dans l'adresse, après <code>/odoo</code> ou <code>/web</code>.</li>
+        <li>Une icône d'insecte apparaît dans la barre du haut.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Ce qu'il débloque</h3>
+      <ul class="clean small">
+        <li>Survoler un champ affiche son <b>nom technique</b> et son modèle.</li>
+        <li>Menu insecte → <b>Modifier la vue</b> : ouvre la vue affichée.</li>
+        <li><b>Paramètres → Technique</b> : vues, modèles, actions, actions automatisées.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>Pour retrouver n'importe quelle vue : <b>Paramètres → Technique → Interface utilisateur → Vues</b>, puis cherche par nom ou par <b>clé</b> (ex. <code>website.layout</code>).</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vues</div>
+  <h2>Les types de vues</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">BACK-OFFICE</div><h3>Formulaire, liste, kanban</h3><p>Ce que voient les utilisateurs dans l'interface. Écrites en XML avec des balises <code>&lt;field&gt;</code>.</p></div>
+    <div class="card"><div class="tag">RECHERCHE</div><h3>Search</h3><p>Les filtres et regroupements proposés dans la barre de recherche.</p></div>
+    <div class="card"><div class="tag">QWEB</div><h3>Pages web et rapports</h3><p>Pages du site, e-mails, PDF. Du HTML avec des instructions <code>t-…</code>.</p></div>
+  </div>
+  <ul class="clean small" style="margin-top:24px">
+    <li>Le code d'une vue se trouve dans l'onglet <b>Architecture</b> de sa fiche.</li>
+    <li>Une vue a une <b>clé</b> (identifiant stable), un <b>modèle</b>, et éventuellement une <b>vue héritée</b> (parente).</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">La bonne méthode</div>
+  <h2>Hériter plutôt que modifier</h2>
+  <div class="grid2">
+    <pre>&lt;!-- vue qui hérite de website.layout --&gt;
+&lt;xpath expr=<span class="s">"//header"</span> position=<span class="s">"after"</span>&gt;
+  &lt;div class=<span class="s">"alert alert-info"</span>&gt;
+    Fermé le lundi
+  &lt;/div&gt;
+&lt;/xpath&gt;
+
+&lt;xpath expr=<span class="s">"//footer//a[@href='/contact']"</span>
+       position=<span class="s">"attributes"</span>&gt;
+  &lt;attribute name=<span class="s">"class"</span>&gt;btn btn-primary&lt;/attribute&gt;
+&lt;/xpath&gt;</pre>
+    <div>
+      <p class="small">Une vue héritée ne recopie pas la vue d'origine : elle dit <b>où</b> et <b>quoi</b> changer.</p>
+      <table style="margin-top:14px">
+        <tr><th>position</th><th>Effet</th></tr>
+        <tr><td><code>before</code> / <code>after</code></td><td>Ajoute avant / après</td></tr>
+        <tr><td><code>inside</code></td><td>Ajoute à la fin, dedans</td></tr>
+        <tr><td><code>replace</code></td><td>Remplace l'élément</td></tr>
+        <tr><td><code>attributes</code></td><td>Change un attribut</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="callout"><p>Les mises à jour d'Odoo réécrivent les vues standard. Tes modifications dans une vue héritée, elles, survivent.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Erreur classique</div>
+  <h2>« L'élément … est introuvable dans la vue parente »</h2>
+  <div class="grid2">
+    <div>
+      <p>Une XPath cherche un élément précis. S'il n'existe pas (ou plus) dans la vue parente, Odoo refuse d'afficher la vue.</p>
+      <ul class="clean small" style="margin-top:18px">
+        <li>Un thème ou un module a été conçu pour <b>une autre version</b> d'Odoo.</li>
+        <li>Tu as changé de modèle d'en-tête : le nouveau n'a pas l'élément visé (une barre de recherche, par exemple).</li>
+        <li>Une autre vue héritée a déjà <b>supprimé ou remplacé</b> cet élément.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Pour s'en sortir</h3>
+      <ol class="steps small">
+        <li>Lis le nom de la vue fautive dans le message d'erreur.</li>
+        <li>Retrouve-la dans <b>Technique → Vues</b>.</li>
+        <li>Corrige l'expression XPath, ou <b>archive</b> la vue si elle n'est plus utile.</li>
+        <li>Vérifie ta version d'Odoo avant d'installer un thème ou un module tiers.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Site web</div>
+  <h2>Les vues propres au site</h2>
+  <div class="grid2">
+    <div>
+      <p>Quand tu modifies une page dans l'<b>éditeur du site</b>, Odoo ne touche pas à la vue générique : il crée une <b>copie liée à ce site web</b> (champ <code>Site web</code> rempli) et c'est elle qui s'affiche désormais.</p>
+      <div class="callout warn" style="margin-top:22px"><p><b>Symptôme :</b> tu modifies la vue dans Technique → Vues, mais rien ne change sur le site. Tu as modifié la générique, alors que le site affiche sa copie.</p></div>
+    </div>
+    <div class="card">
+      <h3>Comment éviter le piège</h3>
+      <ul class="clean small">
+        <li>Dans la liste des vues, regarde s'il existe <b>deux vues de même clé</b>, dont une avec un site web.</li>
+        <li>Pour du code, passe par le site : <b>Site → Éditeur HTML/CSS/JS</b> modifie toujours la version affichée.</li>
+        <li>Pour revenir à l'original, supprime la copie propre au site.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">QWeb</div>
+  <h2>Les instructions de base</h2>
+  <div class="grid2">
+    <pre>&lt;t t-foreach=<span class="s">"records"</span> t-as=<span class="s">"bien"</span>&gt;
+  &lt;div class=<span class="s">"card"</span>&gt;
+    &lt;h3 t-field=<span class="s">"bien.name"</span>/&gt;
+
+    &lt;p t-if=<span class="s">"bien.x_surface"</span>&gt;
+      &lt;t t-out=<span class="s">"bien.x_surface"</span>/&gt; m²
+    &lt;/p&gt;
+    &lt;p t-else=<span class="s">""</span> class=<span class="s">"text-muted"</span>&gt;
+      Surface non communiquée
+    &lt;/p&gt;
+
+    &lt;a t-att-href=<span class="s">"'/biens/%s' % bien.id"</span>&gt;
+      Voir
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/t&gt;</pre>
+    <table>
+      <tr><th>Instruction</th><th>Rôle</th></tr>
+      <tr><td><code>t-foreach</code> + <code>t-as</code></td><td>Boucle sur une liste</td></tr>
+      <tr><td><code>t-if</code> / <code>t-elif</code> / <code>t-else</code></td><td>Condition</td></tr>
+      <tr><td><code>t-field</code></td><td>Affiche un champ formaté (date, prix…), éditable dans l'éditeur</td></tr>
+      <tr><td><code>t-out</code></td><td>Affiche une valeur (remplace <code>t-esc</code>)</td></tr>
+      <tr><td><code>t-att-…</code></td><td>Attribut calculé</td></tr>
+      <tr><td><code>t-call</code></td><td>Inclut un autre template</td></tr>
+      <tr><td><code>&lt;t&gt;</code></td><td>Conteneur invisible</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">QWeb</div>
+  <h2>Gérer les listes et valeurs vides</h2>
+  <div class="grid2">
+    <pre><span class="c">&lt;!-- liste vide --&gt;</span>
+&lt;t t-if=<span class="s">"records"</span>&gt;
+  &lt;t t-foreach=<span class="s">"records"</span> t-as=<span class="s">"r"</span>&gt;…&lt;/t&gt;
+&lt;/t&gt;
+&lt;t t-else=<span class="s">""</span>&gt;
+  &lt;p&gt;Aucun résultat pour le moment.&lt;/p&gt;
+&lt;/t&gt;</pre>
+    <ul class="clean small">
+      <li><code>t-else</code> doit suivre <b>immédiatement</b> le bloc <code>t-if</code>, sans autre élément entre les deux.</li>
+      <li>En Python, une liste vide, <code>0</code>, <code>""</code> et <code>False</code> sont « faux » : <code>t-if</code> les traite comme absents.</li>
+      <li>Attention : une surface de <code>0</code> serait donc considérée comme vide.</li>
+      <li>Le nom de la variable de boucle (<code>records</code>, <code>bien</code>…) dépend de la vue : lis le <code>t-foreach</code> existant avant d'écrire.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Champs dynamiques</div>
+  <h2>Le champ Properties</h2>
+  <div class="flow">
+    <div class="node hl"><b>Parent</b><span>Porte la <strong>définition</strong> : la liste des propriétés et leur type. Champ <code>PropertiesDefinition</code></span></div><div class="arr">→</div>
+    <div class="node"><b>Enfants</b><span>Portent les <strong>valeurs</strong>. Champ <code>Properties</code> qui pointe vers le parent</span></div>
+  </div>
+  <div class="grid2">
+    <ul class="clean small">
+      <li>Exemples : le projet pour les tâches, l'équipe commerciale pour les pistes CRM.</li>
+      <li>Les utilisateurs créent les propriétés depuis le formulaire, sans module ni Studio.</li>
+      <li>Chaque propriété a un <b>nom technique aléatoire</b> : ne l'écris jamais en dur dans un template.</li>
+    </ul>
+    <div class="card">
+      <h3>« Quand j'en modifie une, ça change partout »</h3>
+      <p class="small">Normal : tous les enregistrements d'un même parent partagent la même définition, quelle que soit la vue. Pour des jeux de propriétés différents, il faut des <b>parents différents</b> (par exemple un modèle « catégorie »).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Pages de modèle</div>
+  <h2>Pages, vues et duplication</h2>
+  <div class="grid2">
+    <div>
+      <p>Studio peut publier un modèle sur le site sous forme de <b>page liste</b> et de <b>page détail</b>. Une page n'est qu'un pointeur : elle désigne une URL, un modèle, un filtre et <b>une vue</b>.</p>
+      <ul class="clean small" style="margin-top:18px">
+        <li>Dupliquer une page ne duplique <b>pas</b> sa vue.</li>
+        <li>Modifier le contenu de l'une modifie donc toutes celles qui partagent la vue.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Deux solutions</h3>
+      <ul class="clean small">
+        <li><b>Une vue par page</b> : duplique la vue et fais pointer la page vers la copie. Pour des mises en page vraiment différentes.</li>
+        <li><b>Une vue commune avec conditions</b> : <code>t-if</code> sur l'adresse (<code>request.httprequest.path</code>). Pour un titre ou une phrase qui change.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Diagnostic</div>
+  <h2>Problèmes fréquents</h2>
+  <table>
+    <tr><th>Symptôme</th><th>Cause probable</th><th>Piste</th></tr>
+    <tr><td>Erreur XPath introuvable</td><td>Élément absent de la vue parente</td><td>Corriger ou archiver la vue héritée</td></tr>
+    <tr><td>Modification invisible sur le site</td><td>Copie de la vue propre au site</td><td>Éditer via l'éditeur HTML du site</td></tr>
+    <tr><td>Changement sur une page = sur toutes</td><td>Pages qui partagent la même vue</td><td>Une vue par page, ou des conditions</td></tr>
+    <tr><td>Propriété ajoutée partout</td><td>Définition partagée par le parent</td><td>Parents différents</td></tr>
+    <tr><td>« Champ inexistant »</td><td>Libellé utilisé au lieu du nom technique</td><td>Mode développeur, survol du champ</td></tr>
+  </table>
+  <div class="callout"><p><b>Avant toute modification de code :</b> copie l'Architecture de la vue dans un fichier. Revenir en arrière prend alors dix secondes.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">À retenir</div>
+  <h2>L'essentiel en 6 phrases</h2>
+  <div class="grid2">
+    <ul class="clean">
+      <li>Modèle = structure, enregistrement = donnée, vue = affichage.</li>
+      <li>Le mode développeur donne les noms techniques et les vues.</li>
+      <li>On <b>hérite</b> d'une vue avec des XPath au lieu de la modifier.</li>
+    </ul>
+    <ul class="clean">
+      <li>L'éditeur du site crée des <b>copies propres au site</b>.</li>
+      <li>QWeb : <code>t-foreach</code>, <code>t-if</code>/<code>t-else</code>, <code>t-field</code>, <code>t-out</code>.</li>
+      <li>Properties : définition sur le parent, valeurs sur l'enfant.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi</h2>
+  <div class="qa">
+    <details><summary>Où trouver le nom technique du champ « Surface » d'un formulaire ?</summary><p>Activer le mode développeur, puis survoler le libellé du champ dans le formulaire : une infobulle affiche le nom technique et le modèle.</p></details>
+    <details><summary>Tu modifies une vue dans Technique → Vues mais le site ne change pas. Pourquoi ?</summary><p>Le site affiche probablement une copie de la vue qui lui est propre, créée lors d'une modification dans l'éditeur. Il faut modifier cette copie, par exemple via l'éditeur HTML du site.</p></details>
+    <details><summary>Quelle <code>position</code> d'XPath pour changer la classe d'un bouton existant ?</summary><p><code>position="attributes"</code> avec <code>&lt;attribute name="class"&gt;…&lt;/attribute&gt;</code>.</p></details>
+    <details><summary>Comment afficher « Aucun bien » quand la liste est vide ?</summary><p>Entourer la boucle d'un <code>&lt;t t-if="records"&gt;</code>, suivi immédiatement d'un <code>&lt;t t-else=""&gt;</code> avec le message.</p></details>
+    <details><summary>Pourquoi ajouter une propriété sur une tâche l'ajoute à toutes les tâches du projet ?</summary><p>La définition des propriétés est stockée sur le projet (le parent) et partagée par toutes ses tâches.</p></details>
+  </div>
+</section>
+
+</div></div>
+<nav id="bar" aria-label="Navigation des slides">
+  <button id="prev" aria-label="Slide précédente">←</button>
+  <button id="next" aria-label="Slide suivante">→</button>
+  <span id="count">1 / 1</span>
+  <div id="prog"><i></i></div>
+  <button id="theme" class="opt" aria-label="Changer de thème">Clair / sombre</button>
+  <a id="full" class="opt" href="#" target="_blank" rel="noopener" title="Ouvrir dans un nouvel onglet">⤢ Plein écran</a>
+</nav>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), vp=document.getElementById('viewport');
+  var i=0, n=slides.length;
+  slides.forEach(function(s,k){s.setAttribute('data-n',(k+1)+' / '+n)});
+  function fit(){var w=vp.clientWidth-24,h=vp.clientHeight-24;var sc=Math.min(w/1280,h/720);stage.style.transform='scale('+sc+')'}
+  function go(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,j){s.classList.toggle('active',j===i)});
+    document.getElementById('count').textContent=(i+1)+' / '+n;
+    document.querySelector('#prog i').style.width=((i+1)/n*100)+'%';
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===n-1;
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home')go(0); if(e.key==='End')go(n-1);
+  });
+  var sx=null;
+  document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){if(sx===null)return;var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)go(i+(d<0?1:-1));sx=null});
+  stage.addEventListener('click',function(e){if(e.target.closest('details,a,button,summary'))return;var r=stage.getBoundingClientRect();go(i+(e.clientX>r.left+r.width/2?1:-1))});
+  document.getElementById('theme').onclick=function(){
+    var r=document.documentElement,cur=r.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark');
+    try{localStorage.setItem('cours-theme',r.getAttribute('data-theme'))}catch(e){}
+  };
+  try{var t=localStorage.getItem('cours-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+  var full=document.getElementById('full'); full.href=location.href.split('#')[0];
+  if(window.top===window.self) full.style.display='none';
+  window.addEventListener('resize',fit); fit();
+  var h=parseInt((location.hash||'').slice(1),10); go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
