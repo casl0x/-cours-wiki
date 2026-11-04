@@ -121,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant → intermédiaire</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> bases de HTML et CSS</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Accessibilité : les principes">
   <div class="kicker">Pourquoi</div>
   <h2>L'accessibilité n'est plus optionnelle</h2>
   <div class="grid2">
@@ -166,6 +166,20 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Pour qui</div>
+  <h2>Comment les gens naviguent vraiment</h2>
+  <table>
+    <tr><th>Outil ou situation</th><th>Ce que ça implique pour ton site</th></tr>
+    <tr><td><b>Lecteur d'écran</b> (personnes aveugles)</td><td>La page est lue à voix haute ou en braille : titres, liens et boutons doivent avoir un sens sans l'image</td></tr>
+    <tr><td><b>Zoom et loupe</b> (malvoyance)</td><td>Le texte doit pouvoir grossir à 200 % sans se chevaucher ni obliger à défiler horizontalement</td></tr>
+    <tr><td><b>Clavier seul</b> (motricité, habitude)</td><td>Tout doit être atteignable avec <kbd>Tab</kbd>, avec un focus visible</td></tr>
+    <tr><td><b>Commande vocale</b></td><td>L'utilisateur dit le texte visible d'un bouton : le nom accessible doit le contenir</td></tr>
+    <tr><td><b>Sous-titres</b> (surdité, son coupé)</td><td>Les vidéos ont besoin de sous-titres, l'audio d'une transcription</td></tr>
+    <tr><td><b>Difficultés cognitives</b></td><td>Textes clairs, navigation cohérente, pas de limite de temps cachée</td></tr>
+  </table>
+</section>
+
+<section class="slide" data-part="Accessibilité : en pratique">
   <div class="kicker">Fondation</div>
   <h2>Un HTML qui a du sens</h2>
   <div class="grid2">
@@ -192,6 +206,26 @@ td:first-child{font-weight:600}
 
 <section class="slide">
   <div class="kicker">Perceptible</div>
+  <h2>Des liens et des boutons explicites</h2>
+  <div class="grid2">
+    <table>
+      <tr><th>À éviter</th><th>Mieux</th></tr>
+      <tr><td>« Cliquez ici »</td><td>« Voir nos tarifs »</td></tr>
+      <tr><td>« En savoir plus » × 6</td><td>« En savoir plus sur la création de sites »</td></tr>
+      <tr><td>Une icône seule</td><td>Icône + texte, ou <code>aria-label</code></td></tr>
+      <tr><td>« Télécharger »</td><td>« Télécharger la brochure (PDF, 2 Mo) »</td></tr>
+    </table>
+    <ul class="clean small">
+      <li>Les lecteurs d'écran proposent la <b>liste de tous les liens</b> de la page : chacun doit avoir un sens hors de son contexte.</li>
+      <li>Un lien qui ouvre un <b>nouvel onglet</b> doit le signaler (texte ou icône annoncée).</li>
+      <li>Les liens doivent se distinguer du texte <b>autrement que par la couleur</b> : en général, un soulignement.</li>
+      <li>Le texte d'un lien est aussi un signal pour les moteurs de recherche : un lien explicite aide le SEO.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Perceptible</div>
   <h2>Images, contraste et couleur</h2>
   <div class="grid2">
     <div>
@@ -211,6 +245,35 @@ td:first-child{font-weight:600}
         <tr><td>Icônes, bordures de champs, focus</td><td><b>3 : 1</b></td></tr>
       </table>
       <p class="small muted" style="margin-top:12px">Ne transmets jamais une information par la couleur seule : ajoute une icône ou un texte.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Compréhensible</div>
+  <h2>Langue, lisibilité et clarté</h2>
+  <div class="grid2">
+    <div>
+      <pre>&lt;html lang=<span class="s">"fr"</span>&gt;
+…
+&lt;p&gt;Notre slogan :
+  &lt;span lang=<span class="s">"en"</span>&gt;Just do it&lt;/span&gt;&lt;/p&gt;
+
+&lt;abbr title=<span class="s">"Taxe sur la valeur ajoutée"</span>&gt;TVA&lt;/abbr&gt;</pre>
+      <ul class="clean small" style="margin-top:16px">
+        <li><code>lang</code> fait lire le texte avec la bonne prononciation, et aide les traducteurs automatiques.</li>
+        <li>Un passage dans une autre langue reçoit son propre <code>lang</code>.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Écrire clair</h3>
+      <ul class="clean small">
+        <li>Une idée par phrase, des phrases courtes.</li>
+        <li>Les mots du quotidien plutôt que le jargon ; les abréviations expliquées au moins une fois.</li>
+        <li>Des titres qui disent ce que contient la section.</li>
+        <li>Des listes pour les étapes et les énumérations.</li>
+        <li>Le <b>FALC</b> (Facile à lire et à comprendre) propose des règles précises pour les publics qui en ont besoin.</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -268,6 +331,34 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Compréhensible</div>
+  <h2>Des tableaux accessibles</h2>
+  <div class="grid2">
+    <pre>&lt;table&gt;
+  &lt;caption&gt;Tarifs 2026&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope=<span class="s">"col"</span>&gt;Formule&lt;/th&gt;
+      &lt;th scope=<span class="s">"col"</span>&gt;Prix&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope=<span class="s">"row"</span>&gt;Essentiel&lt;/th&gt;
+      &lt;td&gt;490 €&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+    <ul class="clean small">
+      <li><code>&lt;caption&gt;</code> donne un titre au tableau.</li>
+      <li><code>&lt;th&gt;</code> marque les en-têtes, <code>scope</code> précise s'ils portent sur une colonne ou une ligne : le lecteur d'écran annonce alors « Formule Essentiel, Prix 490 € ».</li>
+      <li>Les tableaux servent aux <b>données</b>, jamais à la mise en page (utilise Grid ou Flexbox).</li>
+      <li>Sur mobile, un tableau large peut défiler dans un conteneur <code>overflow-x: auto</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Robuste</div>
   <h2>ARIA : seulement quand le HTML ne suffit pas</h2>
   <div class="grid2">
@@ -290,6 +381,32 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Robuste</div>
+  <h2>Fenêtres modales et menus</h2>
+  <div class="grid2">
+    <pre>&lt;dialog id=<span class="s">"confirm"</span> aria-labelledby=<span class="s">"t"</span>&gt;
+  &lt;h2 id=<span class="s">"t"</span>&gt;Supprimer ce projet ?&lt;/h2&gt;
+  &lt;button&gt;Annuler&lt;/button&gt;
+  &lt;button&gt;Supprimer&lt;/button&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  confirm.showModal(); <span class="c">// ouvre en modal</span>
+&lt;/script&gt;</pre>
+    <div>
+      <h3>Une modale accessible</h3>
+      <ul class="clean small">
+        <li>À l'ouverture, le <b>focus</b> va dans la fenêtre.</li>
+        <li>Le focus reste <b>piégé</b> dedans tant qu'elle est ouverte.</li>
+        <li><kbd>Échap</kbd> la ferme.</li>
+        <li>À la fermeture, le focus <b>revient</b> sur le bouton qui l'a ouverte.</li>
+      </ul>
+      <p class="small muted" style="margin-top:12px">L'élément natif <code>&lt;dialog&gt;</code> avec <code>showModal()</code> gère l'essentiel de ces règles. Pour un menu déroulant : <code>aria-expanded</code> sur le bouton et fermeture avec <kbd>Échap</kbd>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Tester et documenter">
   <div class="kicker">Tester</div>
   <h2>Outils automatiques et tests à la main</h2>
   <div class="grid2">
@@ -300,6 +417,59 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Tester</div>
+  <h2>Tester avec un lecteur d'écran</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>NVDA (Windows, gratuit)</h3>
+      <table style="margin-top:6px">
+        <tr><td><kbd>Ctrl+Alt+N</kbd></td><td>Lancer NVDA</td></tr>
+        <tr><td><kbd>H</kbd></td><td>Titre suivant</td></tr>
+        <tr><td><kbd>D</kbd></td><td>Repère suivant (nav, main…)</td></tr>
+        <tr><td><kbd>K</kbd></td><td>Lien suivant</td></tr>
+        <tr><td><kbd>F</kbd></td><td>Champ de formulaire suivant</td></tr>
+        <tr><td><kbd>Insert+F7</kbd></td><td>Liste des titres, liens, repères</td></tr>
+        <tr><td><kbd>Ctrl</kbd></td><td>Arrêter la lecture</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card">
+        <h3>VoiceOver (Mac et iPhone, intégré)</h3>
+        <ul class="clean small">
+          <li>Mac : <kbd>Cmd+F5</kbd> pour l'activer, <kbd>Ctrl+Option+U</kbd> pour le rotor (listes de titres, liens…).</li>
+          <li>iPhone : Réglages → Accessibilité → VoiceOver, puis glisser pour passer d'un élément à l'autre.</li>
+        </ul>
+      </div>
+      <p class="small muted" style="margin-top:14px">Exercice : ferme les yeux et essaie de trouver le numéro de téléphone de ta page d'accueil. Ce qui est difficile ici l'est pour un visiteur aveugle.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Obligations</div>
+  <h2>La déclaration d'accessibilité</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Les sites du <b>secteur public</b> doivent publier une déclaration d'accessibilité : niveau de conformité, contenus non accessibles, moyen de contact.</li>
+        <li>Avec l'Acte européen sur l'accessibilité, les entreprises concernées doivent aussi <b>informer</b> sur la manière dont leur service respecte les exigences, en général dans une page dédiée ou les conditions générales.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Ce qu'on y trouve</h3>
+      <ul class="clean small">
+        <li>La norme de référence (WCAG 2.2 niveau AA, EN 301 549).</li>
+        <li>L'état : conforme, partiellement conforme, non conforme.</li>
+        <li>La liste des problèmes connus et leur date de correction prévue.</li>
+        <li>Un <b>contact</b> pour signaler un problème ou demander une version alternative.</li>
+        <li>La date du dernier audit.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>Même sans obligation, une page « Accessibilité » honnête montre ton sérieux et donne un moyen d'être prévenu des blocages.</p></div>
+</section>
+
+<section class="slide" data-part="Référencement (SEO)">
   <div class="kicker">SEO</div>
   <h2>Comment un moteur de recherche voit ton site</h2>
   <div class="flow">
@@ -319,6 +489,53 @@ td:first-child{font-weight:600}
 
 <section class="slide">
   <div class="kicker">SEO</div>
+  <h2>Mots-clés et intention de recherche</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Pars des <b>questions</b> de tes clients, dans <b>leurs mots</b> : « créer site internet association Namur », pas « solutions de présence digitale ».</li>
+        <li>Chaque page vise <b>un sujet principal</b> : une page par service plutôt qu'une page fourre-tout.</li>
+        <li>Place l'expression clé dans le <code>title</code>, le <code>h1</code>, l'URL et le premier paragraphe, naturellement.</li>
+        <li>Des outils gratuits aident à trouver les formulations : suggestions de Google, « Autres questions posées », Search Console (onglet Performances).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Les types d'intention</h3>
+      <table style="margin-top:6px">
+        <tr><td><b>Informationnelle</b></td><td>« comment changer un DNS »</td></tr>
+        <tr><td><b>Navigationnelle</b></td><td>« espace client OVH »</td></tr>
+        <tr><td><b>Commerciale</b></td><td>« meilleur hébergeur site vitrine »</td></tr>
+        <tr><td><b>Transactionnelle</b></td><td>« acheter nom de domaine .be »</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:12px">La page doit répondre au type d'intention : un guide pour une question, une offre claire pour un achat.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">SEO</div>
+  <h2>Structurer le contenu et les liens internes</h2>
+  <div class="grid2">
+    <ul class="clean small">
+      <li>Un <code>h1</code> qui annonce le sujet, des <code>h2</code> pour chaque partie : les moteurs (et les lecteurs d'écran) comprennent la structure.</li>
+      <li>Réponds <b>tôt</b> à la question, puis développe.</li>
+      <li>Des <b>liens internes</b> relient les pages proches : ils aident les robots à découvrir le site et répartissent l'importance entre les pages.</li>
+      <li>Les pages importantes doivent être à <b>peu de clics</b> de l'accueil.</li>
+    </ul>
+    <div class="card">
+      <h3>Contenu à éviter</h3>
+      <ul class="clean small">
+        <li><b>Contenu dupliqué</b> : le même texte sur plusieurs pages ou plusieurs adresses. Utilise <code>canonical</code>.</li>
+        <li><b>Pages vides</b> ou presque, juste pour une ville ou un mot-clé.</li>
+        <li><b>Bourrage de mots-clés</b> : répéter l'expression partout est pénalisé.</li>
+        <li>Du texte dans des <b>images</b> : illisible pour les robots.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">SEO</div>
   <h2>Contrôler l'indexation</h2>
   <table>
     <tr><th>Outil</th><th>Rôle</th><th>Attention</th></tr>
@@ -328,6 +545,20 @@ td:first-child{font-weight:600}
     <tr><td>Google Search Console</td><td>Pages indexées, erreurs, requêtes qui amènent du trafic</td><td>Vérification de propriété par un TXT dans le DNS</td></tr>
   </table>
   <div class="callout"><p>Le contenu reste le premier facteur : des pages qui répondent clairement à une question, avec des titres structurés et des liens entre elles.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">SEO</div>
+  <h2>Le SEO technique</h2>
+  <table>
+    <tr><th>Point</th><th>Pourquoi</th><th>Vérification</th></tr>
+    <tr><td>HTTPS partout</td><td>Signal de confiance, obligatoire pour plusieurs fonctions du navigateur</td><td>Cadenas, redirection de <code>http://</code></td></tr>
+    <tr><td>Adapté au mobile</td><td>Google indexe d'abord la version mobile</td><td>Mode appareil des DevTools</td></tr>
+    <tr><td>Une seule adresse par page</td><td>Évite le contenu dupliqué (www / sans www, / final)</td><td>Redirections 301 et <code>canonical</code></td></tr>
+    <tr><td>Pas de liens cassés</td><td>Les 404 gaspillent l'exploration et frustrent</td><td>Search Console → Pages</td></tr>
+    <tr><td>Redirections après une refonte</td><td>Garde le référencement des anciennes URL</td><td>301 de chaque ancienne vers la nouvelle</td></tr>
+    <tr><td>Vitesse</td><td>Facteur de classement et de conversion</td><td>Core Web Vitals</td></tr>
+  </table>
 </section>
 
 <section class="slide">
@@ -357,6 +588,48 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">SEO</div>
+  <h2>Le référencement local</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Pour une activité locale, la <b>fiche Google Business Profile</b> (gratuite) apparaît dans Maps et dans le bloc local des résultats.</li>
+        <li>Remplis-la entièrement : catégorie, horaires, zone desservie, photos, lien vers le site.</li>
+        <li>Garde des coordonnées <b>identiques</b> partout (nom, adresse, téléphone) : site, fiche, annuaires, réseaux.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Les avis</h3>
+      <ul class="clean small">
+        <li>Demande-les simplement après une prestation réussie, avec un lien direct.</li>
+        <li><b>Réponds</b> à tous, y compris les négatifs, calmement.</li>
+        <li>N'achète et n'invente jamais d'avis : c'est interdit et sanctionné.</li>
+      </ul>
+      <p class="small muted" style="margin-top:12px">Sur le site, une page par zone servie n'a de sens que si son contenu est réellement propre à cette zone.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">SEO</div>
+  <h2>Sites en JavaScript et référencement</h2>
+  <div class="grid2">
+    <table>
+      <tr><th>Rendu</th><th>Ce que reçoit le robot</th><th>SEO</th></tr>
+      <tr><td>Statique (SSG)</td><td>HTML complet</td><td>Excellent</td></tr>
+      <tr><td>Serveur (SSR)</td><td>HTML complet</td><td>Excellent</td></tr>
+      <tr><td>Client seul (SPA)</td><td>Une page vide + du JavaScript</td><td>Plus lent et fragile</td></tr>
+    </table>
+    <ul class="clean small">
+      <li>Google exécute le JavaScript, mais plus tard et avec des limites. D'autres moteurs et les aperçus des réseaux sociaux, souvent pas.</li>
+      <li>Les frameworks comme Next.js, Nuxt ou Astro génèrent le HTML côté serveur : le contenu est lisible dès le départ.</li>
+      <li>Vérifie avec l'outil <b>Inspection d'URL</b> de la Search Console : « Afficher la page explorée ».</li>
+      <li>Les liens doivent être de vrais <code>&lt;a href&gt;</code>, pas des clics JavaScript.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Performance">
   <div class="kicker">Performance</div>
   <h2>Les Core Web Vitals</h2>
   <div class="grid3">
@@ -365,6 +638,16 @@ td:first-child{font-weight:600}
     <div class="card"><div class="tag">CLS</div><h3>Stabilité</h3><p>À quel point la page « saute » pendant le chargement.</p><div class="big-num" style="font-size:40px;margin-top:12px">≤ 0,1</div></div>
   </div>
   <div class="callout"><p>Ces seuils doivent être atteints pour <b>75 % des visites réelles</b>. Lighthouse donne une mesure de labo ; la Search Console et PageSpeed Insights montrent les données des vrais visiteurs.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Performance</div>
+  <h2>Mesurer avant d'optimiser</h2>
+  <div class="grid2">
+    <div class="card"><div class="tag">TERRAIN</div><h3>Les vrais visiteurs</h3><ul class="clean small"><li><b>PageSpeed Insights</b> (haut de page) et la <b>Search Console</b> montrent les données réelles des utilisateurs de Chrome, sur 28 jours.</li><li>C'est ce qui compte pour Google.</li><li>Disponible seulement si le site a assez de trafic.</li></ul></div>
+    <div class="card"><div class="tag">LABO</div><h3>Un test simulé</h3><ul class="clean small"><li><b>Lighthouse</b> et le bas de PageSpeed Insights : un chargement simulé sur un téléphone moyen.</li><li>Idéal pour comparer avant et après une modification.</li><li>DevTools → <b>Performance</b> et <b>Réseau</b> (avec limitation de connexion) pour trouver la cause.</li></ul></div>
+  </div>
+  <div class="callout"><p>Teste toujours en <b>mobile</b> et en navigation privée (les extensions faussent les mesures). Un ordinateur puissant en fibre ne ressemble pas au téléphone de tes visiteurs.</p></div>
 </section>
 
 <section class="slide">
@@ -386,6 +669,31 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Performance</div>
+  <h2>Les images en détail</h2>
+  <div class="grid2">
+    <pre style="font-size:14.5px">&lt;picture&gt;
+  &lt;source srcset=<span class="s">"hero.avif"</span> type=<span class="s">"image/avif"</span>&gt;
+  &lt;source srcset=<span class="s">"hero.webp"</span> type=<span class="s">"image/webp"</span>&gt;
+  &lt;img src=<span class="s">"hero.jpg"</span> alt=<span class="s">"…"</span>
+       width=<span class="s">"1600"</span> height=<span class="s">"900"</span>
+       fetchpriority=<span class="s">"high"</span>&gt;
+&lt;/picture&gt;
+
+&lt;img src=<span class="s">"galerie-1.webp"</span> alt=<span class="s">"…"</span>
+     width=<span class="s">"600"</span> height=<span class="s">"400"</span>
+     loading=<span class="s">"lazy"</span> decoding=<span class="s">"async"</span>&gt;</pre>
+    <ul class="clean small">
+      <li>Les images sont souvent <b>plus de la moitié</b> du poids d'une page : c'est le premier levier.</li>
+      <li>AVIF et WebP pèsent souvent deux à trois fois moins qu'un JPEG de qualité comparable.</li>
+      <li><code>&lt;picture&gt;</code> propose plusieurs formats ; le navigateur prend le premier qu'il comprend.</li>
+      <li>Outils : Squoosh (en ligne), l'export de ton logiciel, ou les composants d'image des frameworks qui convertissent automatiquement.</li>
+      <li>Repère : une photo plein écran bien compressée pèse en général quelques centaines de Ko, pas plusieurs Mo.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Synthèse">
   <div class="kicker">Méthode</div>
   <h2>Checklist avant la mise en ligne</h2>
   <div class="grid2">
@@ -403,6 +711,29 @@ td:first-child{font-weight:600}
       <li>Aperçu de partage vérifié (Open Graph).</li>
       <li>Lighthouse sur mobile : aucun indicateur au rouge.</li>
     </ol>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>WCAG</td><td>Règles internationales d'accessibilité du web</td></tr>
+      <tr><td>EAA</td><td>Acte européen sur l'accessibilité</td></tr>
+      <tr><td>Nom accessible</td><td>Ce qu'un lecteur d'écran annonce pour un élément</td></tr>
+      <tr><td>Repère (landmark)</td><td>Zone de page : <code>header</code>, <code>nav</code>, <code>main</code>…</td></tr>
+      <tr><td>Focus</td><td>Élément actif au clavier</td></tr>
+      <tr><td>ARIA</td><td>Attributs qui complètent la sémantique HTML</td></tr>
+    </table>
+    <table>
+      <tr><td>Indexation</td><td>Enregistrement d'une page par un moteur</td></tr>
+      <tr><td>Canonical</td><td>Adresse officielle d'une page</td></tr>
+      <tr><td>Sitemap</td><td>Liste des pages à faire découvrir</td></tr>
+      <tr><td>JSON-LD</td><td>Format des données structurées</td></tr>
+      <tr><td>LCP / INP / CLS</td><td>Chargement, réactivité, stabilité</td></tr>
+      <tr><td>Données terrain</td><td>Mesures sur de vrais visiteurs</td></tr>
+    </table>
   </div>
 </section>
 
@@ -432,6 +763,18 @@ td:first-child{font-weight:600}
     <details><summary>Pourquoi un <code>&lt;div onclick&gt;</code> pose problème ?</summary><p>Il n'est pas atteignable au clavier et n'est pas annoncé comme un bouton par les lecteurs d'écran. Il faut un <code>&lt;button&gt;</code>.</p></details>
     <details><summary>Une page apparaît dans Google alors qu'elle est bloquée dans <code>robots.txt</code>. Pourquoi ?</summary><p><code>robots.txt</code> bloque l'exploration, pas l'indexation. Pour l'exclure, il faut une balise <code>noindex</code>, et laisser la page explorable pour que la balise soit lue.</p></details>
     <details><summary>La page saute quand les images chargent. Quel indicateur, et quelle correction ?</summary><p>Le CLS. On donne des dimensions (<code>width</code> et <code>height</code>, ou <code>aspect-ratio</code>) aux images pour réserver leur place.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Ta page a six liens « En savoir plus ». Quel problème pour un utilisateur de lecteur d'écran ?</summary><p>Dans la liste des liens, il entend six fois la même chose sans savoir où chacun mène. Rends chaque texte explicite.</p></details>
+    <details><summary>Une modale s'ouvre, mais <kbd>Tab</kbd> continue à naviguer dans la page derrière. Que manque-t-il ?</summary><p>Le piège du focus : il doit rester dans la modale tant qu'elle est ouverte. <code>&lt;dialog&gt;</code> avec <code>showModal()</code> le gère.</p></details>
+    <details><summary>Lighthouse donne 95 mais la Search Console signale un LCP lent. Laquelle croire ?</summary><p>La Search Console : ce sont les données des vrais visiteurs (terrain). Lighthouse est une simulation.</p></details>
+    <details><summary>Tu refais ton site et les adresses des pages changent. Que faire pour ne pas perdre ton référencement ?</summary><p>Une redirection 301 de chaque ancienne URL vers la nouvelle page équivalente, puis un nouveau sitemap dans la Search Console.</p></details>
+    <details><summary>Un tableau de tarifs est lu « 490 €, 890 € » sans contexte. Quelle correction ?</summary><p>Des <code>&lt;th&gt;</code> avec <code>scope="col"</code> et <code>scope="row"</code>, et un <code>&lt;caption&gt;</code>.</p></details>
   </div>
 </section>
 

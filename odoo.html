@@ -121,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant → intermédiaire</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> bases de HTML</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -134,7 +134,7 @@ td:first-child{font-weight:600}
   </ol>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Les bases">
   <div class="kicker">Le principe</div>
   <h2>Modèles, enregistrements, vues</h2>
   <div class="flow">
@@ -147,6 +147,46 @@ td:first-child{font-weight:600}
     <li>Une vue ne contient <b>pas les données</b> : elle décrit seulement comment les présenter. Deux vues peuvent afficher le même champ.</li>
     <li>Les pages du site web sont des vues de type <b>QWeb</b> : du HTML enrichi d'instructions <code>t-…</code>.</li>
   </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le contexte</div>
+  <h2>Éditions et hébergements</h2>
+  <table>
+    <tr><th></th><th>Odoo Online</th><th>Odoo.sh</th><th>Sur ton serveur</th></tr>
+    <tr><td>Hébergé par</td><td>Odoo</td><td>Odoo, avec accès développeur</td><td>Toi (ou ton prestataire)</td></tr>
+    <tr><td>Studio (sans code)</td><td>Oui (Enterprise)</td><td>Oui (Enterprise)</td><td>Oui si Enterprise</td></tr>
+    <tr><td>Vues et QWeb modifiables</td><td>Oui</td><td>Oui</td><td>Oui</td></tr>
+    <tr><td>Modules Python sur mesure</td><td><b>Non</b></td><td>Oui, via GitHub</td><td>Oui</td></tr>
+    <tr><td>Mises à jour</td><td>Gérées par Odoo</td><td>Accompagnées</td><td>À ta charge</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:20px">
+    <ul class="clean small"><li><b>Community</b> : gratuite et open source, sans Studio ni certaines applications.</li></ul>
+    <ul class="clean small"><li><b>Enterprise</b> : payante, avec Studio, l'application mobile et plus de modules.</li></ul>
+  </div>
+  <p class="small muted">Avant de suivre un tutoriel, vérifie qu'il correspond à ton hébergement et à ta version.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Le contexte</div>
+  <h2>Les modules</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>Chaque application (Ventes, Site web, CRM…) est un <b>module</b>. Un module peut en exiger d'autres : installer <i>Site web</i> installe aussi des modules de base.</li>
+        <li>Les modules installés se gèrent dans <b>Applications</b>. Retire le filtre « Applications » pour voir aussi les modules techniques.</li>
+        <li><b>Mettre à jour</b> un module recharge ses vues et ses données d'origine.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Pourquoi c'est important</h3>
+      <ul class="clean small">
+        <li>Une vue standard modifiée directement peut être <b>écrasée</b> à la mise à jour de son module.</li>
+        <li>Une vue <b>héritée</b> que tu as créée, elle, reste en place.</li>
+        <li>Les thèmes de site sont aussi des modules : ils ajoutent leurs propres vues héritées.</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
@@ -164,6 +204,16 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Champs</div>
+  <h2>Champs liés et champs calculés</h2>
+  <div class="grid2">
+    <div class="card"><div class="tag">CHAMP LIÉ</div><h3>Copier une info d'ailleurs</h3><p class="small">Affiche un champ d'un enregistrement relié. Ex. : sur une commande, la ville du client (<code>partner_id.city</code>).</p><p class="small muted" style="margin-top:10px">Pratique pour afficher, filtrer ou grouper sans double saisie. Dans Studio : « Champ lié ».</p></div>
+    <div class="card"><div class="tag">CHAMP CALCULÉ</div><h3>Une valeur déduite</h3><p class="small">Sa valeur est calculée à partir d'autres champs. Ex. : prix au m² = prix ÷ surface.</p><p class="small muted" style="margin-top:10px">Par défaut non stocké : recalculé à l'affichage, donc impossible à trier ou rechercher. Le stocker le rend recherchable.</p></div>
+  </div>
+  <div class="callout"><p>En mode développeur, la fiche d'un champ (<b>Technique → Champs</b>) indique s'il est lié, calculé, stocké, obligatoire ou en lecture seule.</p></div>
+</section>
+
+<section class="slide" data-part="Outils">
   <div class="kicker">L'outil indispensable</div>
   <h2>Le mode développeur</h2>
   <div class="grid2">
@@ -188,6 +238,51 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Outils</div>
+  <h2>Studio : personnaliser sans code</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean small">
+        <li>L'icône <b>Studio</b> (en haut à droite, version Enterprise) ouvre l'éditeur sur l'écran en cours.</li>
+        <li><b>Glisser-déposer</b> de nouveaux champs dans un formulaire ou une liste.</li>
+        <li>Créer une <b>nouvelle application</b> avec ses propres modèles, menus et vues.</li>
+        <li>Ajouter des filtres, des rapports PDF, des règles d'automatisation.</li>
+        <li>Publier un modèle sur le site web (pages liste et détail).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Ce qu'il fait en coulisses</h3>
+      <p class="small">Studio crée des champs <code>x_studio_…</code> et des <b>vues héritées</b>, exactement comme un développeur le ferait. Tu peux les retrouver et les lire dans <b>Technique → Vues</b>.</p>
+      <p class="small muted" style="margin-top:10px">Les modifications de Studio sont regroupées dans un module « Studio customizations » que l'on peut exporter.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Outils</div>
+  <h2>Explorer les modèles et les champs</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Paramètres → Technique → Modèles</b> : la liste de tous les modèles, avec leur nom technique (<code>sale.order</code>, <code>res.partner</code>…).</li>
+      <li>Ouvre un modèle : onglet <b>Champs</b>, avec types, relations et options.</li>
+      <li><b>Technique → Champs</b> : chercher un champ précis dans tous les modèles.</li>
+      <li>Menu insecte → <b>Afficher les champs</b> : toutes les valeurs brutes de l'enregistrement affiché.</li>
+    </ol>
+    <div class="card">
+      <h3>Conventions de noms</h3>
+      <table style="margin-top:6px">
+        <tr><td><code>res.</code></td><td>Données de base (partenaires, utilisateurs, société)</td></tr>
+        <tr><td><code>product.</code></td><td>Produits</td></tr>
+        <tr><td><code>sale.</code> / <code>account.</code></td><td>Ventes / comptabilité</td></tr>
+        <tr><td><code>website.</code></td><td>Site web</td></tr>
+        <tr><td><code>x_</code></td><td>Créé sur mesure</td></tr>
+        <tr><td><code>…_id</code> / <code>…_ids</code></td><td>Many2one / relations multiples</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Vues et héritage">
   <div class="kicker">Vues</div>
   <h2>Les types de vues</h2>
   <div class="grid3">
@@ -199,6 +294,41 @@ td:first-child{font-weight:600}
     <li>Le code d'une vue se trouve dans l'onglet <b>Architecture</b> de sa fiche.</li>
     <li>Une vue a une <b>clé</b> (identifiant stable), un <b>modèle</b>, et éventuellement une <b>vue héritée</b> (parente).</li>
   </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vues</div>
+  <h2>Lire l'architecture d'un formulaire</h2>
+  <div class="grid2">
+    <pre style="font-size:13.5px;line-height:1.42">&lt;form&gt;
+  &lt;header&gt;
+    &lt;field name=<span class="s">"state"</span> widget=<span class="s">"statusbar"</span>/&gt;
+  &lt;/header&gt;
+  &lt;sheet&gt;
+    &lt;group&gt;
+      &lt;group&gt;
+        &lt;field name=<span class="s">"name"</span>/&gt;
+        &lt;field name=<span class="s">"partner_id"</span>/&gt;
+      &lt;/group&gt;
+      &lt;group&gt;
+        &lt;field name=<span class="s">"date_order"</span>/&gt;
+        &lt;field name=<span class="s">"x_surface"</span>
+               invisible=<span class="s">"state == 'draft'"</span>/&gt;
+      &lt;/group&gt;
+    &lt;/group&gt;
+    &lt;notebook&gt;
+      &lt;page string=<span class="s">"Détails"</span>&gt;…&lt;/page&gt;
+    &lt;/notebook&gt;
+  &lt;/sheet&gt;
+&lt;/form&gt;</pre>
+    <ul class="clean small">
+      <li><code>&lt;sheet&gt;</code> : la « feuille » blanche du formulaire. <code>&lt;header&gt;</code> : la barre de statut et les boutons.</li>
+      <li><code>&lt;group&gt;</code> imbriqués : deux colonnes de champs avec leurs libellés.</li>
+      <li><code>&lt;notebook&gt;</code> et <code>&lt;page&gt;</code> : des onglets.</li>
+      <li><code>widget</code> change l'affichage d'un champ (barre de statut, étiquettes, image…).</li>
+      <li><code>invisible</code>, <code>readonly</code>, <code>required</code> acceptent une condition. Depuis Odoo 17, on l'écrit directement (l'ancien attribut <code>attrs</code> a disparu).</li>
+    </ul>
+  </div>
 </section>
 
 <section class="slide">
@@ -231,6 +361,24 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">La bonne méthode</div>
+  <h2>Écrire une expression XPath</h2>
+  <table>
+    <tr><th>Expression</th><th>Cible</th></tr>
+    <tr><td><code>//field[@name='partner_id']</code></td><td>Le champ <code>partner_id</code>, où qu'il soit</td></tr>
+    <tr><td><code>//div[@id='wrap']</code></td><td>La div d'identifiant <code>wrap</code></td></tr>
+    <tr><td><code>//div[hasclass('o_footer')]</code></td><td>Une div qui a la classe <code>o_footer</code> (parmi d'autres)</td></tr>
+    <tr><td><code>//header//nav</code></td><td>Une <code>nav</code> n'importe où dans le <code>header</code></td></tr>
+    <tr><td><code>//t[@t-foreach='records']</code></td><td>La boucle sur <code>records</code></td></tr>
+    <tr><td><code>(//section)[1]</code></td><td>La première section</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:20px">
+    <ul class="clean small"><li>Vise un élément <b>stable</b> (un nom de champ, un identifiant) plutôt qu'une position : la structure peut changer à la mise à jour.</li></ul>
+    <ul class="clean small"><li>Raccourci pour un champ : <code>&lt;field name="partner_id" position="after"&gt;</code> sans écrire de XPath.</li></ul>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">Erreur classique</div>
   <h2>« L'élément … est introuvable dans la vue parente »</h2>
   <div class="grid2">
@@ -254,7 +402,7 @@ td:first-child{font-weight:600}
   </div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Site web">
   <div class="kicker">Site web</div>
   <h2>Les vues propres au site</h2>
   <div class="grid2">
@@ -274,6 +422,49 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Site web</div>
+  <h2>Le constructeur de site</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">BLOCS</div><h3>Glisser-déposer</h3><p>Textes, images, colonnes, formulaires, listes de produits… Chaque bloc a des options (fond, espacements, animations).</p></div>
+    <div class="card"><div class="tag">THÈME</div><h3>Réglages globaux</h3><p>Couleurs, polices, boutons, en-tête et pied de page, appliqués à tout le site.</p></div>
+    <div class="card"><div class="tag">SITE</div><h3>Pages et menus</h3><p>Créer des pages, gérer le menu, les redirections, le référencement (titre, description) de chaque page.</p></div>
+  </div>
+  <ul class="clean small" style="margin-top:24px">
+    <li>Commence toujours par le constructeur : c'est le plus simple et le plus résistant aux mises à jour.</li>
+    <li>Passe au code (Éditeur HTML/CSS) seulement pour ce qu'il ne sait pas faire.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">Site web</div>
+  <h2>La structure d'une page web</h2>
+  <div class="grid2">
+    <pre>&lt;t t-name=<span class="s">"website.ma_page"</span>&gt;
+  &lt;t t-call=<span class="s">"website.layout"</span>&gt;
+    &lt;div id=<span class="s">"wrap"</span>&gt;
+
+      &lt;div class=<span class="s">"oe_structure"</span>/&gt;
+
+      &lt;section class=<span class="s">"container py-5"</span>&gt;
+        &lt;h1&gt;Nos biens&lt;/h1&gt;
+        …
+      &lt;/section&gt;
+
+      &lt;div class=<span class="s">"oe_structure"</span>/&gt;
+
+    &lt;/div&gt;
+  &lt;/t&gt;
+&lt;/t&gt;</pre>
+    <ul class="clean small">
+      <li><code>t-call="website.layout"</code> insère la page dans le cadre du site : en-tête, menu, pied de page, CSS.</li>
+      <li><code>#wrap</code> contient le contenu propre à la page.</li>
+      <li>Les zones <code>oe_structure</code> sont des <b>emplacements libres</b> : on peut y déposer des blocs avec l'éditeur.</li>
+      <li>Les classes <code>container</code>, <code>row</code>, <code>col-md-6</code>, <code>py-5</code> viennent de <b>Bootstrap</b>, le framework CSS utilisé par Odoo.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="QWeb">
   <div class="kicker">QWeb</div>
   <h2>Les instructions de base</h2>
   <div class="grid2">
@@ -308,6 +499,55 @@ td:first-child{font-weight:600}
 
 <section class="slide">
   <div class="kicker">QWeb</div>
+  <h2>Variables et attributs dynamiques</h2>
+  <pre style="font-size:14.5px"><span class="c">&lt;!-- créer une variable --&gt;</span>
+&lt;t t-set=<span class="s">"nb"</span> t-value=<span class="s">"len(records)"</span>/&gt;
+&lt;p&gt;&lt;t t-out=<span class="s">"nb"</span>/&gt; biens disponibles&lt;/p&gt;
+
+<span class="c">&lt;!-- classe calculée --&gt;</span>
+&lt;div t-att-class=<span class="s">"'badge bg-success' if bien.x_dispo else 'badge bg-secondary'"</span>&gt;
+
+<span class="c">&lt;!-- texte + valeur mélangés --&gt;</span>
+&lt;div t-attf-class=<span class="s">"card #{'border-primary' if bien.x_vedette else ''}"</span>&gt;
+&lt;img t-attf-src=<span class="s">"/web/image/{{ bien._name }}/{{ bien.id }}/image_1920"</span>/&gt;</pre>
+  <div class="grid2" style="margin-top:20px">
+    <ul class="clean small">
+      <li><code>t-set</code> / <code>t-value</code> : une variable réutilisable dans la suite du template.</li>
+      <li><code>t-att-<i>nom</i></code> : la valeur de l'attribut est une <b>expression Python</b>.</li>
+    </ul>
+    <ul class="clean small">
+      <li><code>t-attf-<i>nom</i></code> : du texte avec des morceaux calculés, entre <code>#{…}</code> ou <code>{{…}}</code>.</li>
+      <li>L'URL <code>/web/image/modèle/id/champ</code> affiche une image stockée dans un champ.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">QWeb</div>
+  <h2>Formater les valeurs</h2>
+  <div class="grid2">
+    <pre><span class="c">&lt;!-- prix avec la devise --&gt;</span>
+&lt;span t-field=<span class="s">"bien.list_price"</span>
+      t-options=<span class="s">'{"widget": "monetary",
+        "display_currency": website.currency_id}'</span>/&gt;
+
+<span class="c">&lt;!-- date au format de la langue --&gt;</span>
+&lt;span t-field=<span class="s">"bien.create_date"</span>
+      t-options=<span class="s">'{"widget": "date"}'</span>/&gt;
+
+<span class="c">&lt;!-- texte riche (champ Html) --&gt;</span>
+&lt;div t-field=<span class="s">"bien.description"</span>/&gt;</pre>
+    <ul class="clean small">
+      <li><code>t-field</code> connaît le type du champ : il formate les dates, les montants et les relations selon la langue du visiteur.</li>
+      <li><code>t-options</code> précise le format (widget).</li>
+      <li><code>t-out</code> <b>échappe</b> le HTML par défaut : du texte contenant <code>&lt;b&gt;</code> s'affiche tel quel, ce qui protège contre l'injection de code.</li>
+      <li>Un champ de type Html, affiché avec <code>t-field</code>, est rendu normalement.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">QWeb</div>
   <h2>Gérer les listes et valeurs vides</h2>
   <div class="grid2">
     <pre><span class="c">&lt;!-- liste vide --&gt;</span>
@@ -326,7 +566,7 @@ td:first-child{font-weight:600}
   </div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Données et pages">
   <div class="kicker">Champs dynamiques</div>
   <h2>Le champ Properties</h2>
   <div class="flow">
@@ -342,6 +582,36 @@ td:first-child{font-weight:600}
     <div class="card">
       <h3>« Quand j'en modifie une, ça change partout »</h3>
       <p class="small">Normal : tous les enregistrements d'un même parent partagent la même définition, quelle que soit la vue. Pour des jeux de propriétés différents, il faut des <b>parents différents</b> (par exemple un modèle « catégorie »).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Données</div>
+  <h2>Les domaines : filtrer des enregistrements</h2>
+  <div class="grid2">
+    <div>
+      <pre><span class="c"># ET implicite entre les conditions</span>
+[(<span class="s">'state'</span>, <span class="s">'='</span>, <span class="s">'sale'</span>),
+ (<span class="s">'amount_total'</span>, <span class="s">'&gt;'</span>, 1000)]
+
+<span class="c"># OU : opérateur placé avant</span>
+[<span class="s">'|'</span>,
+ (<span class="s">'city'</span>, <span class="s">'='</span>, <span class="s">'Namur'</span>),
+ (<span class="s">'city'</span>, <span class="s">'='</span>, <span class="s">'Liège'</span>)]
+
+<span class="c"># champ d'un enregistrement lié</span>
+[(<span class="s">'partner_id.country_id.code'</span>, <span class="s">'='</span>, <span class="s">'BE'</span>)]</pre>
+    </div>
+    <div>
+      <p class="small">Un <b>domaine</b> est une liste de conditions <code>(champ, opérateur, valeur)</code>. On le retrouve partout : filtres, pages de modèle, règles d'accès, automatisations.</p>
+      <table style="margin-top:12px">
+        <tr><td><code>=</code> <code>!=</code> <code>&gt;</code> <code>&lt;</code></td><td>Comparaisons</td></tr>
+        <tr><td><code>in</code> / <code>not in</code></td><td>Dans une liste</td></tr>
+        <tr><td><code>ilike</code></td><td>Contient (sans casse)</td></tr>
+        <tr><td><code>!= False</code></td><td>Le champ est rempli</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:12px">L'éditeur de domaine (mode développeur) construit la liste à ta place.</p>
     </div>
   </div>
 </section>
@@ -367,7 +637,63 @@ td:first-child{font-weight:600}
   </div>
 </section>
 
+<section class="slide" data-part="Automatiser et sécuriser">
+  <div class="kicker">Automatiser</div>
+  <h2>Les règles d'automatisation</h2>
+  <div class="grid2">
+    <div>
+      <p class="small">Une règle dit : <b>quand</b> ceci se produit, <b>sur</b> ces enregistrements, <b>fais</b> cela.</p>
+      <table style="margin-top:12px">
+        <tr><th>Déclencheur</th><th>Exemple</th></tr>
+        <tr><td>Création</td><td>Nouvelle piste CRM</td></tr>
+        <tr><td>Modification d'un champ</td><td>Statut passé à « Vendu »</td></tr>
+        <tr><td>Date</td><td>3 jours avant l'échéance</td></tr>
+        <tr><td>Réception d'un e-mail</td><td>Message sur un alias</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Actions possibles</h3>
+      <ul class="clean small">
+        <li>Mettre à jour un champ (archiver, changer un statut).</li>
+        <li>Envoyer un e-mail ou un SMS à partir d'un modèle.</li>
+        <li>Créer une activité ou une tâche.</li>
+        <li>Exécuter du code Python (pour les cas avancés).</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Teste toujours une règle sur une base de test : une règle mal filtrée peut modifier des milliers d'enregistrements.</p>
+    </div>
+  </div>
+</section>
+
 <section class="slide">
+  <div class="kicker">Site web</div>
+  <h2>Langues et traductions</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><b>Paramètres → Langues</b> : active la langue (néerlandais, anglais…).</li>
+      <li>Dans les paramètres du site web, ajoute-la aux langues du site.</li>
+      <li>Sur le site, choisis la langue puis clique sur <b>Traduire</b> : le texte modifiable apparaît surligné.</li>
+      <li>Les champs des enregistrements (nom de produit, description) se traduisent depuis leur formulaire, via l'icône de langue.</li>
+    </ol>
+    <ul class="clean small">
+      <li>Chaque langue a sa propre adresse : <code>/nl/…</code>, <code>/en/…</code>.</li>
+      <li>Les textes écrits en dur dans une vue QWeb sont traduisibles aussi, mais une modification du texte d'origine peut faire perdre la traduction.</li>
+      <li>Pense au référencement de chaque langue : titre et description traduits.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Sécurité</div>
+  <h2>Travailler sans risque</h2>
+  <div class="grid3">
+    <div class="card"><div class="tag">BASE DE TEST</div><h3>Dupliquer avant</h3><p>Duplique la base (gestionnaire de bases, ou branche de test sur Odoo.sh) et fais tes essais dessus. Les e-mails sortants y sont désactivés.</p></div>
+    <div class="card"><div class="tag">COPIE</div><h3>Sauver l'architecture</h3><p>Avant de modifier une vue, copie son code dans un fichier. Revenir en arrière prend alors quelques secondes.</p></div>
+    <div class="card"><div class="tag">ARCHIVER</div><h3>Plutôt que supprimer</h3><p>Une vue ou une règle archivée cesse d'agir mais reste récupérable. Une suppression est définitive.</p></div>
+  </div>
+  <div class="callout"><p>Sur une base de production, une modification à la fois, testée en <b>navigation privée</b> (pour voir le site comme un visiteur non connecté).</p></div>
+</section>
+
+<section class="slide" data-part="Synthèse">
   <div class="kicker">Diagnostic</div>
   <h2>Problèmes fréquents</h2>
   <table>
@@ -379,6 +705,29 @@ td:first-child{font-weight:600}
     <tr><td>« Champ inexistant »</td><td>Libellé utilisé au lieu du nom technique</td><td>Mode développeur, survol du champ</td></tr>
   </table>
   <div class="callout"><p><b>Avant toute modification de code :</b> copie l'Architecture de la vue dans un fichier. Revenir en arrière prend alors dix secondes.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>Modèle</td><td>Type de données (une « table »)</td></tr>
+      <tr><td>Enregistrement</td><td>Une ligne de données</td></tr>
+      <tr><td>Champ</td><td>Une information d'un modèle</td></tr>
+      <tr><td>Vue</td><td>Façon d'afficher des enregistrements</td></tr>
+      <tr><td>Vue héritée</td><td>Vue qui modifie une autre vue</td></tr>
+      <tr><td>XPath</td><td>Chemin qui désigne un élément d'une vue</td></tr>
+    </table>
+    <table>
+      <tr><td>QWeb</td><td>Langage de templates d'Odoo</td></tr>
+      <tr><td>Domaine</td><td>Liste de conditions de filtrage</td></tr>
+      <tr><td>Module</td><td>Paquet de fonctionnalités</td></tr>
+      <tr><td>Studio</td><td>Éditeur sans code (Enterprise)</td></tr>
+      <tr><td>Clé de vue</td><td>Identifiant stable d'un template</td></tr>
+      <tr><td>Properties</td><td>Champs dynamiques définis sur un parent</td></tr>
+    </table>
+  </div>
 </section>
 
 <section class="slide">
@@ -407,6 +756,18 @@ td:first-child{font-weight:600}
     <details><summary>Quelle <code>position</code> d'XPath pour changer la classe d'un bouton existant ?</summary><p><code>position="attributes"</code> avec <code>&lt;attribute name="class"&gt;…&lt;/attribute&gt;</code>.</p></details>
     <details><summary>Comment afficher « Aucun bien » quand la liste est vide ?</summary><p>Entourer la boucle d'un <code>&lt;t t-if="records"&gt;</code>, suivi immédiatement d'un <code>&lt;t t-else=""&gt;</code> avec le message.</p></details>
     <details><summary>Pourquoi ajouter une propriété sur une tâche l'ajoute à toutes les tâches du projet ?</summary><p>La définition des propriétés est stockée sur le projet (le parent) et partagée par toutes ses tâches.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary>Tu es sur Odoo Online et un tutoriel demande d'installer un module Python sur mesure. Possible ?</summary><p>Non : Odoo Online n'accepte pas les modules sur mesure. Il faut passer par Studio et les vues, ou migrer vers Odoo.sh ou un hébergement propre.</p></details>
+    <details><summary>Écris le domaine « ventes confirmées de plus de 500 € ».</summary><p><code>[('state', '=', 'sale'), ('amount_total', '&gt;', 500)]</code></p></details>
+    <details><summary>Comment afficher un prix avec le symbole de la devise dans une page web ?</summary><p><code>t-field</code> sur le champ, avec <code>t-options='{"widget": "monetary", "display_currency": website.currency_id}'</code>.</p></details>
+    <details><summary>Quelle XPath pour viser une div qui porte la classe <code>o_footer</code> parmi d'autres classes ?</summary><p><code>//div[hasclass('o_footer')]</code></p></details>
+    <details><summary>Tu veux tester une règle d'automatisation qui envoie des e-mails. Où le faire ?</summary><p>Sur une copie de la base (base de test), où les e-mails sortants sont désactivés.</p></details>
   </div>
 </section>
 

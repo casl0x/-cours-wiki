@@ -121,7 +121,7 @@ td:first-child{font-weight:600}
   <div class="meta"><span><b>Niveau</b> débutant → intermédiaire</span><span><b>Durée</b> ~1 h</span><span><b>Prérequis</b> bases de HTML</span></div>
 </section>
 
-<section class="slide">
+<section class="slide" data-part="Introduction">
   <div class="kicker">Objectifs</div>
   <h2>À la fin de ce cours, tu sauras…</h2>
   <ol class="steps">
@@ -132,6 +132,68 @@ td:first-child{font-weight:600}
     <li>Traduire du CSS en classes <b>Tailwind</b>, y compris les valeurs sur mesure.</li>
     <li>Gérer les valeurs dynamiques en Tailwind sans piège.</li>
   </ol>
+</section>
+
+<section class="slide" data-part="Les bases">
+  <div class="kicker">Les bases</div>
+  <h2>Comment le CSS s'applique</h2>
+  <div class="grid2">
+    <pre><span class="c">/* sélecteur   propriété : valeur */</span>
+.bouton {
+  background: #BE185D;
+  color: white;
+  padding: 12px 20px;
+}</pre>
+    <ul class="clean small">
+      <li>Une <b>règle</b> = un <b>sélecteur</b> (à quoi elle s'applique) + des <b>déclarations</b> (propriété et valeur).</li>
+      <li>Trois façons de l'ajouter : un fichier lié par <code>&lt;link rel="stylesheet"&gt;</code> (la meilleure), une balise <code>&lt;style&gt;</code>, ou l'attribut <code>style=""</code> (à éviter, sauf valeurs dynamiques).</li>
+      <li>Une erreur dans une déclaration n'arrête pas le reste : le navigateur ignore simplement la ligne fautive.</li>
+      <li>Certaines propriétés se <b>transmettent</b> aux enfants (couleur, police, taille de texte), d'autres non (marges, bordures, fond).</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les bases</div>
+  <h2>Les sélecteurs essentiels</h2>
+  <table>
+    <tr><th>Sélecteur</th><th>Cible</th></tr>
+    <tr><td><code>p</code></td><td>Toutes les balises <code>&lt;p&gt;</code></td></tr>
+    <tr><td><code>.carte</code></td><td>Les éléments qui ont la classe <code>carte</code></td></tr>
+    <tr><td><code>#menu</code></td><td>L'élément d'identifiant <code>menu</code> (unique dans la page)</td></tr>
+    <tr><td><code>.carte p</code></td><td>Les <code>&lt;p&gt;</code> <b>à l'intérieur</b> d'une <code>.carte</code>, à n'importe quelle profondeur</td></tr>
+    <tr><td><code>.menu &gt; li</code></td><td>Les <code>&lt;li&gt;</code> <b>enfants directs</b> de <code>.menu</code></td></tr>
+    <tr><td><code>h2 + p</code></td><td>Le <code>&lt;p&gt;</code> qui suit immédiatement un <code>&lt;h2&gt;</code></td></tr>
+    <tr><td><code>a[target="_blank"]</code></td><td>Les liens qui ont cet attribut</td></tr>
+    <tr><td><code>h1, h2, h3</code></td><td>Plusieurs sélecteurs à la fois</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Les bases</div>
+  <h2>Cascade et spécificité : qui gagne ?</h2>
+  <div class="grid2">
+    <div>
+      <p class="small">Quand plusieurs règles visent le même élément, le navigateur compare leur <b>spécificité</b> :</p>
+      <table style="margin-top:12px">
+        <tr><th>Sélecteur</th><th>Poids</th></tr>
+        <tr><td><code>style=""</code></td><td>le plus fort</td></tr>
+        <tr><td><code>#id</code></td><td>1 · 0 · 0</td></tr>
+        <tr><td><code>.classe</code>, <code>:hover</code>, <code>[attr]</code></td><td>0 · 1 · 0</td></tr>
+        <tr><td><code>p</code>, <code>::before</code></td><td>0 · 0 · 1</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:12px">À spécificité égale, la règle écrite <b>en dernier</b> gagne.</p>
+    </div>
+    <div class="card">
+      <h3>Bonnes habitudes</h3>
+      <ul class="clean small">
+        <li>Style surtout avec des <b>classes</b> : poids faible et égal, donc prévisible.</li>
+        <li>Évite les <code>#id</code> pour le style et les sélecteurs très longs.</li>
+        <li><code>!important</code> écrase tout : c'est un signe que l'organisation coince. À réserver aux cas extrêmes.</li>
+        <li>Dans les DevTools, une déclaration <s>barrée</s> a perdu face à une autre règle.</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
@@ -159,6 +221,20 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Les bases</div>
+  <h2>Les valeurs de <code>display</code></h2>
+  <table>
+    <tr><th>Valeur</th><th>Comportement</th><th>Exemples par défaut</th></tr>
+    <tr><td><code>block</code></td><td>Prend toute la largeur, passe à la ligne. Accepte largeur, hauteur, marges.</td><td><code>div</code>, <code>p</code>, <code>h1</code>, <code>section</code></td></tr>
+    <tr><td><code>inline</code></td><td>Reste dans le texte. Ignore largeur, hauteur et marges verticales.</td><td><code>span</code>, <code>a</code>, <code>strong</code></td></tr>
+    <tr><td><code>inline-block</code></td><td>Dans le texte, mais accepte largeur, hauteur et marges</td><td><code>button</code>, <code>img</code> (presque)</td></tr>
+    <tr><td><code>flex</code> / <code>grid</code></td><td>Bloc qui organise ses enfants</td><td>À choisir toi-même</td></tr>
+    <tr><td><code>none</code></td><td>Retiré de la page (et des lecteurs d'écran)</td><td>Éléments masqués</td></tr>
+  </table>
+  <div class="callout"><p>Un lien <code>&lt;a&gt;</code> qui refuse un <code>padding</code> vertical ou une largeur ? Il est <code>inline</code> : passe-le en <code>inline-block</code> ou <code>block</code>.</p></div>
+</section>
+
+<section class="slide">
   <div class="kicker">Les unités</div>
   <h2>Quelle unité choisir ?</h2>
   <table>
@@ -173,6 +249,48 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Texte</div>
+  <h2>Une typographie lisible</h2>
+  <div class="grid2">
+    <pre>body {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 1rem;      <span class="c">/* 16px */</span>
+  line-height: 1.6;     <span class="c">/* sans unité */</span>
+}
+
+h1 {
+  <span class="c">/* min, idéal, max */</span>
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+}
+
+article {
+  max-width: 65ch;      <span class="c">/* ~65 caractères */</span>
+}</pre>
+    <ul class="clean small">
+      <li>Toujours une <b>pile de polices</b> qui finit par une famille générique (<code>sans-serif</code>, <code>serif</code>, <code>monospace</code>).</li>
+      <li><code>line-height</code> sans unité : il s'adapte à chaque taille. 1,5 à 1,7 pour le texte, 1,1 à 1,25 pour les titres.</li>
+      <li><code>clamp()</code> fait grandir un titre avec l'écran, entre un minimum et un maximum : plus besoin de media queries pour ça.</li>
+      <li>Des lignes de <b>45 à 75 caractères</b> se lisent mieux : <code>max-width</code> en <code>ch</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Couleurs</div>
+  <h2>Écrire les couleurs</h2>
+  <table>
+    <tr><th>Format</th><th>Exemple</th><th>Intérêt</th></tr>
+    <tr><td>Hexadécimal</td><td><code>#BE185D</code>, <code>#BE185D80</code></td><td>Le plus courant, copié depuis les outils de design</td></tr>
+    <tr><td><code>rgb()</code></td><td><code>rgb(190 24 93 / 50%)</code></td><td>Rouge, vert, bleu de 0 à 255, plus la transparence</td></tr>
+    <tr><td><code>hsl()</code></td><td><code>hsl(335 78% 42%)</code></td><td>Teinte, saturation, luminosité : facile à décliner</td></tr>
+    <tr><td><code>oklch()</code></td><td><code>oklch(52% 0.19 355)</code></td><td>Luminosité perçue fiable : idéal pour générer une palette homogène</td></tr>
+    <tr><td><code>currentColor</code></td><td><code>border-color: currentColor</code></td><td>Reprend la couleur du texte (pratique pour les icônes)</td></tr>
+  </table>
+  <div class="callout"><p>Le dernier chiffre (ou <code>/ 50%</code>) est la <b>transparence</b>. Pour un fond semi-transparent, préfère-la à <code>opacity</code>, qui rend aussi le texte transparent.</p></div>
+</section>
+
+<section class="slide" data-part="Mise en page">
   <div class="kicker">Flexbox</div>
   <h2>Aligner sur un axe</h2>
   <div class="grid2">
@@ -282,7 +400,48 @@ td:first-child{font-weight:600}
   <div class="callout"><p>On les combine sans arrêt : une <b>grille</b> de cartes, et du <b>flex</b> à l'intérieur de chaque carte pour aligner l'icône et le texte.</p></div>
 </section>
 
+<section class="slide" data-part="Positionner">
+  <div class="kicker">Positionner</div>
+  <h2>Les modes de <code>position</code></h2>
+  <table>
+    <tr><th>Valeur</th><th>Comportement</th><th>Usage</th></tr>
+    <tr><td><code>static</code></td><td>Par défaut : suit le flux normal</td><td>—</td></tr>
+    <tr><td><code>relative</code></td><td>Reste dans le flux, sert de <b>repère</b> pour ses enfants <code>absolute</code></td><td>Conteneur d'un badge ou d'une icône</td></tr>
+    <tr><td><code>absolute</code></td><td>Sort du flux, se place par rapport au parent positionné le plus proche</td><td>Badge « Nouveau » dans un coin</td></tr>
+    <tr><td><code>fixed</code></td><td>Collé à l'écran, même en défilant</td><td>Bouton de chat, bandeau cookies</td></tr>
+    <tr><td><code>sticky</code></td><td>Normal, puis collé quand il atteint <code>top</code></td><td>En-tête de tableau, menu qui suit</td></tr>
+  </table>
+  <div class="callout warn"><p><code>sticky</code> ne marche pas ? Il lui faut une valeur (<code>top: 0</code>), et aucun parent ne doit avoir <code>overflow: hidden</code>.</p></div>
+</section>
+
 <section class="slide">
+  <div class="kicker">Positionner</div>
+  <h2>Superpositions et débordements</h2>
+  <div class="grid2">
+    <div>
+      <h3><code>z-index</code></h3>
+      <ul class="clean small">
+        <li>Ordonne les éléments <b>positionnés</b> qui se chevauchent : le plus grand passe devant.</li>
+        <li>Un parent avec <code>z-index</code>, <code>transform</code> ou <code>opacity</code> &lt; 1 crée un <b>contexte d'empilement</b> : ses enfants ne peuvent pas passer devant ce qui est hors de lui, même avec <code>z-index: 9999</code>.</li>
+        <li>Garde une petite échelle : 10 (menus), 100 (en-tête), 1000 (modales).</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Débordements</h3>
+      <pre style="margin-top:8px">.zone      { overflow: auto; }   <span class="c">/* barre si besoin */</span>
+.photo     { overflow: hidden; } <span class="c">/* coupe le surplus */</span>
+
+.titre-court {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;       <span class="c">/* « Un très long… » */</span>
+}</pre>
+      <p class="small muted" style="margin-top:10px">Une page qui défile horizontalement sur mobile ? Cherche l'élément trop large dans les DevTools.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Responsive">
   <div class="kicker">Responsive</div>
   <h2>Mobile d'abord, puis on élargit</h2>
   <div class="grid2">
@@ -309,6 +468,36 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Responsive</div>
+  <h2>Des images qui s'adaptent</h2>
+  <div class="grid2">
+    <pre style="font-size:14px">img {
+  max-width: 100%;   <span class="c">/* pas plus large que le parent */</span>
+  height: auto;
+  display: block;
+}
+
+.vignette {
+  aspect-ratio: 4 / 3;  <span class="c">/* format fixe */</span>
+  object-fit: cover;    <span class="c">/* remplit, recadre */</span>
+  width: 100%;
+}</pre>
+    <div>
+      <ul class="clean small">
+        <li><code>object-fit: cover</code> remplit le cadre en recadrant ; <code>contain</code> montre toute l'image avec des bandes.</li>
+        <li><code>aspect-ratio</code> réserve la place de l'image avant son chargement (pas de saut de page).</li>
+        <li><code>srcset</code> propose plusieurs tailles : le navigateur choisit la plus adaptée à l'écran.</li>
+      </ul>
+      <pre style="margin-top:14px;font-size:14px">&lt;img src=<span class="s">"photo-800.jpg"</span>
+  srcset=<span class="s">"photo-400.jpg 400w,
+          photo-800.jpg 800w"</span>
+  sizes=<span class="s">"(min-width: 768px) 50vw, 100vw"</span>
+  alt=<span class="s">"…"</span>&gt;</pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Organisation et mouvement">
   <div class="kicker">Organisation</div>
   <h2>Variables CSS et design tokens</h2>
   <div class="grid2">
@@ -338,6 +527,98 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Organisation</div>
+  <h2>Un mode sombre propre</h2>
+  <div class="grid2" style="grid-template-columns:1.25fr 1fr">
+    <pre style="font-size:14.5px">:root {
+  --fond: #FFFFFF;
+  --texte: #1B1A17;
+  color-scheme: light dark;
+}
+
+<span class="c">/* suit le réglage du système */</span>
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fond: #121210; --texte: #EEEAE1;
+  }
+}
+
+<span class="c">/* choix forcé par un bouton */</span>
+:root[data-theme="dark"] {
+  --fond: #121210; --texte: #EEEAE1;
+}
+
+body { background: var(--fond); color: var(--texte); }</pre>
+    <ul class="clean small">
+      <li>Toutes les couleurs passent par des <b>variables</b> : le mode sombre ne fait que les redéfinir.</li>
+      <li>Par défaut, on suit le système (<code>prefers-color-scheme</code>). Un bouton peut forcer un choix via <code>data-theme</code> sur <code>&lt;html&gt;</code>.</li>
+      <li><code>color-scheme</code> adapte aussi les champs de formulaire et les barres de défilement.</li>
+      <li>En sombre, évite le noir pur et le blanc pur : des tons légèrement atténués fatiguent moins les yeux.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">États</div>
+  <h2>Pseudo-classes et pseudo-éléments</h2>
+  <div class="grid2">
+    <table>
+      <tr><th>Sélecteur</th><th>Cible</th></tr>
+      <tr><td><code>:hover</code></td><td>Survol de la souris</td></tr>
+      <tr><td><code>:focus-visible</code></td><td>Focus au clavier</td></tr>
+      <tr><td><code>:disabled</code>, <code>:checked</code></td><td>État d'un champ</td></tr>
+      <tr><td><code>:first-child</code>, <code>:nth-child(2n)</code></td><td>Position parmi les frères</td></tr>
+      <tr><td><code>:not(.actif)</code></td><td>Tout sauf…</td></tr>
+      <tr><td><code>:has(img)</code></td><td>Parent qui <b>contient</b> une image</td></tr>
+      <tr><td><code>::before</code>, <code>::after</code></td><td>Contenu décoratif ajouté</td></tr>
+      <tr><td><code>::placeholder</code></td><td>Texte indicatif d'un champ</td></tr>
+    </table>
+    <pre>.ligne:nth-child(even) {
+  background: var(--doux);
+}
+
+.carte:has(img) {
+  padding-top: 0;
+}
+
+.obligatoire::after {
+  content: <span class="s">" *"</span>;
+  color: crimson;
+}</pre>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Mouvement</div>
+  <h2>Transitions, transformations, animations</h2>
+  <div class="grid2">
+    <pre>.carte {
+  transition: transform .2s ease,
+              box-shadow .2s ease;
+}
+.carte:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 15%);
+}
+
+@keyframes pulse {
+  from { opacity: 1; }
+  to   { opacity: .4; }
+}
+.chargement {
+  animation: pulse 1s ease-in-out infinite alternate;
+}</pre>
+    <ul class="clean small">
+      <li><b>Transition</b> : passe en douceur d'un état à l'autre (au survol, à l'ajout d'une classe).</li>
+      <li><b>Transform</b> : déplace, agrandit ou tourne <b>sans</b> recalculer la mise en page autour.</li>
+      <li><b>Animation</b> : une séquence définie par <code>@keyframes</code>, qui peut boucler.</li>
+      <li>Anime de préférence <code>transform</code> et <code>opacity</code> : ce sont les propriétés les plus fluides.</li>
+      <li>Respecte <code>prefers-reduced-motion</code> pour les personnes sensibles aux mouvements.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Tailwind">
   <div class="kicker">Tailwind</div>
   <h2>Le principe : une classe = une propriété</h2>
   <div class="grid2">
@@ -471,6 +752,112 @@ td:first-child{font-weight:600}
 </section>
 
 <section class="slide">
+  <div class="kicker">Tailwind</div>
+  <h2>Classes conditionnelles sans conflit</h2>
+  <div class="grid2">
+    <pre><span class="c">// lib/cn.ts</span>
+<span class="k">import</span> { clsx } <span class="k">from</span> <span class="s">"clsx"</span>;
+<span class="k">import</span> { twMerge } <span class="k">from</span> <span class="s">"tailwind-merge"</span>;
+<span class="k">export const</span> cn = (...c) =&gt; twMerge(clsx(c));
+
+<span class="c">// Bouton.tsx</span>
+&lt;button className={cn(
+  <span class="s">"px-4 py-2 rounded-lg bg-gray-900 text-white"</span>,
+  actif &amp;&amp; <span class="s">"ring-2 ring-pink-500"</span>,
+  desactive &amp;&amp; <span class="s">"opacity-50 cursor-not-allowed"</span>,
+  className   <span class="c">// classes passées par le parent</span>
+)}&gt;</pre>
+    <ul class="clean small">
+      <li><b>clsx</b> assemble des classes selon des conditions, sans concaténations fragiles.</li>
+      <li><b>tailwind-merge</b> résout les conflits : avec <code>px-4</code> puis <code>px-6</code>, seul le dernier est gardé.</li>
+      <li>Ce petit utilitaire <code>cn()</code> est devenu un standard (on le retrouve dans shadcn/ui).</li>
+      <li>Les classes restent écrites <b>en entier</b> : Tailwind les trouve toujours.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Tailwind</div>
+  <h2>Composants plutôt que <code>@apply</code></h2>
+  <div class="grid2">
+    <div>
+      <p class="small">Quand une suite de classes se répète, deux options :</p>
+      <pre style="margin-top:12px;font-size:14px"><span class="c">/* @apply : regroupe des classes en CSS */</span>
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium;
+}</pre>
+      <pre style="margin-top:12px;font-size:14px"><span class="c">// composant : la méthode conseillée</span>
+<span class="k">function</span> Bouton({ children, ...props }) {
+  <span class="k">return</span> &lt;button className=<span class="s">"px-4 py-2 rounded-lg font-medium"</span>
+    {...props}&gt;{children}&lt;/button&gt;;
+}</pre>
+    </div>
+    <ul class="clean small">
+      <li>Dans un projet React, Vue ou Svelte, un <b>composant</b> réutilise à la fois le style <b>et</b> le HTML : c'est la recommandation de Tailwind.</li>
+      <li><code>@apply</code> reste utile pour styler du HTML que tu ne contrôles pas (contenu Markdown, éléments d'une bibliothèque).</li>
+      <li>Pour du texte long (articles), le plugin <b>typography</b> (<code>prose</code>) met tout en forme d'un coup.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" data-part="Outils et dépannage">
+  <div class="kicker">Outils</div>
+  <h2>Inspecter avec les DevTools</h2>
+  <div class="grid2">
+    <ol class="steps small">
+      <li><kbd>F12</kbd> ou clic droit → <i>Inspecter</i> sur l'élément.</li>
+      <li>Onglet <b>Styles</b> : les règles appliquées, les barrées ont perdu. Modifie une valeur en direct pour tester.</li>
+      <li>Onglet <b>Calculé</b> : la valeur finale de chaque propriété, et le schéma du modèle de boîte.</li>
+      <li>Badges <b>flex</b> et <b>grid</b> à côté des éléments : ils affichent les lignes et les espaces.</li>
+      <li><kbd>Ctrl+Maj+M</kbd> : mode appareil pour tester les tailles d'écran.</li>
+    </ol>
+    <div class="card">
+      <h3>Astuce de débogage</h3>
+      <pre style="margin-top:8px;font-size:14px">* { outline: 1px solid red; }</pre>
+      <p class="small" style="margin-top:12px">Colle temporairement cette ligne : le contour de chaque boîte apparaît, et l'élément qui déborde saute aux yeux.</p>
+      <p class="small muted" style="margin-top:10px"><code>outline</code> ne change pas les dimensions, contrairement à <code>border</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Dépannage</div>
+  <h2>Erreurs fréquentes</h2>
+  <table>
+    <tr><th>Symptôme</th><th>Cause probable</th></tr>
+    <tr><td>Mon style ne s'applique pas</td><td>Spécificité plus faible qu'une autre règle, faute de frappe dans la classe, ou fichier CSS non chargé</td></tr>
+    <tr><td>La page défile horizontalement sur mobile</td><td>Un élément à largeur fixe trop grande, une image sans <code>max-width: 100%</code>, ou un <code>100vw</code></td></tr>
+    <tr><td><code>height: 100%</code> sans effet</td><td>Le parent n'a pas de hauteur définie</td></tr>
+    <tr><td>Une marge « traverse » son parent</td><td>Fusion des marges verticales : utiliser <code>padding</code> ou <code>display: flow-root</code> sur le parent</td></tr>
+    <tr><td><code>z-index</code> ignoré</td><td>Élément non positionné, ou piégé dans un contexte d'empilement</td></tr>
+    <tr><td>Classe Tailwind sans effet</td><td>Nom construit dynamiquement, fichier non scanné, ou classe inexistante dans ta version</td></tr>
+  </table>
+</section>
+
+<section class="slide" data-part="Synthèse">
+  <div class="kicker">Synthèse</div>
+  <h2>Glossaire</h2>
+  <div class="grid2">
+    <table>
+      <tr><td>Sélecteur</td><td>Ce qui désigne les éléments à styler</td></tr>
+      <tr><td>Spécificité</td><td>Poids d'un sélecteur dans la cascade</td></tr>
+      <tr><td>Cascade</td><td>Règles qui décident quelle déclaration gagne</td></tr>
+      <tr><td>Box model</td><td>Contenu, padding, bordure, marge</td></tr>
+      <tr><td>Flux</td><td>Placement normal des éléments les uns après les autres</td></tr>
+      <tr><td>Breakpoint</td><td>Largeur où la mise en page change</td></tr>
+    </table>
+    <table>
+      <tr><td>Token</td><td>Variable nommée selon son rôle</td></tr>
+      <tr><td>Utilitaire</td><td>Classe Tailwind qui fait une seule chose</td></tr>
+      <tr><td>Valeur arbitraire</td><td>Valeur sur mesure entre <code>[…]</code></td></tr>
+      <tr><td>Contexte d'empilement</td><td>Groupe isolé pour le <code>z-index</code></td></tr>
+      <tr><td>Media query</td><td>Condition sur l'écran</td></tr>
+      <tr><td>Container query</td><td>Condition sur le parent</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="slide">
   <div class="kicker">À retenir</div>
   <h2>L'essentiel en 6 phrases</h2>
   <div class="grid2">
@@ -496,6 +883,18 @@ td:first-child{font-weight:600}
     <details><summary>Traduis <code>gap: 14px</code> et <code>border-radius: 10px</code> en Tailwind.</summary><p><code>gap-3.5</code> (3,5 × 4px) et <code>rounded-[10px]</code> (aucune classe par défaut ne vaut 10px).</p></details>
     <details><summary>Pourquoi <code>className={`text-${taille}`}</code> ne fonctionne pas ?</summary><p>Tailwind génère les classes en lisant le texte des fichiers. La classe complète n'y apparaît jamais, donc elle n'est pas générée. Utilise une table de classes complètes.</p></details>
     <details><summary>Une grille doit avoir une colonne sur mobile et trois à partir de 1024px. En Tailwind ?</summary><p><code>grid grid-cols-1 lg:grid-cols-3</code>. Sans préfixe pour le mobile, <code>lg:</code> à partir de 1024px.</p></details>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Exercices</div>
+  <h2>Teste-toi (suite)</h2>
+  <div class="qa">
+    <details><summary><code>.menu a</code> et <code>#nav a</code> donnent deux couleurs différentes au même lien. Laquelle gagne ?</summary><p><code>#nav a</code> : un identifiant est plus spécifique qu'une classe, quel que soit l'ordre.</p></details>
+    <details><summary>Ton en-tête en <code>position: sticky</code> ne colle pas. Deux vérifications ?</summary><p>Qu'il a bien <code>top: 0</code>, et qu'aucun parent n'a <code>overflow: hidden</code> ou <code>auto</code>.</p></details>
+    <details><summary>Comment faire un titre qui grandit avec l'écran, entre 2rem et 3.5rem ?</summary><p><code>font-size: clamp(2rem, 5vw, 3.5rem);</code></p></details>
+    <details><summary>Des photos de tailles différentes doivent toutes apparaître en carré, sans déformation.</summary><p><code>aspect-ratio: 1; object-fit: cover; width: 100%;</code></p></details>
+    <details><summary>Tu passes <code>className="px-6"</code> à un bouton qui a déjà <code>px-4</code>. Comment être sûr que <code>px-6</code> gagne ?</summary><p>Fusionner les classes avec <code>tailwind-merge</code> (via un utilitaire <code>cn()</code>), qui garde la dernière classe en conflit.</p></details>
   </div>
 </section>
 
